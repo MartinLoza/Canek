@@ -7,6 +7,30 @@
 #         Sampling -> A boolean value indicating if the estimator will use sampling from the cell pairs
 #         Number_Samples -> Number of samples to use from the cell pairs
 # OUTPUT : Correction Vector containing the batch effect estimation. The vector is equal size as the number of genes.
+
+
+
+#' Correct_Batches
+#'
+#' Function to correct batch effect over two batches
+#'
+#' @param Batches
+#' @param Query_Batch_Cell_Types
+#' @param Similar_Cells
+#' @param Num_Clusters
+#' @param Sampling
+#' @param Number_Samples
+#' @param k_Neighbors
+#' @param PCA
+#' @param Dimensions
+#' @param Max_Membership
+#' @param Fuzzy
+#' @param Hierarchical
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                             Number_Samples = NULL, k_Neighbors = 20, PCA = TRUE,
