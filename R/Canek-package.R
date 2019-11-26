@@ -5,5 +5,5 @@
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
 ## usethis namespace: end
-#' @import FNN irlba tictoc numbers fpc ape
+#' @import FNN irlba tictoc numbers fpc ape spdep
 NULL

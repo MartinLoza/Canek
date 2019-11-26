@@ -11,7 +11,32 @@ Correct_Batches(Batches, Query_Batch_Cell_Types = "Surprise-me",
   Hierarchical = TRUE)
 }
 \arguments{
-\item{Hierarchical}{}
+\item{Batches}{#List of batches to integrate. Batches should contain the same number of genes as rows.}
+
+\item{Query_Batch_Cell_Types}{#A number indicating the expected number of cells types on the batches to integrate. The default value is set as a chain "Surprise-me" on which an estimation of the cell types is defined.}
+
+\item{Similar_Cells}{#A string value indicating in a semi-supervised the way MNNs pairs should be filtered. The input accepted values are "Low", "Medium" and "High" being the latter one the default value.}
+
+\item{Num_Clusters}{#A number indicating the number of clusters to use to filter MNNs pairs.}
+
+\item{Sampling}{#A logical value indicating if sampling of MNNs pairs is used on the estimation process.}
+
+\item{Number_Samples}{#A number defining the number of MNNs pairs samples to use on the estimation process.}
+
+\item{k_Neighbors}{#A number defining the number of k-neighbors to find MNNs pairs.}
+
+\item{PCA}{#A logical value that indicates if MNNs pairs are found under a principal components representation.}
+
+\item{Dimensions}{#A number indicating the number of principal components to use to find MNNs pairs.}
+
+\item{Max_Membership}{#A number indicating the maximum number of memberships when are automatically defined.}
+
+\item{Fuzzy}{#A logical value indicating if fuzzy logic is used to join the local correction vectors.}
+
+\item{Hierarchical}{#A logical value indicating if a hiearchical integration scheme is used when correcting more than two batches.}
+}
+\value{
+A list containing a matrix with the integrated datasets.
 }
 \description{
 Function to correct batch effect over two batches

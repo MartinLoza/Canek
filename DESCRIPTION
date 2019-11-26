@@ -6,8 +6,9 @@ Authors@R: c(
     person("Martin", "Loza", email = "martin.loza.lopez@gmail.com", role = c("aut", "cre")),
     person("Diego", "Diez", email = "diego10ruiz@gmail.com", role = c("aut"))
     )
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Non-linear/linear hybrid method for batch-effect correction 
+  that couples identification of similar cells between datasets using Mutual Nearest Neighbors (MNNs)
+  with an Extended Kalman Filter (EKF)
 Depends:
 Imports:
   FNN,
@@ -15,7 +16,8 @@ Imports:
   tictoc,
   numbers,
   fpc,
-  ape
+  ape,
+  spdep
 Suggests:
 License: MIT + file LICENSE
 Encoding: UTF-8

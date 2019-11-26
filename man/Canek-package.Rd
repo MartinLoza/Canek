@@ -6,8 +6,9 @@
 \alias{Canek-package}
 \title{Canek: Batch Correction of Single-Cell Data Using Extended Kalman Filter}
 \description{
-More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Non-linear/linear hybrid method for batch-effect correction 
+  that couples identification of similar cells between datasets using Mutual Nearest Neighbors (MNNs)
+  with an Extended Kalman Filter (EKF)
 }
 \author{
 \strong{Maintainer}: Martin Loza \email{martin.loza.lopez@gmail.com}
