@@ -3,18 +3,18 @@
 #'
 #' Function to correct batch effect over two batches
 #'
-#' @param Batches #List of batches to integrate. Batches should contain the same number of genes as rows.
-#' @param Query_Batch_Cell_Types #A number indicating the expected number of cells types on the batches to integrate. The default value is set as a chain "Surprise-me" on which an estimation of the cell types is defined.
-#' @param Similar_Cells #A string value indicating in a semi-supervised the way MNNs pairs should be filtered. The input accepted values are "Low", "Medium" and "High" being the latter one the default value.
-#' @param Num_Clusters #A number indicating the number of clusters to use to filter MNNs pairs.
-#' @param Sampling #A logical value indicating if sampling of MNNs pairs is used on the estimation process.
-#' @param Number_Samples #A number defining the number of MNNs pairs samples to use on the estimation process.
-#' @param k_Neighbors #A number defining the number of k-neighbors to find MNNs pairs.
-#' @param PCA #A logical value that indicates if MNNs pairs are found under a principal components representation.
-#' @param Dimensions #A number indicating the number of principal components to use to find MNNs pairs.
-#' @param Max_Membership #A number indicating the maximum number of memberships when are automatically defined.
-#' @param Fuzzy #A logical value indicating if fuzzy logic is used to join the local correction vectors.
-#' @param Hierarchical #A logical value indicating if a hiearchical integration scheme is used when correcting more than two batches.
+#' @param Batches List of batches to integrate. Batches should contain the same number of genes as rows.
+#' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
+#' @param Similar_Cells A string value indicating in a semi-supervised the way MNNs pairs should be filtered. Accepted input values are "Low", "Medium" and "High".
+#' @param Num_Clusters Number of clusters used to filter MNNs pairs.
+#' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
+#' @param Number_Samples A number defining the number of MNNs pairs samples to use on the estimation process.
+#' @param k_Neighbors Number of k-nearest-neighbors used to find MNNs pairs.
+#' @param PCA Whether or not MNNs pairs are found under a principal components representation.
+#' @param Dimensions PCA dimensions used to find MNNs pairs.
+#' @param Max_Membership Maximum number of memberships used when memberships are automatically defined.
+#' @param Fuzzy Whether or not a fuzzy logic join is used on the local correction vectors.
+#' @param Hierarchical Whether or not a hiearchical integration scheme is used when correcting more than two batches.
 #'
 #' @return A list containing a matrix with the integrated datasets.
 #' @export
