@@ -39,5 +39,5 @@ Correct_Batches(Batches, Query_Batch_Cell_Types = "Surprise-me",
 A list containing a matrix with the integrated datasets.
 }
 \description{
-Function to correct batch effect over two batches
+Batch-Effect correction over a list of single cell batches
 }

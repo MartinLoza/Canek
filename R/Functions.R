@@ -1,7 +1,7 @@
 
 #' Correct_Batches
 #'
-#' Function to correct batch effect over two batches
+#' Batch-Effect correction over a list of single cell batches
 #'
 #' @param Batches List of batches to integrate. Batches should contain the same number of genes as rows.
 #' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
