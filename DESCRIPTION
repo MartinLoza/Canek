@@ -9,7 +9,6 @@ Authors@R: c(
 Description: Non-linear/linear hybrid method for batch-effect correction 
   that couples identification of similar cells between datasets using Mutual Nearest Neighbors (MNNs)
   with an Extended Kalman Filter (EKF)
-Depends:
 Imports:
   FNN,
   irlba,
@@ -19,6 +18,7 @@ Imports:
   ape,
   spdep
 Suggests:
+    testthat
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
