@@ -16,7 +16,7 @@
 #' @param Fuzzy Whether or not a fuzzy logic join is used on the local correction vectors.
 #' @param Hierarchical Whether or not a hiearchical integration scheme is used when correcting more than two batches.
 #'
-#' @return A list containing a matrix with the integrated datasets.
+#' @return A list containing the integrated datasets as matrix and the correction data .
 #' @export
 #'
 #' @examples
@@ -144,15 +144,39 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
   return(Corrected_Batches)
 }
 
-##Correct_Batch##
-#Function to correct batch effect over two batches
-# INPUT : Reference_Batch -> Reference batch
-#         Query_Batch -> Query batch (This batch will be modified)
-#         Pairs -> Cell pairs for batch effect estimations
-#         Num_Clusters -> Number of clusters to use when selecting pairs
-#         Sampling -> A boolean value indicating if the estimator will use sampling from the cell pairs
-#         Number_Samples -> Number of samples to use from the cell pairs
-# OUTPUT : Correction Vector containing the batch effect estimation. The vector is equal size as the number of genes.
+
+
+#' Correct_Batch
+#'
+#' Function to correct batch effect over two batches
+#'
+#' @param Reference_Batch Batch to use as reference for the integration.
+#' @param Query_Batch Batch to correct.
+#' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
+#' @param Similar_Cells A string value indicating in a semi-supervised the way MNNs pairs should be filtered. Accepted input values are "Low", "Medium" and "High".
+#' @param Num_Clusters Number of clusters used to filter MNNs pairs.
+#' @param Sampling Whether or not samples MNNs pairs' samples are used on the estimation process.
+#' @param Number_Samples Number of MNNs pairs' samples used on the estimation process.
+#' @param Pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
+#' @param Cells_Index_Query Index of cells from the query-batch used as observations of the batch-effect.
+#' @param Cells_Index_Reference Index of cells from the reference-batch used as observations of the batch-effect.
+#' @param k_Neighbors Number of k-nearest-neighbors used to find MNNs pairs.
+#' @param PCA Whether or not MNNs pairs are found under a principal components representation.
+#' @param Dimensions PCA dimensions used to find MNNs pairs.
+#' @param Max_Membership Maximum number of memberships used when memberships are automatically defined.
+#' @param Fuzzy Whether or not a hiearchical integration scheme is used when correcting more than two batches.
+#'
+#' @details  INPUT : Reference_Batch -> Reference batch
+#'         Query_Batch -> Query batch (This batch will be modified)
+#'         Pairs -> Cell pairs for batch effect estimations
+#'        Num_Clusters -> Number of clusters to use when selecting pairs
+#'        Sampling -> A boolean value indicating if the estimator will use sampling from the cell pairs
+#'        Number_Samples -> Number of samples to use from the cell pairs
+#' OUTPUT : Correction Vector containing the batch effect estimation. The vector is equal size as the number of genes.
+#'
+#' @return A list containing the corrected batch as a matrix and correction data
+#'
+#' @examples
 Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types = "Surprise-me",
                           Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                           Number_Samples = NULL, Pairs = NULL, Cells_Index_Query = NULL,
