@@ -1,11 +1,21 @@
-##Pairs_Selection##
-#Function to select pairs to be used on batch effect correction. The pairs are selected by clustering the query batch
-#and analyzing the mean distance of pair cells on each cluster. The pairs of the cluster with minimum mean distance are returned.
-# INPUT : B1 -> Batch 1 (Reference)
-#         B2 -> Batch 2 (Query)
-#         Pairs -> MNN Pairs
-#         Num_Clusters -> Number of clusters to use
-# OUTPUT : Matrix containing the selected pairs.
+
+
+#' Title Pairs_Selection
+#'
+#' Function to filter MNNs pairs
+#'
+#' @param B1 Reference batch single-cell data.
+#' @param B2 Query's batch single-cell data.
+#' @param Pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
+#' @param Num_Clusters Number of clusters used to filter pairs.
+#'
+#' @return A matrix containing the filtered pairs. First column corresponds to query-batch cell indexes.
+#'
+#' @details Function to select pairs to used on batch effect correction.
+#'  The pairs are selected by clustering the query batch and analyzing the mean distance of pair cells on each cluster.
+#'  The pairs of the cluster with minimum mean distance are returned.
+#'
+#' @examples
 Pairs_Selection <- function(B1,B2, Pairs, Num_Clusters = 1){
 
   cat("\n\nSelecting Pairs by Clusters")

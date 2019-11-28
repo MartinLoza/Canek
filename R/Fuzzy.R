@@ -3,11 +3,14 @@
 #'
 #' Function to score cell's memberships by fuzzy logic
 #'
-#' @param Cluster_Membership Memberships' clustering data
-#' @param Cells_PCA PCA representation of the cells
-#' @param Correction_Memberships Matrix containing the initial membership assignment. Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.
+#' @param Cluster_Membership Memberships' clustering data.
+#' @param Cells_PCA PCA representation of the cells.
+#' @param Correction_Memberships Matrix containing the initial membership assignment.
+#'  Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.
 #'
-#' @details This function stablishes the fuzzification for the cells' membership. A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed for each of the edges of the MST.
+#' @details This function stablishes the fuzzification for the cells' membership.
+#'  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
+#'   for each of the edges of the MST.
 #'
 #'
 #' @examples
