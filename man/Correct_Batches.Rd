@@ -4,11 +4,20 @@
 \alias{Correct_Batches}
 \title{Correct_Batches}
 \usage{
-Correct_Batches(Batches, Query_Batch_Cell_Types = "Surprise-me",
-  Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
-  Number_Samples = NULL, k_Neighbors = 20, PCA = TRUE,
-  Dimensions = 50, Max_Membership = 5, Fuzzy = TRUE,
-  Hierarchical = TRUE)
+Correct_Batches(
+  Batches,
+  Query_Batch_Cell_Types = "Surprise-me",
+  Similar_Cells = "High",
+  Num_Clusters = NULL,
+  Sampling = NULL,
+  Number_Samples = NULL,
+  k_Neighbors = 20,
+  PCA = TRUE,
+  Dimensions = 50,
+  Max_Membership = 5,
+  Fuzzy = TRUE,
+  Hierarchical = TRUE
+)
 }
 \arguments{
 \item{Batches}{List of batches to integrate. Batches should contain the same number of genes as rows.}

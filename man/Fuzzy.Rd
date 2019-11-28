@@ -4,8 +4,11 @@
 \alias{Fuzzy}
 \title{Title Fuzzy}
 \usage{
-Fuzzy(Cluster_Membership = NULL, Cells_PCA = NULL,
-  Correction_Memberships = NULL)
+Fuzzy(
+  Cluster_Membership = NULL,
+  Cells_PCA = NULL,
+  Correction_Memberships = NULL
+)
 }
 \arguments{
 \item{Cluster_Membership}{Memberships' clustering data.}

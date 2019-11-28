@@ -4,12 +4,23 @@
 \alias{Correct_Batch}
 \title{Correct_Batch}
 \usage{
-Correct_Batch(Reference_Batch, Query_Batch,
-  Query_Batch_Cell_Types = "Surprise-me", Similar_Cells = "High",
-  Num_Clusters = NULL, Sampling = NULL, Number_Samples = NULL,
-  Pairs = NULL, Cells_Index_Query = NULL,
-  Cells_Index_Reference = NULL, k_Neighbors = 20, PCA = TRUE,
-  Dimensions = 50, Max_Membership = 5, Fuzzy = TRUE)
+Correct_Batch(
+  Reference_Batch,
+  Query_Batch,
+  Query_Batch_Cell_Types = "Surprise-me",
+  Similar_Cells = "High",
+  Num_Clusters = NULL,
+  Sampling = NULL,
+  Number_Samples = NULL,
+  Pairs = NULL,
+  Cells_Index_Query = NULL,
+  Cells_Index_Reference = NULL,
+  k_Neighbors = 20,
+  PCA = TRUE,
+  Dimensions = 50,
+  Max_Membership = 5,
+  Fuzzy = TRUE
+)
 }
 \arguments{
 \item{Reference_Batch}{Batch to use as reference for the integration.}

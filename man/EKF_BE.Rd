@@ -4,8 +4,7 @@
 \alias{EKF_BE}
 \title{Title EKF_BE}
 \usage{
-EKF_BE(B1, B2, Pairs, Sampling = NULL, Number_Samples = NULL,
-  Gain = 0.1)
+EKF_BE(B1, B2, Pairs, Sampling = NULL, Number_Samples = NULL, Gain = 0.1)
 }
 \arguments{
 \item{B1}{Reference batch single-cell data.}
