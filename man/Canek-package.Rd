@@ -6,9 +6,9 @@
 \alias{Canek-package}
 \title{Canek: Batch Correction of Single-Cell Data Using Extended Kalman Filter}
 \description{
-Non-linear/linear hybrid method for batch-effect correction 
-  that couples identification of similar cells between datasets using Mutual Nearest Neighbors (MNNs)
-  with an Extended Kalman Filter (EKF)
+Non-linear/linear hybrid method for batch-effect correction
+    that couples identification of similar cells between datasets using 
+    Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
 }
 \author{
 \strong{Maintainer}: Martin Loza \email{martin.loza.lopez@gmail.com}
