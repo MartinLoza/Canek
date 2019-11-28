@@ -6,4 +6,5 @@
 ## usethis namespace: start
 ## usethis namespace: end
 #' @import FNN irlba tictoc numbers fpc ape spdep
+#' @importFrom stats dist kmeans sd
 NULL
