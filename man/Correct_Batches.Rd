@@ -21,7 +21,7 @@ Correct_Batches(Batches, Query_Batch_Cell_Types = "Surprise-me",
 
 \item{Sampling}{Whether or not sampling of MNNs pairs is used on the estimation process.}
 
-\item{Number_Samples}{A number defining the number of MNNs pairs samples to use on the estimation process.}
+\item{Number_Samples}{Number of MNNs pairs samples used on the estimation process.}
 
 \item{k_Neighbors}{Number of k-nearest-neighbors used to find MNNs pairs.}
 

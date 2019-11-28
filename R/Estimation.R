@@ -1,53 +1,57 @@
 
-##EKF_BE##
-#Function to estimate the batch effect from two input batches. B1 is used as the reference batch and B2 is used as the query batch. These two
-#input batches need to have the same genes.
-# INPUT : B1 -> Batch 1 (Reference)
-#         B2 -> Batch 2 (Query)
-#         Pairs -> Cell pairs for batch effect estimations
-#         Sampling -> A boolean value indicating if the estimator will use sampling from the cell pairs
-#         Number_Samples -> Number of samples to use from the cell pairs
-#         Gain -> Gain to use on the estimation process
-#
-# OUTPUT : Correction Vector containing the batch effect estimation. The vector is equal size as the number of genes.
+
+#' Title EKF_BE
+#'
+#' Estimation of batch-effect by Extended Kalman Filter
+#'
+#' @param B1 Reference batch single-cell data.
+#' @param B2 Query's batch single-cell data.
+#' @param Pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
+#' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
+#' @param Number_Samples Number of MNNs pairs samples used on the estimation process.
+#' @param Gain Gain used when updating the estimated values.
+#'
+#' @return A list containing the estimated correction vector and MNNs pair samples used on the estimation process.
+#' The length of the correction vector is equal to the number of genes.
+#'
+#' @details B1 is used as the reference batch and B2 is used as the query batch.
+#' Input batches need to have the same number of genes.
+#'
+#' @examples
 EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1){
-  #Gain=0.8
 
+  #INIT
   Epochs <- 1
-
-  #Pairs Dimensions
   Pairs_Dim <- dim(Pairs)
   Num_Pairs <- Pairs_Dim[1]
-  #Pairs <- matrix(c(as.vector(Pairs[1:Num_Pairs,1]), as.vector(Pairs[1:Num_Pairs,2])), nrow = Num_Pairs)
+  B2_Dim <- dim(B2)
+  B2_NumCells <- B2_Dim[2]
+  Num_genes <- B2_Dim[1]
+  Progress <- Num_genes/10
+  Progress <- floor(Progress)
+  Min_Samples <- 300
 
   if(Num_Pairs < 10){
     Sampling <- FALSE
     warning('\nWarning: Low number of pairs', call. = TRUE)
-
   }
 
-  #Query Batch Dimensions
-  B2_Dim <- dim(B2)
-  B2_NumCells <- B2_Dim[2]
-  Num_genes <- B2_Dim[1]
-
-  Progress <- Num_genes/10
-  Progress <- floor(Progress)
-
-  #Check number of samples
+  #Set number of samples
   if( is.null(Number_Samples) ){
     if(Sampling == TRUE){
-      Number_Samples <- round(Num_Pairs*0.2)
+      if(Num_Pairs > Min_Samples){
+        Number_Samples <- round(Num_Pairs*0.2)
+      }else{
+        Number_Samples <- Min_Samples
+      }
     }else{
-      Number_Samples <- 1000
+      Number_Samples <- Num_Pairs
     }
   }
 
   if(Num_Pairs < Number_Samples){
     Epochs <- ceiling(Number_Samples/Num_Pairs)
-    Number_Samples = Num_Pairs
     Sampling <- FALSE
-    #Epochs <- ceiling(1000/Number_Samples)
     warning('\nWarning: Number of pairs is lower than number of samples', call. = TRUE)
     cat(paste( "\n\tNumber of epochs: ", Epochs ))
   }

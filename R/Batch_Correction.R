@@ -8,7 +8,7 @@
 #' @param Similar_Cells A string value indicating in a semi-supervised the way MNNs pairs should be filtered. Accepted input values are "Low", "Medium" and "High".
 #' @param Num_Clusters Number of clusters used to filter MNNs pairs.
 #' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
-#' @param Number_Samples A number defining the number of MNNs pairs samples to use on the estimation process.
+#' @param Number_Samples Number of MNNs pairs samples used on the estimation process.
 #' @param k_Neighbors Number of k-nearest-neighbors used to find MNNs pairs.
 #' @param PCA Whether or not MNNs pairs are found under a principal components representation.
 #' @param Dimensions PCA dimensions used to find MNNs pairs.
@@ -351,7 +351,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
     }else{
       warning('\nWarning: Not enough pairs found for this Membership. No correction is performed', call. = TRUE)
       Estimation_Data <- NULL
-      Correction_Vector <- NULL
+      Correction_Vector <- Correction_Matrix[,Membership]
     }
 
    Membership_Correction_Data[[paste("Membership", Membership)]] <- list( "Cells Index" = Membership_Cells_Index, "Pairs Selection Data" = Pairs_Select,

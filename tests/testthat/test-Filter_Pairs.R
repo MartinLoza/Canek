@@ -7,7 +7,7 @@ z <- Correct_Batches(Batches, Num_Clusters = 3, Sampling = FALSE)
 M2_Pairs_Data <- z$`B1/B2`$`Correction Data`$`Membership Data`$`Membership Correction Data`$`Membership 2`$`Pairs Selection Data`
 M3_Pairs_Data <- z$`B1/B2`$`Correction Data`$`Membership Data`$`Membership Correction Data`$`Membership 3`$`Pairs Selection Data`
 
-test_that("Fuzzy works", {
+test_that("Filter_Pairs works", {
   expect_false(is.null(M2_Pairs_Data) || is.null(M3_Pairs_Data))
   expect_true( (length(M2_Pairs_Data) == 3) &&  (length(M3_Pairs_Data) == 3) )
   expect_equal( names(M2_Pairs_Data), c("Selected Pairs", "Clusters", "Selected Cluster") )
