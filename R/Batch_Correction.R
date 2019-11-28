@@ -19,7 +19,6 @@
 #' @return A list containing the integrated datasets as matrix and the correction data .
 #' @export
 #'
-#' @examples
 Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                             Number_Samples = NULL, k_Neighbors = 20, PCA = TRUE,
@@ -171,7 +170,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @return A list containing the corrected batch as a matrix and correction data
 #' @export
 #'
-#' @examples
 Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types = "Surprise-me",
                           Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                           Number_Samples = NULL, Pairs = NULL, Cells_Index_Query = NULL,

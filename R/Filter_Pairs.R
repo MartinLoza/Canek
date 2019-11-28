@@ -15,7 +15,6 @@
 #'  The pairs are selected by clustering the query batch and analyzing the mean distance of pair cells on each cluster.
 #'  The pairs of the cluster with minimum mean distance are returned.
 #'
-#' @examples
 Pairs_Selection <- function(B1,B2, Pairs, Num_Clusters = 1){
 
   cat("\n\nSelecting Pairs by Clusters")

@@ -13,7 +13,6 @@
 #'   for each of the edges of the MST.
 #'
 #'
-#' @examples
 Fuzzy <- function(Cluster_Membership = NULL, Cells_PCA = NULL, Correction_Memberships = NULL){
 
   #INIT

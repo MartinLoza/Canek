@@ -17,7 +17,6 @@
 #' @details B1 is used as the reference batch and B2 is used as the query batch.
 #' Input batches need to have the same number of genes.
 #'
-#' @examples
 EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1){
 
   #INIT
