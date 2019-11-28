@@ -165,8 +165,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @param Max_Membership Maximum number of memberships used when memberships are automatically defined.
 #' @param Fuzzy Whether or not a hiearchical integration scheme is used when correcting more than two batches.
 #'
-#' @details
-#'
 #' @return A list containing the corrected batch as a matrix and correction data
 #' @export
 #'

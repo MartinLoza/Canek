@@ -59,6 +59,3 @@ A list containing the corrected batch as a matrix and correction data
 \description{
 Function to correct batch effect over two batches
 }
-\details{
-
-}
