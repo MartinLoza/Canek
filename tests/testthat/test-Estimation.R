@@ -12,7 +12,8 @@ test_that("Estimation works", {
   expect_false(is.null(M1_Data) || is.null(M2_Data) || is.null(M3_Data) )
   expect_true( (length(M1_Data) == 4) &&  (length(M2_Data) == 4) &&  (length(M3_Data) == 4) )
   expect_equal( names(M1_Data), c("Cells Index", "Pairs Selection Data", "Sampled MNN Pairs", "Correction Vector"  ) )
-  expect_true( (names(M1_Data) == names(M2_Data)) && (names(M1_Data) == names(M3_Data)) )
+  expect_equal( names(M2_Data), c("Cells Index", "Pairs Selection Data", "Sampled MNN Pairs", "Correction Vector"  ) )
+  expect_equal( names(M3_Data), c("Cells Index", "Pairs Selection Data", "Sampled MNN Pairs", "Correction Vector"  ) )
 
   expect_false(is.null(M1_Data$`Correction Vector`) || is.null(M2_Data$`Correction Vector`) || is.null(M3_Data$`Correction Vector`) )
   expect_true( length(M1_Data$`Correction Vector`) == nrow(z$`Batches Integrated`) )
