@@ -35,13 +35,15 @@ Find_MNN_Pairs <- function(B1_B2_NN = NULL, B2_B1_NN = NULL, B2_NCells = NULL ){
   if ( is.null(B1_B2_NN) ){
     stop('B1_B2_NN, Nearest neighbors need to be defined')
   }
+
   if ( is.null(B2_B1_NN) ){
     stop('B2_B1_NN, Nearest neighbors need to be defined')
   }
 
-  if( is.null(B2_NCells) ){
-    B2_NCells <- dim(B2)[2]
+  if ( is.null(B2_NCells) ){
+    stop('B2_NCells, Number of B2 cells needs to be defined.')
   }
+
   #CHECK PAIRS
   for (i in 1:B2_NCells) {
 
