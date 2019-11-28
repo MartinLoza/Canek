@@ -166,15 +166,10 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @param Max_Membership Maximum number of memberships used when memberships are automatically defined.
 #' @param Fuzzy Whether or not a hiearchical integration scheme is used when correcting more than two batches.
 #'
-#' @details  INPUT : Reference_Batch -> Reference batch
-#'         Query_Batch -> Query batch (This batch will be modified)
-#'         Pairs -> Cell pairs for batch effect estimations
-#'        Num_Clusters -> Number of clusters to use when selecting pairs
-#'        Sampling -> A boolean value indicating if the estimator will use sampling from the cell pairs
-#'        Number_Samples -> Number of samples to use from the cell pairs
-#' OUTPUT : Correction Vector containing the batch effect estimation. The vector is equal size as the number of genes.
+#' @details
 #'
 #' @return A list containing the corrected batch as a matrix and correction data
+#' @export
 #'
 #' @examples
 Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types = "Surprise-me",

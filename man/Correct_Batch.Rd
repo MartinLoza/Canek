@@ -49,11 +49,5 @@ A list containing the corrected batch as a matrix and correction data
 Function to correct batch effect over two batches
 }
 \details{
-INPUT : Reference_Batch -> Reference batch
-        Query_Batch -> Query batch (This batch will be modified)
-        Pairs -> Cell pairs for batch effect estimations
-       Num_Clusters -> Number of clusters to use when selecting pairs
-       Sampling -> A boolean value indicating if the estimator will use sampling from the cell pairs
-       Number_Samples -> Number of samples to use from the cell pairs
-OUTPUT : Correction Vector containing the batch effect estimation. The vector is equal size as the number of genes.
+
 }

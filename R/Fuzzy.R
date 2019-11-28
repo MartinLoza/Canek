@@ -1,15 +1,23 @@
-##Fuzzy##
-# This function stablishes the fuzzification for the memberships. A minimum spanning tree (MST) is created among memberships,
-# and the fuzzification is performed for each of the edges of the MST.
-# INPUT : Fuzzy data list
-# OUTPUT : Fuzzy data list
+
+#' Title Fuzzy
+#'
+#' Function to score cell's memberships by fuzzy logic
+#'
+#' @param Cluster_Membership Memberships' clustering data
+#' @param Cells_PCA PCA representation of the cells
+#' @param Correction_Memberships Matrix containing the initial membership assignment. Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.
+#'
+#' @details This function stablishes the fuzzification for the cells' membership. A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed for each of the edges of the MST.
+#'
+#'
+#' @examples
 Fuzzy <- function(Cluster_Membership = NULL, Cells_PCA = NULL, Correction_Memberships = NULL){
 
   #INIT
   Num_Cells <- nrow(Cells_PCA)
   Num_Memberships <- nrow(Cluster_Membership$centers)
   PCA_Max <- 2
-  Fuzzy <- rep(FALSE, Num_Cells)
+  Fuzzied <- rep(FALSE, Num_Cells)
   Fuzzy_Memberships <- Correction_Memberships
   Edges_Data <- list()
 
@@ -83,10 +91,11 @@ Fuzzy <- function(Cluster_Membership = NULL, Cells_PCA = NULL, Correction_Member
       Fuzzification <- rbind( Fuzzification, c(IN_Fuzzification, OUT_Fuzzification) )
 
       #If this cells has not been fuzzified before set fuzzification values
-      if(Fuzzy[Cells_Filtered_RowNames[Cell]] == FALSE){
+      if(Fuzzied[Cells_Filtered_RowNames[Cell]] == FALSE){
 
         Fuzzy_Memberships[Cells_Filtered_RowNames[Cell], IN_Node] <- IN_Fuzzification
         Fuzzy_Memberships[Cells_Filtered_RowNames[Cell], OUT_Node] <- OUT_Fuzzification
+        Fuzzied[Cells_Filtered_RowNames[Cell]] = TRUE
 
       }else{    ##If this cells was already fuzzified, set the fuzzy value as the average of fuzzy values
 
@@ -114,7 +123,7 @@ Fuzzy <- function(Cluster_Membership = NULL, Cells_PCA = NULL, Correction_Member
 
   }
 
-  Fuzzy_Data <- list( "Fuzzy Memberships" = Fuzzy_Memberships, "MST" = Mst, "Fuzzy" =   Fuzzy, "Edges Data" = Edges_Data)
+  Fuzzy_Data <- list( "Fuzzy Memberships" = Fuzzy_Memberships, "MST" = Mst, "Fuzzied" =   Fuzzied, "Edges Data" = Edges_Data)
 
   return(Fuzzy_Data)
 }
