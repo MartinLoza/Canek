@@ -90,34 +90,24 @@ Get_MNN_Pairs <- function(B1 = NULL, B2 = NULL, k_Neighbors = 20){
     stop('B2, Batch needs to be defined')
   }
 
-  B1_NCells <- dim(B1)[2]
-  B2_NCells <- dim(B2)[2]
+  B1_NCells <- ncol(B1)
+  B2_NCells <- ncol(B2)
+  Dim_B1 <- k_Neighbors*B1_NCells
+  Dim_B2 <- k_Neighbors*B2_NCells
+  B1_B2_NN <- matrix(0, nrow = Dim_B1, ncol = 2)
+  B2_B1_NN <- matrix(0, nrow = Dim_B2, ncol = 2)
+  colnames(B1_B2_NN) <- c("Batch-1", "Batch-2")
+  colnames(B2_B1_NN) <- c("Batch-2", "Batch-1")
 
   NN <- get.knnx(data = t(B2), query = t(B1), k = k_Neighbors)
   NN_Index <- NN$nn.index
-
-  B1_B2_NN <- NULL
-  for (i in 1:B1_NCells) {
-
-    for (j in 1:k_Neighbors) {
-      B1_B2_NN <- rbind( B1_B2_NN, c(i,NN_Index[i,j]) )
-    }
-
-  }
-  colnames(B1_B2_NN) <- c("V1", "V2")
+  B1_B2_NN[,1] <- rep(c(1:B1_NCells), each = k_Neighbors)
+  B1_B2_NN[,2] <- t(NN_Index)[1:Dim_B1]
 
   NN <- get.knnx(data = t(B1), query = t(B2), k = k_Neighbors)
   NN_Index <- NN$nn.index
-
-  B2_B1_NN <- NULL
-  for (i in 1:B2_NCells) {
-
-    for (j in 1:k_Neighbors) {
-      B2_B1_NN <- rbind( B2_B1_NN, c(i,NN_Index[i,j]) )
-    }
-
-  }
-  colnames(B2_B1_NN) <- c("V1", "V2")
+  B2_B1_NN[,1] <- rep(c(1:B2_NCells), each = k_Neighbors)
+  B2_B1_NN[,2] <- t(NN_Index)[1:Dim_B2]
 
   Pairs <- Find_MNN_Pairs(B1_B2_NN = B1_B2_NN, B2_B1_NN = B2_B1_NN, B2_NCells = B2_NCells )
 
