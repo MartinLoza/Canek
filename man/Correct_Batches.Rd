@@ -13,7 +13,7 @@ Correct_Batches(
   Number_Samples = NULL,
   k_Neighbors = 20,
   PCA = TRUE,
-  Dimensions = 50,
+  Dimensions = 30,
   Max_Membership = 5,
   Fuzzy = TRUE,
   Hierarchical = TRUE

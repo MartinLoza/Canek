@@ -22,7 +22,7 @@
 Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                             Number_Samples = NULL, k_Neighbors = 20, PCA = TRUE,
-                            Dimensions = 50, Max_Membership = 5, Fuzzy = TRUE,
+                            Dimensions = 30, Max_Membership = 5, Fuzzy = TRUE,
                             Hierarchical = TRUE ){
 
   tic("\nTotal correction time ")
@@ -172,7 +172,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
                           Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                           Number_Samples = NULL, Pairs = NULL, Cells_Index_Query = NULL,
                           Cells_Index_Reference = NULL, k_Neighbors = 20, PCA = TRUE,
-                          Dimensions = 50,   Max_Membership = 5, Fuzzy = TRUE){
+                          Dimensions = 30,   Max_Membership = 5, Fuzzy = TRUE){
 
   tic("\n Correction time")
 

@@ -25,8 +25,8 @@ test_that("Estimation works", {
   expect_equal( length( which( is.finite(M3_Data$`Correction Vector`) ) ), length(M3_Data$`Correction Vector`) )
 
   expect_equal( length(which(M1_Data$`Correction Vector` == 0)), length(M1_Data$`Correction Vector`) )
-  expect_equal( M2_Data$`Correction Vector`[1], 77.5e-5, tolerance = 1e-6 )
-  expect_equal( M3_Data$`Correction Vector`[1], 21.332e-3, tolerance = 1e-6 )
+  expect_equal( M2_Data$`Correction Vector`[1], 48.49e-3, tolerance = 1e-4 )
+  expect_equal( M3_Data$`Correction Vector`[1], -23.89e-3, tolerance = 1e-4 )
 
 
 })

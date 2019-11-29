@@ -17,7 +17,7 @@ Correct_Batch(
   Cells_Index_Reference = NULL,
   k_Neighbors = 20,
   PCA = TRUE,
-  Dimensions = 50,
+  Dimensions = 30,
   Max_Membership = 5,
   Fuzzy = TRUE
 )
