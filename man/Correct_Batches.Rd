@@ -50,3 +50,20 @@ A list containing the integrated datasets as matrix and the correction data .
 \description{
 Batch-Effect correction over a list of single cell batches
 }
+\details{
+Correct_Batches is non-linear/linear hybrid method for single-cell batch-effect correction that couples identification of similar cells
+ between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
+
+ A non-linear correction is performed using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
+}
+\examples{
+Batches <- SimBatches
+z <- Correct_Batches(Batches)
+Corrected <- z$`Batches Integrated`
+
+Uncorrected_PCA <- prcomp(t(cbind(x,y)))
+plot(Uncorrected_PCA$x[,1:2])
+Corrected_PCA <- prcomp(t(z$`Corrected Query Batch`))
+plot(Corrected_PCA$x[,1:2])
+
+}

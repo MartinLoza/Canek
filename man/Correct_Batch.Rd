@@ -51,11 +51,29 @@ Correct_Batch(
 
 \item{Max_Membership}{Maximum number of memberships used when memberships are automatically defined.}
 
-\item{Fuzzy}{Whether or not a hiearchical integration scheme is used when correcting more than two batches.}
+\item{Fuzzy}{Whether or not a fuzzy logic join is used on the local correction vectors.}
 }
 \value{
 A list containing the corrected batch as a matrix and correction data
 }
 \description{
 Function to correct batch effect over two batches
+}
+\details{
+Canek, a new non-linear/linear hybrid method for batch-effect correction that couples identification of similar cells
+ between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
+
+ A non-linear correction is performed by using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
+}
+\examples{
+x <- SimBatches[[1]]
+y <- SimBatches[[2]]
+z <- Canek:::Correct_Batch(x,y)
+Corrected <- z$`Corrected Query Batch`
+
+Uncorrected_PCA <- prcomp(t(cbind(x,y)))
+plot(Uncorrected_PCA$x[,1:2])
+Corrected_PCA <- prcomp(t(cbind(x,z$`Corrected Query Batch`)))
+plot(Corrected_PCA$x[,1:2])
+
 }

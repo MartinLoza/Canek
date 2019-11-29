@@ -16,6 +16,21 @@
 #' @param Fuzzy Whether or not a fuzzy logic join is used on the local correction vectors.
 #' @param Hierarchical Whether or not a hiearchical integration scheme is used when correcting more than two batches.
 #'
+#' @details Correct_Batches is non-linear/linear hybrid method for single-cell batch-effect correction that couples identification of similar cells
+#'  between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
+#'
+#'  A non-linear correction is performed using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
+#'
+#' @examples
+#' Batches <- SimBatches
+#' z <- Correct_Batches(Batches)
+#' Corrected <- z$`Batches Integrated`
+#'
+#' Uncorrected_PCA <- prcomp(t(cbind(x,y)))
+#' plot(Uncorrected_PCA$x[,1:2])
+#' Corrected_PCA <- prcomp(t(z$`Corrected Query Batch`))
+#' plot(Corrected_PCA$x[,1:2])
+#'
 #' @return A list containing the integrated datasets as matrix and the correction data .
 #' @export
 #'
@@ -163,10 +178,27 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @param PCA Whether or not MNNs pairs are found under a principal components representation.
 #' @param Dimensions PCA dimensions used to find MNNs pairs.
 #' @param Max_Membership Maximum number of memberships used when memberships are automatically defined.
-#' @param Fuzzy Whether or not a hiearchical integration scheme is used when correcting more than two batches.
+#' @param Fuzzy Whether or not a fuzzy logic join is used on the local correction vectors.
+#'
+#' @details Canek, a new non-linear/linear hybrid method for batch-effect correction that couples identification of similar cells
+#'  between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
+#'
+#'  A non-linear correction is performed by using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
+#'
+#' @examples
+#' x <- SimBatches[[1]]
+#' y <- SimBatches[[2]]
+#' z <- Canek:::Correct_Batch(x,y)
+#' Corrected <- z$`Corrected Query Batch`
+#'
+#' Uncorrected_PCA <- prcomp(t(cbind(x,y)))
+#' plot(Uncorrected_PCA$x[,1:2])
+#' Corrected_PCA <- prcomp(t(cbind(x,z$`Corrected Query Batch`)))
+#' plot(Corrected_PCA$x[,1:2])
 #'
 #' @return A list containing the corrected batch as a matrix and correction data
 #' @export
+#'
 #'
 Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types = "Surprise-me",
                           Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
