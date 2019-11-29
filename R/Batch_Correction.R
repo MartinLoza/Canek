@@ -207,10 +207,10 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
     if ( Num_Memberships > 1 ){
       warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
       B1_Selected <- B1
-    }else{
+    } else{
       B1_Selected <- B1[,Cells_Index_Reference]
     }
-  }else{
+  } else{
     B1_Selected <- B1
   }
 
@@ -232,21 +232,24 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
 
   #Setting the Number of Clusters
   if(is.null(Num_Clusters)){
-    if(Similar_Cells == "High"){
-      Num_Clusters <- 1
-      if(is.null(Sampling))
-        Sampling <- TRUE
-    }else if(Similar_Cells == "Very Low"){
-      #Num_Clusters <- floor(B2_Selected_Num_Cells/200)
-      Num_Clusters <- 100
+    if(Similar_Cells == "Low"){
+      if(B2_Selected_Num_Cells > 100){
+        Num_Clusters <- 100
+      }else{
+        Num_Clusters <- 10
+      }
       if(is.null(Sampling))
         Sampling <- FALSE
-    }else{
-      if(Similar_Cells != "Low")
-        warning('\nWarning: Similar_Cells set value not recognized. Using "Low instead', call. = TRUE)
+    }else if(Similar_Cells == "Medium"){
       Num_Clusters <- 3
       if(is.null(Sampling))
         Sampling <- FALSE
+    }else{
+      if(Similar_Cells != "High")
+          warning('\nWarning: Similar_Cells set value not recognized. Using "High" instead', call. = TRUE)
+      Num_Clusters <- 1
+      if(is.null(Sampling))
+        Sampling <- TRUE
     }
   }
 
