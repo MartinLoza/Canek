@@ -317,7 +317,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
    if( Num_Clusters != 1 ){
 
      if (length(Membership_Pairs)>20){
-        Pairs_Select <- Pairs_Selection(B1 = B1_Selected, B2 = B2_Membership, Pairs = Membership_Pairs, Num_Clusters = Num_Clusters)
+        Pairs_Select <- Pairs_Selection(B1 = t(PCA_B1), B2 = t(PCA_B2), Pairs = Membership_Pairs, Num_Clusters = Num_Clusters)
         Selected_Pairs <- Pairs_Select[['Selected Pairs']]
         cat( paste( '\n\tNumber of selected pairs:', nrow(Selected_Pairs) ) )
       }else {
