@@ -22,13 +22,13 @@
 #'  A non-linear correction is performed using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
 #'
 #' @examples
-#' Batches <- SimBatches
+#' Batches <- SimBatches$Batches
 #' z <- Correct_Batches(Batches)
 #' Corrected <- z$`Batches Integrated`
 #'
-#' Uncorrected_PCA <- prcomp(t(cbind(x,y)))
+#' Uncorrected_PCA <- prcomp(t(cbind(Batches[[1]], Batches[[2]])))
 #' plot(Uncorrected_PCA$x[,1:2])
-#' Corrected_PCA <- prcomp(t(z$`Corrected Query Batch`))
+#' Corrected_PCA <- prcomp(t(z$`Batches Integrated`))
 #' plot(Corrected_PCA$x[,1:2])
 #'
 #' @return A list containing the integrated datasets as matrix and the correction data .
@@ -186,8 +186,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #'  A non-linear correction is performed by using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
 #'
 #' @examples
-#' x <- SimBatches[[1]]
-#' y <- SimBatches[[2]]
+#' x <- SimBatches$Batches[[1]]
+#' y <- SimBatches$Batches[[2]]
 #' z <- Canek:::Correct_Batch(x,y)
 #' Corrected <- z$`Corrected Query Batch`
 #'
