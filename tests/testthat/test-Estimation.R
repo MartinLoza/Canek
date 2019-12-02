@@ -2,31 +2,20 @@ context("test-Estimation")
 
 set.seed(0)
 
-Batches <- SimBatches
-z <- Correct_Batches(Batches)
-M1_Data <- z$`B1/B2`$`Correction Data`$`Membership Data`$`Membership Correction Data`$`Membership 1`
-M2_Data <- z$`B1/B2`$`Correction Data`$`Membership Data`$`Membership Correction Data`$`Membership 2`
-M3_Data <- z$`B1/B2`$`Correction Data`$`Membership Data`$`Membership Correction Data`$`Membership 3`
+Batches <- SimBatches$Batches
+Pairs <- SimBatches$Pairs
+z <- Canek:::EKF_BE(B1 = Batches[[1]], B2 = Batches[[2]], Pairs = Pairs, Sampling = TRUE)
 
 test_that("Estimation works", {
-  expect_false(is.null(M1_Data) || is.null(M2_Data) || is.null(M3_Data) )
-  expect_true( (length(M1_Data) == 4) &&  (length(M2_Data) == 4) &&  (length(M3_Data) == 4) )
-  expect_equal( names(M1_Data), c("Cells Index", "Pairs Selection Data", "Sampled MNN Pairs", "Correction Vector"  ) )
-  expect_equal( names(M2_Data), c("Cells Index", "Pairs Selection Data", "Sampled MNN Pairs", "Correction Vector"  ) )
-  expect_equal( names(M3_Data), c("Cells Index", "Pairs Selection Data", "Sampled MNN Pairs", "Correction Vector"  ) )
+  expect_false(is.null(z))
+  expect_equal( names(z), c("Sampled Pairs", "Correction Vector"))
 
-  expect_false(is.null(M1_Data$`Correction Vector`) || is.null(M2_Data$`Correction Vector`) || is.null(M3_Data$`Correction Vector`) )
-  expect_true( length(M1_Data$`Correction Vector`) == nrow(z$`Batches Integrated`) )
-  expect_true( (length(M1_Data$`Correction Vector`) == length(M2_Data$`Correction Vector`)) &&
-                 (length(M1_Data$`Correction Vector`) == length(M3_Data$`Correction Vector`)) )
+  expect_false(is.null(z$`Correction Vector`))
+  expect_true(length(z$`Correction Vector`) == nrow(Batches$B1))
+  expect_equal( length( which( is.finite(z$`Correction Vector`))), length(z$`Correction Vector`))
+  expect_equal(z$`Correction Vector`[1], -10.92e-3, tolerance = 1e-4 )
 
-  expect_equal( length( which( is.finite(M1_Data$`Correction Vector`) ) ), length(M1_Data$`Correction Vector`) )
-  expect_equal( length( which( is.finite(M2_Data$`Correction Vector`) ) ), length(M2_Data$`Correction Vector`) )
-  expect_equal( length( which( is.finite(M3_Data$`Correction Vector`) ) ), length(M3_Data$`Correction Vector`) )
-
-  expect_equal( length(which(M1_Data$`Correction Vector` == 0)), length(M1_Data$`Correction Vector`) )
-  expect_equal( M2_Data$`Correction Vector`[1], 48.49e-3, tolerance = 1e-4 )
-  expect_equal( M3_Data$`Correction Vector`[1], -23.89e-3, tolerance = 1e-4 )
-
-
+  expect_equal(ncol(z$`Sampled Pairs`), 2)
+  expect_equal(nrow(z$`Sampled Pairs`), 819)
+  expect_equal(nrow(z$`Sampled Pairs`)/(nrow(Pairs)*0.2), 1.0, tolerance = 1e-3)
 })
