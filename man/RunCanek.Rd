@@ -3,12 +3,15 @@
 \name{RunCanek}
 \alias{RunCanek}
 \alias{RunCanek.Seurat}
+\alias{RunCanek.SingleCellExperiment}
 \alias{RunCanek.list}
 \title{RunCanek}
 \usage{
 RunCanek(x, ...)
 
 \method{RunCanek}{Seurat}(x, batches = NULL, slot = "data", assay = "RNA", ...)
+
+\method{RunCanek}{SingleCellExperiment}(x, batches = NULL, assay = "counts", ...)
 
 \method{RunCanek}{list}(x, ...)
 }

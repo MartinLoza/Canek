@@ -33,6 +33,21 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", ...
   Seurat::DefaultAssay(x) <- "Canek"
 
   Seurat::VariableFeatures(x) <- features
+  x
+}
+
+#' @rdname RunCanek
+#' @export
+RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "counts", ...) {
+  counts <- SummarizedExperiment::assay(x, assay)
+
+  batches <- split(colnames(x), x[[batches]])
+  batches <- lapply(batches, function(batch) {
+    counts[, batch]
+  })
+
+  counts <- RunCanek(batches)
+  SummarizedExperiment::assay(x, "Canek") <- counts[["Batches Integrated"]]
 
   x
 }
