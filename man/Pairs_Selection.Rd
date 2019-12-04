@@ -4,7 +4,7 @@
 \alias{Pairs_Selection}
 \title{Title Pairs_Selection}
 \usage{
-Pairs_Selection(B1, B2, Pairs, Num_Clusters = 1)
+Pairs_Selection(B1, B2, Pairs, Num_Clusters = 1, Verbose = FALSE)
 }
 \arguments{
 \item{B1}{Reference batch single-cell data.}
@@ -14,6 +14,8 @@ Pairs_Selection(B1, B2, Pairs, Num_Clusters = 1)
 \item{Pairs}{A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.}
 
 \item{Num_Clusters}{Number of clusters used to filter pairs.}
+
+\item{Verbose}{Print output.}
 }
 \value{
 A matrix containing the filtered pairs. First column corresponds to query-batch cell indexes.

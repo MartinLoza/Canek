@@ -16,7 +16,8 @@ Correct_Batches(
   Dimensions = 30,
   Max_Membership = 5,
   Fuzzy = TRUE,
-  Hierarchical = TRUE
+  Hierarchical = TRUE,
+  Verbose = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ Correct_Batches(
 \item{Fuzzy}{Whether or not a fuzzy logic join is used on the local correction vectors.}
 
 \item{Hierarchical}{Whether or not a hiearchical integration scheme is used when correcting more than two batches.}
+
+\item{Verbose}{Print output}
 }
 \value{
 A list containing the integrated datasets as matrix and the correction data .

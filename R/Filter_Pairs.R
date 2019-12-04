@@ -8,6 +8,7 @@
 #' @param B2 Query's batch single-cell data.
 #' @param Pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
 #' @param Num_Clusters Number of clusters used to filter pairs.
+#' @param Verbose Print output.
 #'
 #' @return A matrix containing the filtered pairs. First column corresponds to query-batch cell indexes.
 #'
@@ -15,10 +16,13 @@
 #'  The pairs are selected by clustering the query batch and analyzing the mean distance of pair cells on each cluster.
 #'  The pairs of the cluster with minimum mean distance are returned.
 #'
-Pairs_Selection <- function(B1,B2, Pairs, Num_Clusters = 1){
+Pairs_Selection <- function(B1,B2, Pairs, Num_Clusters = 1, Verbose = FALSE){
 
-  cat("\n\nSelecting Pairs by Clusters")
-  cat(paste('\n\tClusters for selecting pairs:',Num_Clusters))
+  if(Verbose){
+    cat("\n\nSelecting Pairs by Clusters")
+    cat(paste('\n\tClusters for selecting pairs:',Num_Clusters))
+  }
+
   #Initialization of varibles for clustering and selection of cell pairs
   Mu <- matrix(0L, nrow = Num_Clusters, ncol = 1)
   SD <- matrix(0L, nrow = Num_Clusters, ncol = 1)

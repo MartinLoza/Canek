@@ -19,7 +19,8 @@ Correct_Batch(
   PCA = TRUE,
   Dimensions = 30,
   Max_Membership = 5,
-  Fuzzy = TRUE
+  Fuzzy = TRUE,
+  Verbose = FALSE
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ Correct_Batch(
 \item{Max_Membership}{Maximum number of memberships used when memberships are automatically defined.}
 
 \item{Fuzzy}{Whether or not a fuzzy logic join is used on the local correction vectors.}
+
+\item{Verbose}{Print output}
 }
 \value{
 A list containing the corrected batch as a matrix and correction data

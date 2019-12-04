@@ -7,7 +7,8 @@
 Fuzzy(
   Cluster_Membership = NULL,
   Cells_PCA = NULL,
-  Correction_Memberships = NULL
+  Correction_Memberships = NULL,
+  Verbose = FALSE
 )
 }
 \arguments{
@@ -17,6 +18,8 @@ Fuzzy(
 
 \item{Correction_Memberships}{Matrix containing the initial membership assignment.
 Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.}
+
+\item{Verbose}{Print output.#'}
 }
 \description{
 Function to score cell's memberships by fuzzy logic
@@ -24,5 +27,5 @@ Function to score cell's memberships by fuzzy logic
 \details{
 This function stablishes the fuzzification for the cells' membership.
  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
-  for each of the edges of the MST.
+  for each of the edges of the MST.#'
 }

@@ -10,6 +10,7 @@
 #' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs samples used on the estimation process.
 #' @param Gain Gain used when updating the estimated values.
+#' @param Verbose Print output.
 #'
 #' @return A list containing the estimated correction vector and MNNs pair samples used on the estimation process.
 #' The length of the correction vector is equal to the number of genes.
@@ -17,7 +18,7 @@
 #' @details B1 is used as the reference batch and B2 is used as the query batch.
 #' Input batches need to have the same number of genes.
 #'
-EKF_BE_old <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1){
+EKF_BE_old <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1, Verbose = FALSE){
 
   #INIT
   Epochs <- 1
@@ -52,7 +53,9 @@ EKF_BE_old <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0
     Epochs <- ceiling(Number_Samples/Num_Pairs)
     Sampling <- FALSE
     warning('\nWarning: Number of pairs is lower than number of samples', call. = TRUE)
-    cat(paste( "\n\tNumber of epochs: ", Epochs ))
+
+    if(Verbose)
+      cat(paste( "\n\tNumber of epochs: ", Epochs ))
   }
 
   if (Sampling) {
@@ -63,7 +66,9 @@ EKF_BE_old <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0
     Number_Samples <- Num_Pairs
     Samples <- Pairs
   }
-  cat(paste( '\n\tNumber of pairs used for the estimation:', Number_Samples ))
+
+  if(Verbose)
+    cat(paste( '\n\tNumber of pairs used for the estimation:', Number_Samples ))
 
   ## INIT VARIABLES
   Number_Samples_Epoch <- Number_Samples*Epochs
@@ -96,11 +101,13 @@ EKF_BE_old <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0
     #Gene to analize
     Gene <- i
 
-    if (Gene == 1){
-      cat( paste( "\n\tEstimating Correction Vector. Progress:", 0, "%" ) )
-    }else{
-      if(mod(Gene,Progress) == 0){
-        cat( paste( "\r\tEstimating Correction Vector. Progress:", (Gene/Progress*10) , "%" ) )
+    if(Verbose){
+      if (Gene == 1){
+        cat( paste( "\n\tEstimating Correction Vector. Progress:", 0, "%" ) )
+      }else{
+        if(mod(Gene,Progress) == 0){
+          cat( paste( "\r\tEstimating Correction Vector. Progress:", (Gene/Progress*10) , "%" ) )
+        }
       }
     }
 
@@ -143,7 +150,7 @@ EKF_BE_old <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0
 }
 
 
-EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1){
+EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1, Verbose = FALSE){
 
   #INIT
   Epochs <- 1
@@ -178,7 +185,9 @@ EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1){
     Epochs <- ceiling(Number_Samples/Num_Pairs)
     Sampling <- FALSE
     warning('\nWarning: Number of pairs is lower than number of samples', call. = TRUE)
-    cat(paste( "\n\tNumber of epochs: ", Epochs ))
+
+    if(Verbose)
+      cat(paste( "\n\tNumber of epochs: ", Epochs ))
   }
 
   if (Sampling) {
@@ -189,7 +198,9 @@ EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1){
     Number_Samples <- Num_Pairs
     Samples <- Pairs
   }
-  cat(paste( '\n\tNumber of pairs used for the estimation:', Number_Samples ))
+
+  if(Verbose)
+    cat(paste( '\n\tNumber of pairs used for the estimation:', Number_Samples ))
 
   ## INIT VARIABLES
   Number_Samples_Epoch <- Number_Samples*Epochs

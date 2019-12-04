@@ -6,14 +6,14 @@
 #' @param Cluster_Membership Memberships' clustering data.
 #' @param Cells_PCA PCA representation of the cells.
 #' @param Correction_Memberships Matrix containing the initial membership assignment.
-#'  Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.
+#' Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.
+#' @param Verbose Print output.
 #'
 #' @details This function stablishes the fuzzification for the cells' membership.
 #'  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
-#'   for each of the edges of the MST.
+#'   for each of the edges of the MST.#'
 #'
-#'
-Fuzzy <- function(Cluster_Membership = NULL, Cells_PCA = NULL, Correction_Memberships = NULL){
+Fuzzy <- function(Cluster_Membership = NULL, Cells_PCA = NULL, Correction_Memberships = NULL, Verbose = FALSE){
 
   #INIT
   Num_Cells <- nrow(Cells_PCA)
@@ -25,14 +25,18 @@ Fuzzy <- function(Cluster_Membership = NULL, Cells_PCA = NULL, Correction_Member
 
 
   # Create Minimum spanning tree (MST) by using centers of Memberships as nodes
-  cat( '\n\tObtaining Minimum Spanning Tree' )
+  if(Verbose)
+    cat( '\n\tObtaining Minimum Spanning Tree' )
+
   Mst <- mst(dist( Cluster_Membership$centers[,1:PCA_Max] ) )  #TODO: If possible change to higher dimensions
 
   #Get edges from MST
   Edges <- Get_Edges(Mst)
 
   #Fuzzy process
-  cat('\n\tFuzzificating cells from each edge')
+  if(Verbose)
+    cat('\n\tFuzzificating cells from each edge')
+
   for(Edge in 1:nrow(Edges)){
 
 

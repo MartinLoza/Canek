@@ -15,6 +15,7 @@
 #' @param Max_Membership Maximum number of memberships used when memberships are automatically defined.
 #' @param Fuzzy Whether or not a fuzzy logic join is used on the local correction vectors.
 #' @param Hierarchical Whether or not a hiearchical integration scheme is used when correcting more than two batches.
+#' @param Verbose Print output
 #'
 #' @details Correct_Batches is non-linear/linear hybrid method for single-cell batch-effect correction that couples identification of similar cells
 #'  between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
@@ -38,9 +39,10 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                             Number_Samples = NULL, k_Neighbors = 20, PCA = TRUE,
                             Dimensions = 30, Max_Membership = 5, Fuzzy = TRUE,
-                            Hierarchical = TRUE ){
+                            Hierarchical = TRUE, Verbose = FALSE ){
 
-  tic("\nTotal correction time ")
+  if(Verbose)
+    tic("\nTotal correction time ")
 
   #Init
   Names_Batches <- names(Batches)
@@ -99,7 +101,9 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
         Ref <- i
         Names_Batches <- names(Batches)
 
-        cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
+        if(Verbose)
+          cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
+
         Correction <- Correct_Batch(Reference_Batch = Batches[[Ref]], Query_Batch = Batches[[Query]],
                                     Query_Batch_Cell_Types = Query_Batch_Cell_Types,
                                     Similar_Cells = Similar_Cells, Num_Clusters = Num_Clusters,  Sampling = Sampling,
@@ -134,12 +138,13 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       Ref <- Batches[[1]]
       Query <- Batches[[i]]
 
-      cat(paste('\nINTEGRATING', Names_Batches[i],"INTO", Names_Batches[1],"\n", sep = " ") )
+      if(Verbose)
+        cat(paste('\nINTEGRATING', Names_Batches[i],"INTO", Names_Batches[1],"\n", sep = " ") )
 
       Correction <- Correct_Batch(Reference_Batch = Ref, Query_Batch = Query, Query_Batch_Cell_Types = Query_Batch_Cell_Types,
                                   Similar_Cells = Similar_Cells, Num_Clusters = Num_Clusters,  Sampling = Sampling,
                                   Number_Samples = Number_Samples, k_Neighbors = k_Neighbors, PCA = PCA,
-                                  Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy)
+                                  Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose)
 
       New_Name <- paste(Names_Batches[1],Names_Batches[i],sep = "/")
       Corrected_Batches[[New_Name]] <- Correction
@@ -154,7 +159,9 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
     Corrected_Batches[["Batches Integrated"]] <- Batches[[1]]
   }
 
-  toc()
+  if(Verbose)
+    toc()
+
   return(Corrected_Batches)
 }
 
@@ -179,6 +186,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @param Dimensions PCA dimensions used to find MNNs pairs.
 #' @param Max_Membership Maximum number of memberships used when memberships are automatically defined.
 #' @param Fuzzy Whether or not a fuzzy logic join is used on the local correction vectors.
+#' @param Verbose Print output
 #'
 #' @details Canek, a new non-linear/linear hybrid method for batch-effect correction that couples identification of similar cells
 #'  between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
@@ -204,9 +212,10 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
                           Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                           Number_Samples = NULL, Pairs = NULL, Cells_Index_Query = NULL,
                           Cells_Index_Reference = NULL, k_Neighbors = 20, PCA = TRUE,
-                          Dimensions = 30,   Max_Membership = 5, Fuzzy = TRUE){
+                          Dimensions = 30,   Max_Membership = 5, Fuzzy = TRUE, Verbose = FALSE){
 
-  tic("\n Correction time")
+  if(Verbose)
+    tic("\n Correction time")
 
   #Check input batches as matrices
   if(!is.matrix(Reference_Batch)){
@@ -295,7 +304,9 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
       PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
       PCA_B2 <- PCA_Batches$x[(B1_Selected_Num_Cells+1):Num_Cells,]
 
-      cat( paste("\n\nFinding mutual nearest neighbors from ", k_Neighbors,"nearest neighbors") )
+      if(Verbose)
+        cat( paste("\n\nFinding mutual nearest neighbors from ", k_Neighbors,"nearest neighbors") )
+
       Pairs <- Get_MNN_Pairs(B1 = t(PCA_B1),B2 = t(PCA_B2),  k_Neighbors = k_Neighbors)
 
     }else{
@@ -305,11 +316,13 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
     Pairs = Pairs$Pairs
   }
 
- cat(paste( '\n\tNumber of MNN pairs found:', nrow(Pairs) ))
+ if(Verbose)
+  cat(paste( '\n\tNumber of MNN pairs found:', nrow(Pairs) ))
 
  if( is.null(Num_Memberships) ){
 
-   cat("\n\nFinding number of memberships")
+   if(Verbose)
+    cat("\n\nFinding number of memberships")
 
    if( !exists("PCA_B2") ){
      PCA_B2 <- prcomp_irlba( t(B2_Selected) )
@@ -324,7 +337,9 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
 
    Num_Memberships <- pamk( PCA_B2[,1:3], krange = 2:Max_Membership, usepam = usepam )
    Num_Memberships <- Num_Memberships$nc
-   cat(paste('\n\tNumber of memberships found:', Num_Memberships) )
+
+   if(Verbose)
+    cat(paste('\n\tNumber of memberships found:', Num_Memberships) )
  }
 
  #Cluster in memberships
@@ -335,7 +350,8 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
 
  for(Membership in 1:Num_Memberships){
 
-   cat(paste('\n\nAnalyzing Membership ', Membership) )
+   if(Verbose)
+    cat(paste('\n\nAnalyzing Membership ', Membership) )
 
    #Membership cell index
    Membership_Cells_Index <- which(Cluster_Membership$cluster == Membership)
@@ -358,9 +374,11 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
    if( Num_Clusters != 1 ){
 
      if (length(Membership_Pairs)>20){
-        Pairs_Select <- Pairs_Selection(B1 = t(PCA_B1), B2 = t(PCA_B2), Pairs = Membership_Pairs, Num_Clusters = Num_Clusters)
+        Pairs_Select <- Pairs_Selection(B1 = t(PCA_B1), B2 = t(PCA_B2), Pairs = Membership_Pairs, Num_Clusters = Num_Clusters, Verbose = Verbose)
         Selected_Pairs <- Pairs_Select[['Selected Pairs']]
-        cat( paste( '\n\tNumber of selected pairs:', nrow(Selected_Pairs) ) )
+
+        if(Verbose)
+          cat( paste( '\n\tNumber of selected pairs:', nrow(Selected_Pairs) ) )
       }else {
         warning('\nWarning: Not enough pairs found for this Membership. No pairs selection is performed', call. = TRUE)
         Selected_Pairs <- Membership_Pairs
@@ -377,9 +395,11 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
       #########################################################
       ###Extended Kalman Filter to estimate the batch effect###
       #########################################################
-      cat("\n\n\tEXTENDED KALMAN FILTER")
+      if(Verbose)
+        cat("\n\n\tEXTENDED KALMAN FILTER")
+
       Estimation_Data <- EKF_BE(B1 = B1_Selected,B2 = B2_Selected, Pairs = Selected_Pairs, Sampling = Sampling,
-                                  Number_Samples = Number_Samples)
+                                  Number_Samples = Number_Samples, Verbose = Verbose)
 
       Correction_Vector <- Estimation_Data[["Correction Vector"]]
 
@@ -420,8 +440,11 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
  #Fuzzy process and Correction
  if(Fuzzy == TRUE & Num_Memberships > 1 ){
 
-   cat('\n\nFUZZY ')
-   Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership, Cells_PCA = PCA_B2, Correction_Memberships = Correction_Memberships )
+   if(Verbose)
+    cat('\n\nFUZZY ')
+
+   Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership, Cells_PCA = PCA_B2, Correction_Memberships = Correction_Memberships,
+                       Verbose = Verbose)
    B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Fuzzy_Data$`Fuzzy Memberships`) )
 
  }else{
@@ -439,7 +462,8 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
   Corrected_Batches <- list("Reference Batch (B1)" = B1, "Query Batch (B2)" = B2,
                             "Corrected Query Batch"= B2_Corrected, "Correction Data" = Correction_Data )
 
-  toc()
+  if(Verbose)
+    toc()
 
   return(Corrected_Batches)
 }
