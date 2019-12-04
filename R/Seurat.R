@@ -19,8 +19,8 @@ RunCanek <- function(x, ...) {
 #' @rdname RunCanek
 #' @export
 RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", ...) {
-  counts <- GetAssayData(x, slot = slot, assay = assay)
-  features <- VariableFeatures(x)
+  counts <- Seurat::GetAssayData(x, slot = slot, assay = assay)
+  features <- Seurat::VariableFeatures(x)
 
   batches <- split(colnames(x), x[[batches]])
   batches <- lapply(batches, function(batch) {
@@ -28,11 +28,12 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", ...
   })
 
   counts <- RunCanek(batches)
-  integrated <- CreateAssayObject(data = counts[["Batches Integrated"]])
+  integrated <- Seurat::CreateAssayObject(data = counts[["Batches Integrated"]])
   x[["Canek"]] <- integrated
-  DefaultAssay(x) <- "Canek"
+  Seurat::DefaultAssay(x) <- "Canek"
 
-  VariableFeatures(x) <- features
+  Seurat::VariableFeatures(x) <- features
+
   x
 }
 

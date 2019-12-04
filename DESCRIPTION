@@ -20,7 +20,9 @@ Imports:
     ape,
     spdep
 Suggests:
-    testthat
+    testthat,
+    Seurat,
+    SummarizedExperiment
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
