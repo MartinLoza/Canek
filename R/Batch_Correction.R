@@ -316,7 +316,13 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
      PCA_B2 <- PCA_B2$x
    }
 
-   Num_Memberships <- pamk( PCA_B2[,1:3], krange = 2:Max_Membership )
+   if(ncol(B2_Selected) < 2000){
+     usepam <- TRUE
+   }else{
+     usepam <- FALSE
+   }
+
+   Num_Memberships <- pamk( PCA_B2[,1:3], krange = 2:Max_Membership, usepam = usepam )
    Num_Memberships <- Num_Memberships$nc
    cat(paste('\n\tNumber of memberships found:', Num_Memberships) )
  }
