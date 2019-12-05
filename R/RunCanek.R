@@ -27,7 +27,7 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", ...
     counts[, batch]
   })
 
-  counts <- RunCanek(batches)
+  counts <- RunCanek(batches, ...)
   integrated <- Seurat::CreateAssayObject(data = counts[["Batches Integrated"]])
   x[["Canek"]] <- integrated
   Seurat::DefaultAssay(x) <- "Canek"
@@ -46,7 +46,7 @@ RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "counts", .
     counts[, batch]
   })
 
-  counts <- RunCanek(batches)
+  counts <- RunCanek(batches, ...)
   SummarizedExperiment::assay(x, "Canek") <- counts[["Batches Integrated"]]
 
   x
@@ -55,5 +55,5 @@ RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "counts", .
 #' @rdname RunCanek
 #' @export
 RunCanek.list <- function(x, ...) {
-  Correct_Batches(x)
+  Correct_Batches(x, ...)
 }

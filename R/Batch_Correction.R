@@ -16,6 +16,7 @@
 #' @param Fuzzy Whether or not a fuzzy logic join is used on the local correction vectors.
 #' @param Hierarchical Whether or not a hiearchical integration scheme is used when correcting more than two batches.
 #' @param Verbose Print output
+#' @param ... pass down methods from RunCanek().
 #'
 #' @details Correct_Batches is non-linear/linear hybrid method for single-cell batch-effect correction that couples identification of similar cells
 #'  between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
@@ -39,7 +40,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                             Number_Samples = NULL, k_Neighbors = 20, PCA = TRUE,
                             Dimensions = 30, Max_Membership = 5, Fuzzy = TRUE,
-                            Hierarchical = TRUE, Verbose = FALSE ){
+                            Hierarchical = TRUE, Verbose = FALSE, ...){
 
   if(Verbose)
     tic("\nTotal correction time ")

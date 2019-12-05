@@ -17,7 +17,8 @@ Correct_Batches(
   Max_Membership = 5,
   Fuzzy = TRUE,
   Hierarchical = TRUE,
-  Verbose = FALSE
+  Verbose = FALSE,
+  ...
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ Correct_Batches(
 \item{Hierarchical}{Whether or not a hiearchical integration scheme is used when correcting more than two batches.}
 
 \item{Verbose}{Print output}
+
+\item{...}{pass down methods from RunCanek().}
 }
 \value{
 A list containing the integrated datasets as matrix and the correction data .
