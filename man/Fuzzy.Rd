@@ -19,7 +19,7 @@ Fuzzy(
 \item{Correction_Memberships}{Matrix containing the initial membership assignment.
 Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.}
 
-\item{Verbose}{Print output.#'}
+\item{Verbose}{Print output.}
 }
 \description{
 Function to score cell's memberships by fuzzy logic
