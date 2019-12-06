@@ -295,10 +295,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
     }
   }
 
-  if( !is.null(Pairs) ){
-    Pairs <- Pairs
-  }else{
-
+  if(is.null(Pairs) ) {
     if(PCA == TRUE){
 
       PCA_Batches <- prcomp_irlba( t(cbind(B1_Selected, B2_Selected)), n = Dimensions)
@@ -314,7 +311,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
       Pairs <- Get_MNN_Pairs(B1 = B1_Selected, B2 = B2_Selected , k_Neighbors = k_Neighbors)
     }
 
-    Pairs = Pairs$Pairs
+    Pairs <- Pairs$Pairs
   }
 
  if(Verbose)
