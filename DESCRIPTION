@@ -22,8 +22,11 @@ Imports:
 Suggests:
     testthat,
     Seurat,
-    SummarizedExperiment
+    SummarizedExperiment,
+    knitr,
+    rmarkdown
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
+VignetteBuilder: knitr

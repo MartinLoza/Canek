@@ -1,0 +1,70 @@
+---
+title: "Run Canek on Seurat objects"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Use Canek with Seurat}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Canek)
+library(Seurat)
+```
+
+# Create Seurat object
+
+```{r}
+x <- lapply(names(SimBatches$Batches), function(batch) {
+  CreateSeuratObject(SimBatches$Batches[[batch]], project = batch) 
+})
+x <- merge(x[[1]], x[[2]])
+x
+```
+
+
+```{r}
+table(x$orig.ident)
+```
+
+
+
+```{r}
+x <- NormalizeData(x)
+```
+
+# Run Canek
+
+We pass the column containing the batch information.
+
+```{r}
+x <- RunCanek(x, "orig.ident")
+```
+
+
+```{r}
+x <- ScaleData(x)
+```
+
+```{r}
+x <- FindVariableFeatures(x, method = "mean.var.plot")
+VariableFeaturePlot(x)
+```
+
+
+```{r}
+x <- RunPCA(x)
+```
+
+
+```{r}
+DimPlot(x)
+```
+
