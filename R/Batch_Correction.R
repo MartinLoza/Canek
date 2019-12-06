@@ -301,7 +301,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
 
     if(PCA == TRUE){
 
-      PCA_Batches <- prcomp_irlba( rbind(t(B1_Selected), t(B2_Selected) ), n = Dimensions)
+      PCA_Batches <- prcomp_irlba( t(cbind(B1_Selected, B2_Selected)), n = Dimensions)
       PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
       PCA_B2 <- PCA_Batches$x[(B1_Selected_Num_Cells+1):Num_Cells,]
 
