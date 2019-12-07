@@ -51,7 +51,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
   Corrected_Batches <- list()
   Batches_Integrated <- NULL
   Order <- NULL
-  Was_Integrated <- matrix( rep(FALSE, Num_Batches ), ncol = 1 )
+  Was_Integrated <- matrix(FALSE, nrow = Num_Batches, ncol = 1 )
   rownames(Was_Integrated) <- c( as.character(1:nrow(Was_Integrated)) )
 
   #Check input batches as matrices
@@ -344,7 +344,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
  Cluster_Membership <- kmeans(PCA_B2[,1:2],Num_Memberships)
 
  #INIT Correction Matrix
- Correction_Matrix <- matrix(rep(0,Num_genes*Num_Memberships), ncol = Num_Memberships)
+ Correction_Matrix <- matrix(0, nrow = Num_genes, ncol = Num_Memberships)
 
  for(Membership in 1:Num_Memberships){
 
@@ -420,7 +420,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
  #################
 
  ####INIT####
- Correction_Memberships <- matrix( rep(0, B2_Selected_Num_Cells*Num_Memberships), ncol = Num_Memberships )
+ Correction_Memberships <- matrix(0, nrow = B2_Selected_Num_Cells, ncol = Num_Memberships )
 
  #Set column names according to number of memberships
  Name_Col <- NULL
