@@ -390,7 +390,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
       Pairs_Select <- NULL
    }
 
-   if ( length(Selected_Pairs) > 20 ){
+   if ( length(Selected_Pairs) > 40 ){
 
       #########################################################
       ###Extended Kalman Filter to estimate the batch effect###

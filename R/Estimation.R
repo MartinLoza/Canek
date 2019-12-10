@@ -31,7 +31,7 @@ EKF_BE_old <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0
   Progress <- floor(Progress)
   Min_Samples <- 300
 
-  if(Num_Pairs < 10){
+  if(Num_Pairs < 20){
     Sampling <- FALSE
     warning('\nWarning: Low number of pairs', call. = TRUE)
   }
