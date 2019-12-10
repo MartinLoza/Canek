@@ -2,8 +2,8 @@ context("test-Estimation")
 
 set.seed(0)
 
-Batches <- SimBatches$Batches
-Pairs <- SimBatches$Pairs
+Batches <- SimBatches$batches
+Pairs <- SimBatches$pairs
 z <- Canek:::EKF_BE(B1 = Batches[[1]], B2 = Batches[[2]], Pairs = Pairs, Sampling = TRUE)
 
 test_that("Estimation works", {

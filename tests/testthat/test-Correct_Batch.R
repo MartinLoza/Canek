@@ -3,8 +3,8 @@ context("test-Correct_Batch")
 set.seed(0)
 #x <- matrix(sample(100, 50*30, replace = TRUE), ncol = 50)
 #y <- matrix(sample(100, 50*30, replace = TRUE), ncol = 50)
-x <- SimBatches$Batches[[1]]
-y <- SimBatches$Batches[[2]]
+x <- SimBatches$batches[[1]]
+y <- SimBatches$batches[[2]]
 z <- Canek:::Correct_Batch(x,y)
 
 test_that("Correct_Batch works", {

@@ -22,8 +22,8 @@ library(Seurat)
 # Create Seurat object
 
 ```{r}
-x <- lapply(names(SimBatches$Batches), function(batch) {
-  CreateSeuratObject(SimBatches$Batches[[batch]], project = batch) 
+x <- lapply(names(SimBatches$batches), function(batch) {
+  CreateSeuratObject(SimBatches$batches[[batch]], project = batch) 
 })
 x <- merge(x[[1]], x[[2]])
 x

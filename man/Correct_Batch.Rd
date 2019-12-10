@@ -69,8 +69,8 @@ Canek, a new non-linear/linear hybrid method for batch-effect correction that co
  A non-linear correction is performed by using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
 }
 \examples{
-x <- SimBatches$Batches[[1]]
-y <- SimBatches$Batches[[2]]
+x <- SimBatches$batches[[1]]
+y <- SimBatches$batches[[2]]
 z <- Canek:::Correct_Batch(x,y)
 Corrected <- z$`Corrected Query Batch`
 

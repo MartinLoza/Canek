@@ -2,7 +2,7 @@ context("test-Filter_Pairs")
 
 set.seed(0)
 
-Batches <- SimBatches$Batches
+Batches <- SimBatches$batches
 z <- Correct_Batches(Batches, Num_Clusters = 3, Sampling = FALSE)
 M2_Pairs_Data <- z$`B1/B2`$`Correction Data`$`Membership Data`$`Membership Correction Data`$`Membership 2`$`Pairs Selection Data`
 M3_Pairs_Data <- z$`B1/B2`$`Correction Data`$`Membership Data`$`Membership Correction Data`$`Membership 3`$`Pairs Selection Data`

@@ -63,7 +63,7 @@ Correct_Batches is non-linear/linear hybrid method for single-cell batch-effect 
  A non-linear correction is performed using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
 }
 \examples{
-Batches <- SimBatches$Batches
+Batches <- SimBatches$batches
 z <- Correct_Batches(Batches)
 Corrected <- z$`Batches Integrated`
 
