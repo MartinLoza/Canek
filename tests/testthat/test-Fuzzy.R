@@ -2,7 +2,7 @@ context("test-Fuzzy")
 
 set.seed(0)
 
-Batches <- SimBatches$Batches
+Batches <- SimBatches$batches
 z <- Correct_Batches(Batches)
 Fuzzy_Data <- z$`B1/B2`$`Correction Data`$`Fuzzy Data`
 

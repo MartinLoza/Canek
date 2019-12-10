@@ -2,7 +2,7 @@ context("test-Correct_Batches")
 
 set.seed(0)
 
-Batches <- SimBatches$Batches
+Batches <- SimBatches$batches
 z <- Correct_Batches(Batches)
 
 test_that("Correct_Batches works", {
