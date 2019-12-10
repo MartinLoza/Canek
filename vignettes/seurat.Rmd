@@ -26,6 +26,7 @@ x <- lapply(names(SimBatches$batches), function(batch) {
   CreateSeuratObject(SimBatches$batches[[batch]], project = batch) 
 })
 x <- merge(x[[1]], x[[2]])
+x[["cell_type"]] <- SimBatches$cell_types
 x
 ```
 
@@ -38,8 +39,23 @@ table(x$orig.ident)
 
 ```{r}
 x <- NormalizeData(x)
+x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
+VariableFeaturePlot(x)
 ```
 
+```{r}
+x <- ScaleData(x)
+```
+
+```{r}
+x <- RunPCA(x)
+```
+
+##PCA plot before correction
+```{r}
+DimPlot(x, group.by = "orig.ident")
+DimPlot(x, group.by = "cell_type")
+```
 # Run Canek
 
 We pass the column containing the batch information.
@@ -54,7 +70,7 @@ x <- ScaleData(x)
 ```
 
 ```{r}
-x <- FindVariableFeatures(x, method = "mean.var.plot")
+x <- FindVariableFeatures(x, selection.method = "mean.var.plot", nfeatures = 500)
 VariableFeaturePlot(x)
 ```
 
@@ -63,8 +79,9 @@ VariableFeaturePlot(x)
 x <- RunPCA(x)
 ```
 
-
+##PCA plot after correction
 ```{r}
-DimPlot(x)
+DimPlot(x, group.by = "orig.ident")
+DimPlot(x, group.by = "cell_type")
 ```
 
