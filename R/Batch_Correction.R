@@ -235,7 +235,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
   Membership_Correction_Data <- list()
   Correction_Matrix <- NULL
   Fuzzy_Data <- NULL
-  Num_Memberships = NULL
+  Num_Memberships <- NULL
 
   if( is.numeric(Query_Batch_Cell_Types) ){
     Num_Memberships <- Query_Batch_Cell_Types
@@ -346,6 +346,8 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
  #INIT Correction Matrix
  Correction_Matrix <- matrix(0, nrow = Num_genes, ncol = Num_Memberships)
 
+ Zero_Correction <- rep(FALSE, Num_Memberships)
+
  for(Membership in 1:Num_Memberships){
 
    if(Verbose)
@@ -407,6 +409,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
       warning('\nWarning: Not enough pairs found for this Membership. No correction is performed', call. = TRUE)
       Estimation_Data <- NULL
       Correction_Vector <- Correction_Matrix[,Membership]
+      Zero_Correction[Membership] <- TRUE
     }
 
    Membership_Correction_Data[[paste("Membership", Membership)]] <- list( "Cells Index" = Membership_Cells_Index, "Pairs Selection Data" = Pairs_Select,
@@ -443,13 +446,48 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
 
    Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership, Cells_PCA = PCA_B2, Correction_Memberships = Correction_Memberships,
                        Verbose = Verbose)
-   B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Fuzzy_Data$`Fuzzy Memberships`) )
+   Correction_Memberships <- Fuzzy_Data$`Fuzzy Memberships`
+   #B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Fuzzy_Data$`Fuzzy Memberships`) )
+   MST <- Fuzzy_Data$MST
 
  }else{
-
-   B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships) )
-
+   MST <- mst(dist(Cluster_Membership$centers[,1:2] ) )
+   #B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships) )
  }
+
+ #No Zero Correction Vectors
+ Is_Zero <- which(Zero_Correction == TRUE)
+ if(length(Is_Zero) == Num_Memberships){
+   warning('\nWarning: No correction vectors where found. Consider using a higher number of kNN or using a lower number of clusters to filter pairs', call. = TRUE)
+ }else if( (length(Is_Zero) != 0) ){
+
+   MST <- Fuzzy_Data$MST
+   Cluster_Dist <- as.matrix(dist(Cluster_Membership$centers,upper = TRUE))
+
+   i = 1
+   while(length(Is_Zero) != 0){
+
+     Related_Edges <- MST[Is_Zero[i],]
+     Related <- which(Related_Edges !=0)
+     #names(Related) <- sapply(Related, toString)
+     Related <- which(Cluster_Dist[Is_Zero[i],] == min(Cluster_Dist[Is_Zero[i],Related]))
+
+     #vemos que el que queremos asignar tenga un vector de correccion
+     if(Zero_Correction[Related]== FALSE){
+       #asignamos el vector de correcion
+       Membership_Correction_Data[[Is_Zero[i]]] <- Membership_Correction_Data[[Related]]
+       Correction_Matrix[,Is_Zero[i]] <- Membership_Correction_Data[[Related]]$`Correction Vector`
+       Zero_Correction[Is_Zero[i]] <- FALSE
+       i = 1
+     }else{
+       i = i+1
+     }
+
+     Is_Zero <- which(Zero_Correction == TRUE)
+   }
+ }
+
+ B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships) )
 
  ### Set data lists to return
   Membership_Data <- list("Cluster Membership" = Cluster_Membership, "Membership Correction Data" = Membership_Correction_Data )
