@@ -450,16 +450,18 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
                        Verbose = Verbose)
    Correction_Memberships <- Fuzzy_Data$`Fuzzy Memberships`
    #B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Fuzzy_Data$`Fuzzy Memberships`) )
+   MST <- Fuzzy_Data$MST
 
  }else{
-
+   MST <- mst(dist(Cluster_Membership$centers[,1:2] ) )
    #B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships) )
-
  }
 
  #No Zero Correction Vectors
  Is_Zero <- which(Zero_Correction == TRUE)
- if(length(Is_Zero) != 0){
+ if(length(Is_Zero) == Num_Memberships){
+   warning('\nWarning: No correction vectors where found. Consider using a higher number of kNN or using a lower number of clusters to filter pairs', call. = TRUE)
+ }else if( (length(Is_Zero) != 0) ){
 
    MST <- Fuzzy_Data$MST
    Cluster_Dist <- as.matrix(dist(Cluster_Membership$centers,upper = TRUE))
@@ -483,7 +485,6 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
        i = i+1
      }
 
-     #i = i+1
      Is_Zero <- which(Zero_Correction == TRUE)
    }
  }
