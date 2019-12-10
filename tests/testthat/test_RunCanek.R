@@ -1,7 +1,7 @@
 context("test-RunCanek")
 
-x <- lapply(names(SimBatches$Batches), function(batch) {
-  Seurat::CreateSeuratObject(SimBatches$Batches[[batch]], project = batch)
+x <- lapply(names(SimBatches$batches), function(batch) {
+  Seurat::CreateSeuratObject(SimBatches$batches[[batch]], project = batch)
 })
 x <- merge(x[[1]], x[[2]])
 x <- RunCanek(x, "orig.ident")
