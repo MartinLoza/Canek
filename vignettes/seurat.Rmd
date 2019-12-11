@@ -9,6 +9,8 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.align = "center",
   collapse = TRUE,
   comment = "#>"
 )
