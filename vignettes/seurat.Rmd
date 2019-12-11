@@ -38,26 +38,30 @@ table(x$orig.ident)
 ```
 
 
-
 ```{r}
 x <- NormalizeData(x)
 x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
 VariableFeaturePlot(x)
 ```
 
+
 ```{r}
 x <- ScaleData(x)
 ```
+
 
 ```{r}
 x <- RunPCA(x)
 ```
 
-##PCA plot before correction
+
+## PCA plot before correction
+
 ```{r}
 DimPlot(x, group.by = "orig.ident")
 DimPlot(x, group.by = "cell_type")
 ```
+
 # Run Canek
 
 We pass the column containing the batch information.
@@ -81,7 +85,8 @@ VariableFeaturePlot(x)
 x <- RunPCA(x)
 ```
 
-##PCA plot after correction
+## PCA plot after correction
+
 ```{r}
 DimPlot(x, group.by = "orig.ident")
 DimPlot(x, group.by = "cell_type")
