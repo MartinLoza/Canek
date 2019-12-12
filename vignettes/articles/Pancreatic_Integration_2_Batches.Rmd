@@ -23,7 +23,7 @@ library(Seurat)
 library(SeuratData)
 ```
 
-On this example we integrate only two batches (celseq and celseq2). See the vignette "Batch Effect Correction on Pancreatic Cells (multiple batches)" for an example of multiple batches integration. 
+In this example we integrate only two batches (celseq and celseq2). See the vignette "Batch Effect Correction on Pancreatic Cells (multiple batches)" for an example of multiple batches integration. 
 
 ```{r}
 InstallData("panc8")
@@ -32,7 +32,8 @@ x <- x[c("celseq", "celseq2")]
 x <- merge(x[["celseq"]], x[["celseq2"]])
 ```
 
-#Data preprocessing
+# Data preprocessing
+
 ```{r}
 x <- NormalizeData(x)
 x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
