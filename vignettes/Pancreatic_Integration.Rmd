@@ -1,0 +1,96 @@
+---
+title: "Batch Effect Correction on Pancreatic Cells"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Batch Effect Correction on Pancreatic Cells}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r setup}
+library(Canek)
+library(Seurat)
+library(SeuratData)
+```
+
+On this example we integrate only two batches (celseq and celseq2). See the vignette "Batch Effect Correction on Pancreatic Cells (multiple batches)" for an example of multiple batches integration. 
+
+```{r}
+InstallData("panc8")
+x <- SplitObject(panc8, split.by = "tech")
+x <- x[c("celseq", "celseq2")]
+x <- merge(x[["celseq"]], x[["celseq2"]])
+```
+
+#Data preprocessing
+```{r}
+x <- NormalizeData(x)
+x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
+VariableFeaturePlot(x)
+```
+
+```{r}
+table(x$tech)
+```
+
+```{r}
+x <- ScaleData(x)
+```
+
+```{r}
+x <- RunPCA(x)
+x <- RunUMAP(x, reduction = "pca", dims = 1:30)
+```
+
+##UMAP plot before correction
+
+```{r}
+DimPlot(x, group.by = "tech")
+DimPlot(x, group.by = "celltype")
+```
+
+# Run Canek
+
+We pass the column containing the batch information.
+
+```{r}
+x <- RunCanek(x, "tech")
+```
+
+
+```{r}
+x <- ScaleData(x)
+```
+
+```{r}
+x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
+VariableFeaturePlot(x)
+```
+
+```{r}
+x <- RunPCA(x)
+x <- RunUMAP(x, reduction = "pca", dims = 1:30)
+```
+
+##UMAP plot after correction
+
+```{r}
+DimPlot(x, group.by = "tech")
+DimPlot(x, group.by = "celltype")
+```
+
+
+
+
+
+

@@ -22,6 +22,7 @@ Imports:
 Suggests:
     testthat,
     Seurat,
+    SeuratData,
     SummarizedExperiment,
     knitr,
     rmarkdown
