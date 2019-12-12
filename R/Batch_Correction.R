@@ -109,7 +109,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                     Query_Batch_Cell_Types = Query_Batch_Cell_Types,
                                     Similar_Cells = Similar_Cells, Num_Clusters = Num_Clusters,  Sampling = Sampling,
                                     Number_Samples = Number_Samples, k_Neighbors = k_Neighbors, PCA = PCA,
-                                    Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy)
+                                    Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose)
 
 
         New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
