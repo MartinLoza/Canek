@@ -52,7 +52,7 @@ x <- RunPCA(x)
 x <- RunUMAP(x, reduction = "pca", dims = 1:30)
 ```
 
-##UMAP plot before correction
+# UMAP plot before correction
 
 ```{r}
 DimPlot(x, group.by = "tech")
@@ -82,7 +82,7 @@ x <- RunPCA(x)
 x <- RunUMAP(x, reduction = "pca", dims = 1:30)
 ```
 
-##UMAP plot after correction
+# UMAP plot after correction
 
 ```{r}
 DimPlot(x, group.by = "tech")
