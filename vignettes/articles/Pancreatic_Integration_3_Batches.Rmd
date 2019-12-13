@@ -27,12 +27,13 @@ In this example we integrate only two batches (celseq and celseq2). See the vign
 
 ```{r}
 InstallData("panc8")
-x <- SplitObject(panc8, split.by = "tech")
-y <- x[c("smartseq2", "celseq")]
-x <- x[c("celseq2")]
-x<- x[[1]]
-x <- merge(x = x, y = y)
-rm(y)
+```
+
+Select datasets and fix correction order (for this example).
+
+```{r}
+x <- panc8[, panc8$tech %in% c("celseq2", "smartseq2", "celseq")]
+x$tech <- factor(x$tech, c("celseq", "smartseq2", "celseq2"))
 ```
 
 # Data preprocessing
