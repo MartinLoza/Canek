@@ -1,28 +1,3 @@
-##Get_Neighbors##
-#Function to find nearest neighbors
-# INPUT :
-#
-# OUTPUT :
-Get_Neighbors <- function( Crossed_Distances = NULL, B1_NCells = NULL, B2_NCells = NULL, k_Neighbors = 20 ){
-
-  if ( (B2_NCells < k_Neighbors) || (B1_NCells < k_Neighbors) ){
-    stop('Number of cells is lower than k-Neighbors')
-  }
-
-  B1_B2_NN <- NULL
-
-  for (i in 1:B1_NCells) {
-    kpairs <- order(Crossed_Distances[i,1:B2_NCells])
-
-    for (j in 1:k_Neighbors) {
-      B1_B2_NN <- rbind(B1_B2_NN, c(i,kpairs[j]))
-    }
-  }
-
-  colnames(B1_B2_NN) <- c("V1", "V2")
-  return(list("NN vector" = B1_B2_NN))
-}
-
 ##Find_MNN_Pairs##
 #Find MNN pairs given two matrices containing nearest neighbors
 # INPUT :
