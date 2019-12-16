@@ -6,7 +6,7 @@ x <- lapply(names(SimBatches$batches), function(batch) {
 x <- merge(x[[1]], x[[2]])
 x <- RunCanek(x, "orig.ident")
 
-test_that("Correct_Batch works", {
+test_that("RunCanek works", {
   expect_false(is.null(x))
   expect_is(x, "Seurat")
   expect_equal(length(x@assays), 2)
