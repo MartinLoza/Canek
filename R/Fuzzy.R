@@ -155,3 +155,48 @@ Get_Rotation_Angle <- function( PCA_Coordinates = NULL ){
   return(Rotation_Angle)
 
 }
+
+#' Title
+#'
+#' @param MST
+#' @param Cluster
+#' @param Membership_Correction_Data
+#' @param Correction_Matrix
+#' @param Zero_Correction
+#'
+#' @return
+#'
+#'
+#' @examples
+CheckZeroCV <-function(MST = NULL, Cluster_Membership = NULL,
+                       Membership_Correction_Data = NULL, Correction_Matrix = NULL,
+                       Zero_Correction = NULL){
+
+  Is_Zero <- which(Zero_Correction == TRUE)
+  Cluster_Dist <- as.matrix(dist(Cluster_Membership$centers,upper = TRUE))
+
+  i = 1
+  while(length(Is_Zero) != 0){
+
+    Related_Edges <- MST[Is_Zero[i],]
+    Related <- which(Related_Edges !=0)
+    Related <- which(Cluster_Dist[Is_Zero[i],] == min(Cluster_Dist[Is_Zero[i],Related]))
+
+    #vemos que el que queremos asignar tenga un vector de correccion
+    if(Zero_Correction[Related]== FALSE){
+      #asignamos el vector de correcion
+      Membership_Correction_Data[[Is_Zero[i]]] <- Membership_Correction_Data[[Related]]
+      Correction_Matrix[,Is_Zero[i]] <- Membership_Correction_Data[[Related]]$`Correction Vector`
+      Zero_Correction[Is_Zero[i]] <- FALSE
+      i = 1
+    }else{
+      i = i+1
+    }
+
+    Is_Zero <- which(Zero_Correction == TRUE)
+  }
+
+  return(list("Membership_Correction_Data" = Membership_Correction_Data,
+              "Correction_Matrix" = Correction_Matrix))
+}
+

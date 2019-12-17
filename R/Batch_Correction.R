@@ -461,30 +461,35 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
    warning('\nWarning: No correction vectors where found. Consider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
  }else if( (length(Is_Zero) != 0) ){
 
-   MST <- Fuzzy_Data$MST
-   Cluster_Dist <- as.matrix(dist(Cluster_Membership$centers,upper = TRUE))
-
-   i = 1
-   while(length(Is_Zero) != 0){
-
-     Related_Edges <- MST[Is_Zero[i],]
-     Related <- which(Related_Edges !=0)
-     #names(Related) <- sapply(Related, toString)
-     Related <- which(Cluster_Dist[Is_Zero[i],] == min(Cluster_Dist[Is_Zero[i],Related]))
-
-     #vemos que el que queremos asignar tenga un vector de correccion
-     if(Zero_Correction[Related]== FALSE){
-       #asignamos el vector de correcion
-       Membership_Correction_Data[[Is_Zero[i]]] <- Membership_Correction_Data[[Related]]
-       Correction_Matrix[,Is_Zero[i]] <- Membership_Correction_Data[[Related]]$`Correction Vector`
-       Zero_Correction[Is_Zero[i]] <- FALSE
-       i = 1
-     }else{
-       i = i+1
-     }
-
-     Is_Zero <- which(Zero_Correction == TRUE)
-   }
+   No_Zero_CV <- CheckZeroCV(MST = Fuzzy_Data$MST, Cluster = Cluster_Membership,
+                             Membership_Correction_Data = Membership_Correction_Data, Correction_Matrix = Correction_Matrix,
+                             Zero_Correction = Zero_Correction)
+   Membership_Correction_Data <- No_Zero_CV[["Membership_Correction_Data"]]
+   Correction_Matrix <- No_Zero_CV[["Correction_Matrix"]]
+   # MST <- Fuzzy_Data$MST
+   # Cluster_Dist <- as.matrix(dist(Cluster_Membership$centers,upper = TRUE))
+   #
+   # i = 1
+   # while(length(Is_Zero) != 0){
+   #
+   #   Related_Edges <- MST[Is_Zero[i],]
+   #   Related <- which(Related_Edges !=0)
+   #   #names(Related) <- sapply(Related, toString)
+   #   Related <- which(Cluster_Dist[Is_Zero[i],] == min(Cluster_Dist[Is_Zero[i],Related]))
+   #
+   #   #vemos que el que queremos asignar tenga un vector de correccion
+   #   if(Zero_Correction[Related]== FALSE){
+   #     #asignamos el vector de correcion
+   #     Membership_Correction_Data[[Is_Zero[i]]] <- Membership_Correction_Data[[Related]]
+   #     Correction_Matrix[,Is_Zero[i]] <- Membership_Correction_Data[[Related]]$`Correction Vector`
+   #     Zero_Correction[Is_Zero[i]] <- FALSE
+   #     i = 1
+   #   }else{
+   #     i = i+1
+   #   }
+   #
+   #   Is_Zero <- which(Zero_Correction == TRUE)
+   # }
  }
 
  B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships) )
