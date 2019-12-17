@@ -461,7 +461,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
    warning('\nWarning: No correction vectors where found. Consider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
  }else if( (length(Is_Zero) != 0) ){
 
-   No_Zero_CV <- CheckZeroCV(MST = Fuzzy_Data$MST, Cluster = Cluster_Membership,
+   No_Zero_CV <- CheckZeroCV(MST = Fuzzy_Data$MST, Cluster_Membership = Cluster_Membership,
                              Membership_Correction_Data = Membership_Correction_Data, Correction_Matrix = Correction_Matrix,
                              Zero_Correction = Zero_Correction)
    Membership_Correction_Data <- No_Zero_CV[["Membership_Correction_Data"]]

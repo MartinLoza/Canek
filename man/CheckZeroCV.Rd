@@ -2,7 +2,7 @@
 % Please edit documentation in R/Fuzzy.R
 \name{CheckZeroCV}
 \alias{CheckZeroCV}
-\title{Title}
+\title{CheckZeroCV}
 \usage{
 CheckZeroCV(
   MST = NULL,
@@ -13,11 +13,19 @@ CheckZeroCV(
 )
 }
 \arguments{
-\item{Zero_Correction}{}
+\item{MST}{Minimum Spanning Tree}
+
+\item{Cluster_Membership}{Clusters used on MST}
+
+\item{Membership_Correction_Data}{Data to correct}
+
+\item{Correction_Matrix}{Data to correct}
+
+\item{Zero_Correction}{Vector indicating which membership has a zero correction vector}
 }
 \value{
 
 }
 \description{
-Title
+CheckZeroCV
 }
