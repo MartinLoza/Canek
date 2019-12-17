@@ -9,7 +9,16 @@
 \usage{
 RunCanek(x, ...)
 
-\method{RunCanek}{Seurat}(x, batches = NULL, slot = "data", assay = "RNA", ...)
+\method{RunCanek}{Seurat}(
+  x,
+  batches = NULL,
+  slot = "data",
+  assay = "RNA",
+  features = NULL,
+  selection.method = "vst",
+  fvf.nfeatures = 2000,
+  ...
+)
 
 \method{RunCanek}{SingleCellExperiment}(x, batches = NULL, assay = "counts", ...)
 
@@ -25,6 +34,12 @@ RunCanek(x, ...)
 \item{slot}{slot used for Seurat objects (default: data).}
 
 \item{assay}{assay used for Seurat objects (default: RNA).}
+
+\item{features}{optional vector of features to use for correction.}
+
+\item{selection.method}{method used for FindVariableFeatures on Seurat objects when features is NULL.}
+
+\item{fvf.nfeatures}{function used to collapse variable features from different batches. Default is intersect.}
 }
 \value{
 An object of the appropriate type.
