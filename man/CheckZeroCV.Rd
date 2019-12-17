@@ -23,9 +23,6 @@ CheckZeroCV(
 
 \item{Zero_Correction}{Vector indicating which membership has a zero correction vector}
 }
-\value{
-
-}
 \description{
 CheckZeroCV
 }

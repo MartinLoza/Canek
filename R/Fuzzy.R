@@ -164,9 +164,6 @@ Get_Rotation_Angle <- function( PCA_Coordinates = NULL ){
 #' @param Correction_Matrix Data to correct
 #' @param Zero_Correction Vector indicating which membership has a zero correction vector
 #'
-#' @return
-#'
-#'
 CheckZeroCV <-function(MST = NULL, Cluster_Membership = NULL,
                        Membership_Correction_Data = NULL, Correction_Matrix = NULL,
                        Zero_Correction = NULL){
