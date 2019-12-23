@@ -333,7 +333,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
      usepam <- FALSE
    }
 
-   Num_Memberships <- pamk( PCA_B2[,1:3], krange = 2:Max_Membership, usepam = usepam )
+   Num_Memberships <- pamk( PCA_B2[,1:3], krange = 1:Max_Membership, usepam = usepam )
    Num_Memberships <- Num_Memberships$nc
 
    if(Verbose)
