@@ -40,7 +40,7 @@ x$tech <- factor(x$tech, c("celseq", "smartseq2", "celseq2"))
 
 ```{r}
 x <- NormalizeData(x)
-x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
+x <- FindVariableFeatures(x)
 VariableFeaturePlot(x)
 ```
 
@@ -53,8 +53,8 @@ x <- ScaleData(x)
 ```
 
 ```{r}
-x <- RunPCA(x)
-x <- RunUMAP(x, reduction = "pca", dims = 1:30)
+x <- RunPCA(x, verbose = FALSE)
+x <- RunUMAP(x, reduction = "pca", dims = 1:30, verbose = FALSE)
 ```
 
 # UMAP plot before correction
@@ -71,7 +71,12 @@ We pass the column containing the batch information. On this integration we set 
 We can see that the order of integrations are defined by the batches list order, with the first integration between celseq and smartseq2 batches, and the second between the already corrected celseq/smartseq2 and celseq2. 
 
 ```{r}
-x <- RunCanek(x, "tech", Verbose = TRUE, Hierarchical = FALSE)
+x <- RunCanek(x, "tech", Hierarchical = FALSE, Verbose = TRUE)
+```
+
+```{r}
+x <- FindVariableFeatures(x)
+VariableFeaturePlot(x)
 ```
 
 ```{r}
@@ -79,13 +84,8 @@ x <- ScaleData(x)
 ```
 
 ```{r}
-x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
-VariableFeaturePlot(x)
-```
-
-```{r}
-x <- RunPCA(x)
-x <- RunUMAP(x, reduction = "pca", dims = 1:30)
+x <- RunPCA(x, verbose = FALSE)
+x <- RunUMAP(x, reduction = "pca", dims = 1:30, verbose = FALSE)
 ```
 
 # UMAP plot after correction
@@ -101,7 +101,12 @@ Now, we integrate under a hierarchical scheme, where more similar batches are in
 We can see that the first integration is done between celseq and celseq2 batches, and the second between the already integrated celseq/celseq2 and smartseq2 batches. 
 
 ```{r}
-x <- RunCanek(x, "tech", Verbose = TRUE, Hierarchical = TRUE)
+x <- RunCanek(x, "tech", Hierarchical = TRUE, Verbose = TRUE)
+```
+
+```{r}
+x <- FindVariableFeatures(x)
+VariableFeaturePlot(x)
 ```
 
 ```{r}
@@ -109,13 +114,8 @@ x <- ScaleData(x)
 ```
 
 ```{r}
-x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
-VariableFeaturePlot(x)
-```
-
-```{r}
-x <- RunPCA(x)
-x <- RunUMAP(x, reduction = "pca", dims = 1:30)
+x <- RunPCA(x, verbose = FALSE)
+x <- RunUMAP(x, reduction = "pca", dims = 1:30, verbose = FALSE)
 ```
 
 # UMAP plot after correction

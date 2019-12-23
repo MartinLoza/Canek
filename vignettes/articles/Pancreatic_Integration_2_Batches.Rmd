@@ -36,7 +36,7 @@ x <- merge(x[["celseq"]], x[["celseq2"]])
 
 ```{r}
 x <- NormalizeData(x)
-x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
+x <- FindVariableFeatures(x)
 VariableFeaturePlot(x)
 ```
 
@@ -74,7 +74,7 @@ x <- ScaleData(x)
 ```
 
 ```{r}
-x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
+x <- FindVariableFeatures(x)
 VariableFeaturePlot(x)
 ```
 
