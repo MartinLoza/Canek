@@ -67,7 +67,7 @@ DimPlot(x, group.by = "cell_type")
 We pass the column containing the batch information.
 
 ```{r}
-x <- RunCanek(x, "orig.ident")
+x <- RunCanek(x, "orig.ident", )
 ```
 
 
@@ -76,7 +76,7 @@ x <- ScaleData(x)
 ```
 
 ```{r}
-x <- FindVariableFeatures(x, selection.method = "mean.var.plot", nfeatures = 500)
+x <- FindVariableFeatures(x, nfeatures = 500)
 VariableFeaturePlot(x)
 ```
 
