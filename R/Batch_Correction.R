@@ -334,7 +334,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
    }
 
    Num_Memberships <- pamk( PCA_B2[,1:3], krange = 1:Max_Membership, usepam = usepam )
-   Num_Memberships <- Num_Memberships$nc
+   Num_Memberships <- (Num_Memberships$nc)^2
 
    if(Verbose)
     cat(paste('\n\tNumber of memberships found:', Num_Memberships) )
