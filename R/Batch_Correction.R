@@ -80,11 +80,16 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 
             nCells_Bj <- ncol(Batches[[j]])
 
-            PCA_Batches <- prcomp_irlba(  t( cbind(Batches[[i]], Batches[[j]]) ) )
+            ##TEST: depth normalization befor getting pairs
+            test_B1 <- batchelor::cosineNorm(Batches[[i]])
+            test_B2 <- batchelor::cosineNorm(Batches[[j]])
+
+            #PCA_Batches <- prcomp_irlba(  t( cbind(Batches[[i]], Batches[[j]]) ) )
+            PCA_Batches <- prcomp_irlba(  t( cbind(test_B1,test_B2) ) )
             PCA_Bi <- PCA_Batches$x[1:nCells_Bi,]
             PCA_Bj <- PCA_Batches$x[(nCells_Bi+1):(nCells_Bi + nCells_Bj),]
 
-            Pairs <- Get_MNN_Pairs(B1 = t(PCA_Bi),B2 = t(PCA_Bj),  k_Neighbors = 5)
+            Pairs <- Get_MNN_Pairs(B1 = t(PCA_Bi),B2 = t(PCA_Bj),  k_Neighbors = 30)
 
             N_Pairs_Bj <- rbind(N_Pairs_Bj, (nrow(Pairs$Pairs)/nCells_Bj))
             #N_Pairs_Bj <- rbind(N_Pairs_Bj, nrow(Pairs$Pairs))
@@ -295,10 +300,15 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
     }
   }
 
+  ##TEST: depth normalization befor getting pairs
+  test_B1 <- batchelor::cosineNorm(B1_Selected)
+  test_B2 <- batchelor::cosineNorm(B2_Selected)
+
   if(is.null(Pairs) ) {
     if(PCA == TRUE){
 
-      PCA_Batches <- prcomp_irlba( t(cbind(B1_Selected, B2_Selected)), n = Dimensions)
+      #PCA_Batches <- prcomp_irlba( t(cbind(B1_Selected, B2_Selected)), n = Dimensions)
+      PCA_Batches <- prcomp_irlba( t(cbind(test_B1, test_B2)), n = Dimensions)
       PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
       PCA_B2 <- PCA_Batches$x[(B1_Selected_Num_Cells+1):Num_Cells,]
 
@@ -308,7 +318,8 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
       Pairs <- Get_MNN_Pairs(B1 = t(PCA_B1),B2 = t(PCA_B2),  k_Neighbors = k_Neighbors)
 
     }else{
-      Pairs <- Get_MNN_Pairs(B1 = B1_Selected, B2 = B2_Selected , k_Neighbors = k_Neighbors)
+      #Pairs <- Get_MNN_Pairs(B1 = B1_Selected, B2 = B2_Selected , k_Neighbors = k_Neighbors)
+      Pairs <- Get_MNN_Pairs(B1 = test_B1, B2 = test_B2 , k_Neighbors = k_Neighbors)
     }
 
     Pairs <- Pairs$Pairs
@@ -335,6 +346,9 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
 
    Num_Memberships <- pamk( PCA_B2[,1:3], krange = 1:Max_Membership, usepam = usepam )
    Num_Memberships <- (Num_Memberships$nc)^2
+
+   ##TEST
+   #Num_Memberships <- (Num_Memberships$nc)
 
    if(Verbose)
     cat(paste('\n\tNumber of memberships found:', Num_Memberships) )
