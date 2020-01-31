@@ -38,9 +38,9 @@
 #'
 Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
-                            Number_Samples = NULL, k_Neighbors = 20, PCA = TRUE,
+                            Number_Samples = NULL, k_Neighbors = 30, PCA = TRUE,
                             Dimensions = 30, Max_Membership = 5, Fuzzy = TRUE,
-                            Hierarchical = TRUE, Verbose = FALSE, ...){
+                            Hierarchical = TRUE, Verbose = FALSE, Gain = 0.5, ...){
 
   if(Verbose)
     tic("\nTotal correction time ")
@@ -109,7 +109,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                     Query_Batch_Cell_Types = Query_Batch_Cell_Types,
                                     Similar_Cells = Similar_Cells, Num_Clusters = Num_Clusters,  Sampling = Sampling,
                                     Number_Samples = Number_Samples, k_Neighbors = k_Neighbors, PCA = PCA,
-                                    Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose)
+                                    Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose, Gain = Gain)
 
 
         New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
@@ -145,7 +145,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       Correction <- Correct_Batch(Reference_Batch = Ref, Query_Batch = Query, Query_Batch_Cell_Types = Query_Batch_Cell_Types,
                                   Similar_Cells = Similar_Cells, Num_Clusters = Num_Clusters,  Sampling = Sampling,
                                   Number_Samples = Number_Samples, k_Neighbors = k_Neighbors, PCA = PCA,
-                                  Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose)
+                                  Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose, Gain = Gain)
 
       New_Name <- paste(Names_Batches[1],Names_Batches[i],sep = "/")
       Corrected_Batches[[New_Name]] <- Correction
@@ -212,8 +212,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types = "Surprise-me",
                           Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                           Number_Samples = NULL, Pairs = NULL, Cells_Index_Query = NULL,
-                          Cells_Index_Reference = NULL, k_Neighbors = 20, PCA = TRUE,
-                          Dimensions = 30,   Max_Membership = 5, Fuzzy = TRUE, Verbose = FALSE){
+                          Cells_Index_Reference = NULL, k_Neighbors = 30, PCA = TRUE,
+                          Dimensions = 30,   Max_Membership = 5, Fuzzy = TRUE, Verbose = FALSE, Gain = 0.5){
 
   if(Verbose)
     tic("\n Correction time")
@@ -399,7 +399,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
         cat("\n\n\tEXTENDED KALMAN FILTER")
 
       Estimation_Data <- EKF_BE(B1 = B1_Selected,B2 = B2_Selected, Pairs = Selected_Pairs, Sampling = Sampling,
-                                  Number_Samples = Number_Samples, Verbose = Verbose)
+                                  Number_Samples = Number_Samples, Verbose = Verbose, Gain = Gain)
 
       Correction_Vector <- Estimation_Data[["Correction Vector"]]
 
