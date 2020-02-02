@@ -288,3 +288,25 @@ EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1, 
 
   return(Estimation_Data)
 }
+
+
+
+Sub_BE <- function(B1,B2, Pairs, Verbose = FALSE){
+
+  # Model -> g_ref = g_que + be
+  # be -> g_ref - g_que
+
+  #Get pairs index
+  pQue <- Pairs[,1]
+  pRef <- Pairs[,2]
+
+  #Subsetting
+  pRef <- B1[,pRef]
+  pQue <- B2[,pQue]
+
+  be <- pRef-pQue
+
+  return(list("Correction Vector" = rowMeans(be), "Sampled Pairs" = NULL))
+
+
+}
