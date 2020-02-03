@@ -67,7 +67,7 @@ DimPlot(x, group.by = "cell_type")
 We pass the column containing the batch information.
 
 ```{r}
-system.time({x <- RunCanek(x, "orig.ident", Estimation = "EKF", Verbose = TRUE)})
+x <- RunCanek(x, "orig.ident")
 ```
 
 
