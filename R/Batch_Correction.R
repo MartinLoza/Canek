@@ -40,7 +40,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                             Number_Samples = NULL, k_Neighbors = 30, PCA = TRUE,
                             Dimensions = 30, Max_Membership = 5, Fuzzy = TRUE,
-                            Hierarchical = TRUE, Verbose = FALSE, Gain = 0.5, ...){
+                            Hierarchical = TRUE, Verbose = FALSE, Gain = 0.5,
+                            Cosine_Norm = TRUE, ...){
 
   if(Verbose)
     tic("\nTotal correction time ")
@@ -80,12 +81,12 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 
             nCells_Bj <- ncol(Batches[[j]])
 
-            ##TEST: depth normalization befor getting pairs
-            test_B1 <- batchelor::cosineNorm(Batches[[i]])
-            test_B2 <- batchelor::cosineNorm(Batches[[j]])
+            #Cosine normalization before getting pairs
+            cnB1 <- batchelor::cosineNorm(Batches[[i]])
+            cnB2 <- batchelor::cosineNorm(Batches[[j]])
 
             #PCA_Batches <- prcomp_irlba(  t( cbind(Batches[[i]], Batches[[j]]) ) )
-            PCA_Batches <- prcomp_irlba(  t( cbind(test_B1,test_B2) ) )
+            PCA_Batches <- prcomp_irlba(  t( cbind(cnB1,cnB2) ) )
             PCA_Bi <- PCA_Batches$x[1:nCells_Bi,]
             PCA_Bj <- PCA_Batches$x[(nCells_Bi+1):(nCells_Bi + nCells_Bj),]
 
@@ -114,7 +115,9 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                     Query_Batch_Cell_Types = Query_Batch_Cell_Types,
                                     Similar_Cells = Similar_Cells, Num_Clusters = Num_Clusters,  Sampling = Sampling,
                                     Number_Samples = Number_Samples, k_Neighbors = k_Neighbors, PCA = PCA,
-                                    Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose, Gain = Gain)
+                                    Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose,
+                                    Gain = Gain,
+                                    Cosine_Norm = Cosine_Norm)
 
 
         New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
@@ -150,7 +153,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       Correction <- Correct_Batch(Reference_Batch = Ref, Query_Batch = Query, Query_Batch_Cell_Types = Query_Batch_Cell_Types,
                                   Similar_Cells = Similar_Cells, Num_Clusters = Num_Clusters,  Sampling = Sampling,
                                   Number_Samples = Number_Samples, k_Neighbors = k_Neighbors, PCA = PCA,
-                                  Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose, Gain = Gain)
+                                  Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose, Gain = Gain,
+                                  Cosine_Norm = Cosine_Norm)
 
       New_Name <- paste(Names_Batches[1],Names_Batches[i],sep = "/")
       Corrected_Batches[[New_Name]] <- Correction
@@ -218,7 +222,9 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
                           Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
                           Number_Samples = NULL, Pairs = NULL, Cells_Index_Query = NULL,
                           Cells_Index_Reference = NULL, k_Neighbors = 30, PCA = TRUE,
-                          Dimensions = 30,   Max_Membership = 5, Fuzzy = TRUE, Verbose = FALSE, Gain = 0.5){
+                          Dimensions = 30,   Max_Membership = 5, Fuzzy = TRUE, Verbose = FALSE,
+                          Gain = 0.5,
+                          Cosine_Norm = TRUE){
 
   if(Verbose)
     tic("\n Correction time")
@@ -300,15 +306,20 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
     }
   }
 
-  ##TEST: depth normalization befor getting pairs
-  test_B1 <- batchelor::cosineNorm(B1_Selected)
-  test_B2 <- batchelor::cosineNorm(B2_Selected)
+  if(Cosine_Norm == TRUE){
+    cnB1 <- batchelor::cosineNorm(B1_Selected)
+    cnB2 <- batchelor::cosineNorm(B2_Selected)
+  }
 
   if(is.null(Pairs) ) {
     if(PCA == TRUE){
 
-      #PCA_Batches <- prcomp_irlba( t(cbind(B1_Selected, B2_Selected)), n = Dimensions)
-      PCA_Batches <- prcomp_irlba( t(cbind(test_B1, test_B2)), n = Dimensions)
+      if(Cosine_Norm == TRUE){
+        PCA_Batches <- prcomp_irlba( t(cbind(cnB1, cnB2)), n = Dimensions)
+      }else{
+        PCA_Batches <- prcomp_irlba( t(cbind(B1_Selected, B2_Selected)), n = Dimensions)
+      }
+
       PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
       PCA_B2 <- PCA_Batches$x[(B1_Selected_Num_Cells+1):Num_Cells,]
 
@@ -318,8 +329,11 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
       Pairs <- Get_MNN_Pairs(B1 = t(PCA_B1),B2 = t(PCA_B2),  k_Neighbors = k_Neighbors)
 
     }else{
-      #Pairs <- Get_MNN_Pairs(B1 = B1_Selected, B2 = B2_Selected , k_Neighbors = k_Neighbors)
-      Pairs <- Get_MNN_Pairs(B1 = test_B1, B2 = test_B2 , k_Neighbors = k_Neighbors)
+      if(Cosine_Norm == TRUE){
+        Pairs <- Get_MNN_Pairs(B1 = cnB1, B2 = cnB2 , k_Neighbors = k_Neighbors)
+      }else{
+        Pairs <- Get_MNN_Pairs(B1 = B1_Selected, B2 = B2_Selected , k_Neighbors = k_Neighbors)
+      }
     }
 
     Pairs <- Pairs$Pairs
@@ -480,30 +494,7 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
                              Zero_Correction = Zero_Correction)
    Membership_Correction_Data <- No_Zero_CV[["Membership_Correction_Data"]]
    Correction_Matrix <- No_Zero_CV[["Correction_Matrix"]]
-   # MST <- Fuzzy_Data$MST
-   # Cluster_Dist <- as.matrix(dist(Cluster_Membership$centers,upper = TRUE))
-   #
-   # i = 1
-   # while(length(Is_Zero) != 0){
-   #
-   #   Related_Edges <- MST[Is_Zero[i],]
-   #   Related <- which(Related_Edges !=0)
-   #   #names(Related) <- sapply(Related, toString)
-   #   Related <- which(Cluster_Dist[Is_Zero[i],] == min(Cluster_Dist[Is_Zero[i],Related]))
-   #
-   #   #vemos que el que queremos asignar tenga un vector de correccion
-   #   if(Zero_Correction[Related]== FALSE){
-   #     #asignamos el vector de correcion
-   #     Membership_Correction_Data[[Is_Zero[i]]] <- Membership_Correction_Data[[Related]]
-   #     Correction_Matrix[,Is_Zero[i]] <- Membership_Correction_Data[[Related]]$`Correction Vector`
-   #     Zero_Correction[Is_Zero[i]] <- FALSE
-   #     i = 1
-   #   }else{
-   #     i = i+1
-   #   }
-   #
-   #   Is_Zero <- which(Zero_Correction == TRUE)
-   # }
+
  }
 
  B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships) )
