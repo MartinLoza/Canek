@@ -18,11 +18,15 @@
 #' @details B1 is used as the reference batch and B2 is used as the query batch.
 #' Input batches need to have the same number of genes.
 #'
-<<<<<<< HEAD
-EKF_BE_old <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain = 0.5, Verbose = FALSE){
-=======
-EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1, Verbose = FALSE){
->>>>>>> Improve_Estimation
+
+EKF_BE <- function(B1,
+                   B2,
+                   Pairs,
+                   Sampling=NULL,
+                   Number_Samples= NULL,
+                   Gain=0.5,
+                   Verbose = FALSE
+                   ){
 
   #INIT
   Epochs <- 1
@@ -130,12 +134,11 @@ EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain=0.1, 
 }
 
 
-<<<<<<< HEAD
-EKF_BE <- function(B1,B2, Pairs, Sampling=NULL, Number_Samples= NULL, Gain = 0.5, Verbose = FALSE){
-=======
->>>>>>> Improve_Estimation
-
-Sub_BE <- function(B1,B2, Pairs, Verbose = FALSE){
+Sub_BE <- function(B1,
+                   B2,
+                   Pairs,
+                   Verbose = FALSE
+                   ){
 
   # Model -> g_ref = g_que + be
   # be -> g_ref - g_que

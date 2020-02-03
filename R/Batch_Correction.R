@@ -37,15 +37,22 @@
 #' @export
 #'
 Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
-                            Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
-                            Number_Samples = NULL, k_Neighbors = 30, PCA = TRUE,
-                            Dimensions = 30, Max_Membership = 5, Fuzzy = TRUE,
-<<<<<<< HEAD
-                            Hierarchical = TRUE, Verbose = FALSE, Gain = 0.5,
-                            Cosine_Norm = TRUE, ...){
-=======
-                            Hierarchical = TRUE, Verbose = FALSE,Estimation = "EKF", ...){
->>>>>>> Improve_Estimation
+                            Similar_Cells = "High",
+                            Num_Clusters = NULL,
+                            Sampling = NULL,
+                            Number_Samples = NULL,
+                            k_Neighbors = 30,
+                            PCA = TRUE,
+                            Dimensions = 30,
+                            Max_Membership = 5,
+                            Fuzzy = TRUE,
+                            Hierarchical = TRUE,
+                            Verbose = FALSE,
+                            Gain = 0.5,
+                            Cosine_Norm = TRUE,
+                            Estimation = "EKF",
+                            ...
+                            ){
 
   if(Verbose)
     tic("\nTotal correction time ")
@@ -115,18 +122,23 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
         if(Verbose)
           cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
 
-        Correction <- Correct_Batch(Reference_Batch = Batches[[Ref]], Query_Batch = Batches[[Query]],
+        Correction <- Correct_Batch(Reference_Batch = Batches[[Ref]],
+                                    Query_Batch = Batches[[Query]],
                                     Query_Batch_Cell_Types = Query_Batch_Cell_Types,
-                                    Similar_Cells = Similar_Cells, Num_Clusters = Num_Clusters,  Sampling = Sampling,
-                                    Number_Samples = Number_Samples, k_Neighbors = k_Neighbors, PCA = PCA,
-                                    Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose,
-<<<<<<< HEAD
+                                    Similar_Cells = Similar_Cells,
+                                    Num_Clusters = Num_Clusters,
+                                    Sampling = Sampling,
+                                    Number_Samples = Number_Samples,
+                                    k_Neighbors = k_Neighbors,
+                                    PCA = PCA,
+                                    Dimensions = Dimensions,
+                                    Max_Membership = Max_Membership,
+                                    Fuzzy = Fuzzy,
+                                    Verbose = Verbose,
                                     Gain = Gain,
-                                    Cosine_Norm = Cosine_Norm)
-=======
-                                    Estimation = Estimation)
->>>>>>> Improve_Estimation
-
+                                    Cosine_Norm = Cosine_Norm,
+                                    Estimation = Estimation
+                                    )
 
         New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
         Corrected_Batches[[New_Name]] <- Correction
@@ -158,16 +170,23 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       if(Verbose)
         cat(paste('\nINTEGRATING', Names_Batches[i],"INTO", Names_Batches[1],"\n", sep = " ") )
 
-      Correction <- Correct_Batch(Reference_Batch = Ref, Query_Batch = Query, Query_Batch_Cell_Types = Query_Batch_Cell_Types,
-                                  Similar_Cells = Similar_Cells, Num_Clusters = Num_Clusters,  Sampling = Sampling,
-                                  Number_Samples = Number_Samples, k_Neighbors = k_Neighbors, PCA = PCA,
-<<<<<<< HEAD
-                                  Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose, Gain = Gain,
-                                  Cosine_Norm = Cosine_Norm)
-=======
-                                  Dimensions = Dimensions, Max_Membership = Max_Membership, Fuzzy = Fuzzy, Verbose = Verbose,
-                                  Estimation = Estimation)
->>>>>>> Improve_Estimation
+      Correction <- Correct_Batch(Reference_Batch = Ref,
+                                  Query_Batch = Query,
+                                  Query_Batch_Cell_Types = Query_Batch_Cell_Types,
+                                  Similar_Cells = Similar_Cells,
+                                  Num_Clusters = Num_Clusters,
+                                  Sampling = Sampling,
+                                  Number_Samples = Number_Samples,
+                                  k_Neighbors = k_Neighbors,
+                                  PCA = PCA,
+                                  Dimensions = Dimensions,
+                                  Max_Membership = Max_Membership,
+                                  Fuzzy = Fuzzy,
+                                  Verbose = Verbose,
+                                  Gain = Gain,
+                                  Cosine_Norm = Cosine_Norm,
+                                  Estimation = Estimation
+                                  )
 
       New_Name <- paste(Names_Batches[1],Names_Batches[i],sep = "/")
       Corrected_Batches[[New_Name]] <- Correction
@@ -187,8 +206,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 
   return(Corrected_Batches)
 }
-
-
 
 #' Correct_Batch
 #'
@@ -231,19 +248,25 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @export
 #'
 #'
-Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types = "Surprise-me",
-                          Similar_Cells = "High", Num_Clusters = NULL, Sampling = NULL,
-                          Number_Samples = NULL, Pairs = NULL, Cells_Index_Query = NULL,
-<<<<<<< HEAD
-                          Cells_Index_Reference = NULL, k_Neighbors = 30, PCA = TRUE,
-                          Dimensions = 30,   Max_Membership = 5, Fuzzy = TRUE, Verbose = FALSE,
+Correct_Batch <- function(Reference_Batch,
+                          Query_Batch,
+                          Query_Batch_Cell_Types = "Surprise-me",
+                          Similar_Cells = "High",
+                          Num_Clusters = NULL,
+                          Sampling = NULL,
+                          Number_Samples = NULL,
+                          Pairs = NULL,
+                          Cells_Index_Query = NULL,
+                          Cells_Index_Reference = NULL,
+                          k_Neighbors = 30, PCA = TRUE,
+                          Dimensions = 30,
+                          Max_Membership = 5,
+                          Fuzzy = TRUE,
+                          Verbose = FALSE,
                           Gain = 0.5,
-                          Cosine_Norm = TRUE){
-=======
-                          Cells_Index_Reference = NULL, k_Neighbors = 20, PCA = TRUE,
-                          Dimensions = 30,   Max_Membership = 5, Fuzzy = TRUE, Verbose = FALSE,
-                          Estimation = "EKF"){
->>>>>>> Improve_Estimation
+                          Cosine_Norm = TRUE,
+                          Estimation = "EKF"
+                          ){
 
   if(Verbose)
     tic("\n Correction time")
@@ -345,13 +368,22 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
       if(Verbose)
         cat( paste("\n\nFinding mutual nearest neighbors from ", k_Neighbors,"nearest neighbors") )
 
-      Pairs <- Get_MNN_Pairs(B1 = t(PCA_B1),B2 = t(PCA_B2),  k_Neighbors = k_Neighbors)
+      Pairs <- Get_MNN_Pairs(B1 = t(PCA_B1),
+                             B2 = t(PCA_B2),
+                             k_Neighbors = k_Neighbors
+                             )
 
     }else{
       if(Cosine_Norm == TRUE){
-        Pairs <- Get_MNN_Pairs(B1 = cnB1, B2 = cnB2 , k_Neighbors = k_Neighbors)
+        Pairs <- Get_MNN_Pairs(B1 = cnB1,
+                               B2 = cnB2 ,
+                               k_Neighbors = k_Neighbors
+                               )
       }else{
-        Pairs <- Get_MNN_Pairs(B1 = B1_Selected, B2 = B2_Selected , k_Neighbors = k_Neighbors)
+        Pairs <- Get_MNN_Pairs(B1 = B1_Selected,
+                               B2 = B2_Selected,
+                               k_Neighbors = k_Neighbors
+                               )
       }
     }
 
@@ -377,11 +409,12 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
      usepam <- FALSE
    }
 
-   Num_Memberships <- pamk( PCA_B2[,1:3], krange = 1:Max_Membership, usepam = usepam )
-   Num_Memberships <- (Num_Memberships$nc)^2
+   Num_Memberships <- pamk(PCA_B2[,1:3],
+                          krange = 1:Max_Membership,
+                          usepam = usepam
+                          )
 
-   ##TEST
-   #Num_Memberships <- (Num_Memberships$nc)
+   Num_Memberships <- (Num_Memberships$nc)^2
 
    if(Verbose)
     cat(paste('\n\tNumber of memberships found:', Num_Memberships) )
@@ -439,14 +472,10 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
 
    if ( length(Selected_Pairs) > 40 ){
 
-      #########################################################
-      ###Extended Kalman Filter to estimate the batch effect###
-      #########################################################
+      ####################################
+      ###Estimation of the batch effect###
+      ####################################
 
-<<<<<<< HEAD
-      Estimation_Data <- EKF_BE(B1 = B1_Selected,B2 = B2_Selected, Pairs = Selected_Pairs, Sampling = Sampling,
-                                  Number_Samples = Number_Samples, Verbose = Verbose, Gain = Gain)
-=======
      if(Estimation == "EKF"){
        if(Verbose)
          cat("\n\n\tEXTENDED KALMAN FILTER")
@@ -456,7 +485,8 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
                                  Pairs = Selected_Pairs,
                                  Sampling = Sampling,
                                  Number_Samples = Number_Samples,
-                                 Verbose = Verbose)
+                                 Verbose = Verbose,
+                                 Gain = Gain)
      }
 
      if(Estimation == "Sub"){
@@ -468,11 +498,9 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
                                  Pairs = Selected_Pairs,
                                  Verbose = Verbose)
      }
->>>>>>> Improve_Estimation
 
-      Correction_Vector <- Estimation_Data[["Correction Vector"]]
-
-      Correction_Matrix[,Membership] <- Correction_Vector
+     Correction_Vector <- Estimation_Data[["Correction Vector"]]
+     Correction_Matrix[,Membership] <- Correction_Vector
 
     }else{
       warning('\nWarning: Not enough pairs found for this Membership. No correction is performed', call. = TRUE)
@@ -513,8 +541,12 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
    if(Verbose)
     cat('\n\nFUZZY ')
 
-   Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership, Cells_PCA = PCA_B2, Correction_Memberships = Correction_Memberships,
-                       Verbose = Verbose)
+   Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership,
+                       Cells_PCA = PCA_B2,
+                       Correction_Memberships = Correction_Memberships,
+                       Verbose = Verbose
+                       )
+
    Correction_Memberships <- Fuzzy_Data$`Fuzzy Memberships`
    #B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Fuzzy_Data$`Fuzzy Memberships`) )
    MST <- Fuzzy_Data$MST
@@ -530,9 +562,13 @@ Correct_Batch <- function(Reference_Batch, Query_Batch, Query_Batch_Cell_Types =
    warning('\nWarning: No correction vectors where found. Consider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
  }else if( (length(Is_Zero) != 0) ){
 
-   No_Zero_CV <- CheckZeroCV(MST = Fuzzy_Data$MST, Cluster_Membership = Cluster_Membership,
-                             Membership_Correction_Data = Membership_Correction_Data, Correction_Matrix = Correction_Matrix,
-                             Zero_Correction = Zero_Correction)
+   No_Zero_CV <- CheckZeroCV(MST = Fuzzy_Data$MST,
+                             Cluster_Membership = Cluster_Membership,
+                             Membership_Correction_Data = Membership_Correction_Data,
+                             Correction_Matrix = Correction_Matrix,
+                             Zero_Correction = Zero_Correction
+                             )
+
    Membership_Correction_Data <- No_Zero_CV[["Membership_Correction_Data"]]
    Correction_Matrix <- No_Zero_CV[["Correction_Matrix"]]
 
