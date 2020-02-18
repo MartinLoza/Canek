@@ -155,3 +155,40 @@ Sub_BE <- function(B1,
 
   return(list("Correction Vector" = rowMeans(be), "Sampled Pairs" = NULL))
 }
+
+LM_BE <- function(B1,
+                  B2,
+                  Pairs,
+                  Verbose = FALSE
+                  ){
+
+  # Model is g_ref - g_que = be = a(MNNpairs) + b  ----> y = ax+b
+  # be = y
+  #
+
+  lm <- matrix(0, nrow =  nrow(B1), ncol = 2)
+  colnames(lm) <- c("be", "be_derivative")
+
+  for (gene in 1: nrow(B1)){
+
+    g_ref <- B1[gene,Pairs[,2]]
+    g_que <- B2[gene,Pairs[,1]]
+
+    be <- g_ref-g_que
+
+    data <- data.frame("be" = be, "pairs" = seq(from = 1, to = nrow(Pairs)))
+    model <- lm(be~pairs, data = data)
+
+    lm[gene,] <- model$coefficients
+
+  }
+
+  #TEST
+  #print(plot(lm[,2]))
+  #print(mean(lm[,2]))
+
+  return(list("Correction Vector" = lm[,1], "Sampled Pairs" = NULL))
+}
+
+
+

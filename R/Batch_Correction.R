@@ -487,9 +487,17 @@ Correct_Batch <- function(Reference_Batch,
                                  Number_Samples = Number_Samples,
                                  Verbose = Verbose,
                                  Gain = Gain)
-     }
 
-     if(Estimation == "Sub"){
+     }else if(Estimation == "LM"){
+       if(Verbose)
+         cat("\n\n\tLM")
+
+       Estimation_Data <- LM_BE(B1 = B1_Selected,
+                                 B2 = B2_Selected,
+                                 Pairs = Selected_Pairs,
+                                 Verbose = Verbose)
+
+     }else{
        if(Verbose)
          cat("\n\n\tSubstraction")
 
