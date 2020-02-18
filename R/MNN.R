@@ -56,7 +56,7 @@ Find_MNN_Pairs <- function(B1_B2_NN = NULL, B2_B1_NN = NULL, B2_NCells = NULL ){
 # INPUT :
 #
 # OUTPUT :
-Get_MNN_Pairs <- function(B1 = NULL, B2 = NULL, k_Neighbors = 30){
+Get_MNN_Pairs <- function(B1 = NULL, B2 = NULL, k_Neighbors = 25){
 
   if ( is.null(B1) ){
     stop('B1, Batch needs to be defined')
