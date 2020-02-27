@@ -103,8 +103,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 
             Pairs <- Get_MNN_Pairs(B1 = t(PCA_Bi),B2 = t(PCA_Bj),  k_Neighbors = 30)
 
-            N_Pairs_Bj <- rbind(N_Pairs_Bj, (nrow(Pairs$Pairs)/nCells_Bj))
-            #N_Pairs_Bj <- rbind(N_Pairs_Bj, nrow(Pairs$Pairs))
+            #N_Pairs_Bj <- rbind(N_Pairs_Bj, (nrow(Pairs$Pairs)/nCells_Bj))
+            N_Pairs_Bj <- rbind(N_Pairs_Bj, nrow(Pairs$Pairs))
             rownames(N_Pairs_Bj)[nrow(N_Pairs_Bj)] <- j
           }
 
