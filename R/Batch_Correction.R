@@ -328,8 +328,10 @@ Correct_Batch <- function(Reference_Batch,
   #Setting the Number of Clusters
   if(is.null(Num_Clusters)){
     if(Similar_Cells == "Low"){
-      if(B2_Selected_Num_Cells > 100){
-        Num_Clusters <- 100
+      #if(B2_Selected_Num_Cells > 100){
+       # Num_Clusters <- 100
+        if(B2_Selected_Num_Cells > 10){
+          Num_Clusters <- 10
       }else{
         Num_Clusters <- 10
       }
