@@ -12,4 +12,5 @@
 #' @importFrom ape mst
 #' @importFrom spdep Rotation
 #' @importFrom FNN get.knnx
+#' @importFrom batchelor cosineNorm
 NULL
