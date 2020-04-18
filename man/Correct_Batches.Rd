@@ -51,6 +51,12 @@ Correct_Batches(
 
 \item{Verbose}{Print output}
 
+\item{Gain}{TODO}
+
+\item{Cosine_Norm}{TODO}
+
+\item{Estimation}{TODO}
+
 \item{...}{pass down methods from RunCanek().}
 }
 \value{

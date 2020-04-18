@@ -58,6 +58,12 @@ Correct_Batch(
 \item{Fuzzy}{Whether or not a fuzzy logic join is used on the local correction vectors.}
 
 \item{Verbose}{Print output}
+
+\item{Gain}{TODO}
+
+\item{Cosine_Norm}{TODO}
+
+\item{Estimation}{TODO}
 }
 \value{
 A list containing the corrected batch as a matrix and correction data
