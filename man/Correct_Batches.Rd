@@ -7,17 +7,20 @@
 Correct_Batches(
   Batches,
   Query_Batch_Cell_Types = "Surprise-me",
-  Similar_Cells = "High",
+  Similar_Cells = "Medium",
   Num_Clusters = NULL,
   Sampling = NULL,
   Number_Samples = NULL,
-  k_Neighbors = 20,
+  k_Neighbors = 25,
   PCA = TRUE,
   Dimensions = 30,
   Max_Membership = 5,
   Fuzzy = TRUE,
   Hierarchical = TRUE,
   Verbose = FALSE,
+  Gain = 0.5,
+  Cosine_Norm = TRUE,
+  Estimation = "EKF",
   ...
 )
 }
