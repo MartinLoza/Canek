@@ -13,7 +13,7 @@ test_that("Estimation works", {
   expect_false(is.null(z$`Correction Vector`))
   expect_true(length(z$`Correction Vector`) == nrow(Batches$B1))
   expect_equal( length( which( is.finite(z$`Correction Vector`))), length(z$`Correction Vector`))
-  expect_equal(z$`Correction Vector`[1], -10.92e-3, tolerance = 1e-4 )
+  expect_equal(z$`Correction Vector`[1], -0.01188622, tolerance = 1e-4 )
 
   expect_equal(ncol(z$`Sampled Pairs`), 2)
   expect_equal(nrow(z$`Sampled Pairs`), 819)

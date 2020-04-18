@@ -14,8 +14,8 @@ test_that("Filter_Pairs works", {
   expect_equal( names(M3_Pairs_Data), c("Selected Pairs", "Clusters", "Selected Cluster") )
   expect_equal(length(which(is.na(M2_Pairs_Data$`Selected Pairs`))),0)
   expect_equal(length(which(is.na(M3_Pairs_Data$`Selected Pairs`))),0)
-  expect_equal(dim(M2_Pairs_Data$`Selected Pairs`), c(199,2))
-  expect_equal(dim(M3_Pairs_Data$`Selected Pairs`), c(775,2))
+  expect_equal(dim(M2_Pairs_Data$`Selected Pairs`), c(258, 2))
+  expect_equal(dim(M3_Pairs_Data$`Selected Pairs`), c(680, 2))
 
   expect_true( (M2_Pairs_Data$`Selected Cluster` == 2) && (M3_Pairs_Data$`Selected Cluster` == 1) )
 
