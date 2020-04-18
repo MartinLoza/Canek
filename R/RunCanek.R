@@ -23,51 +23,64 @@ RunCanek <- function(x, ...) {
 #' @export
 RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", fvf.nfeatures = 2000, ...) {
 
-  # choose features.
-  if (is.null(features)) {
-    xl <- Seurat::SplitObject(Seurat::DietSeurat(x), split.by = batches)
-    features <- Seurat::SelectIntegrationFeatures(xl, fvf.nfeatures = fvf.nfeatures, selection.method = selection.method, verbose = FALSE)
-  }
-
-  # make sure all features make sense.
-  features <- features[features %in% rownames(x)]
-
-  y <- x[features, ]
-
-  counts <- Seurat::GetAssayData(y, slot = slot, assay = assay)
-
-  batches <- split(colnames(y), y[[batches]])
-  batches <- lapply(batches, function(batch) {
-    counts[, batch]
-  })
-
-  counts <- RunCanek(batches, ...)
-  integrated <- Seurat::CreateAssayObject(data = counts[["Batches Integrated"]])
-  x[["Canek"]] <- integrated
-  Seurat::DefaultAssay(x) <- "Canek"
-
-  Seurat::VariableFeatures(x, assay = assay) <- features
-  x
+  RunCanek(Seurat::SplitObject(x, split.by = batches), ...)
 }
 
 #' @rdname RunCanek
 #' @export
 RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "counts", ...) {
-  counts <- SummarizedExperiment::assay(x, assay)
-
   batches <- split(colnames(x), x[[batches]])
-  batches <- lapply(batches, function(batch) {
-    counts[, batch]
+  x <- lapply(batches, function(batch) {
+    x[, batch]
   })
 
-  counts <- RunCanek(batches, ...)
-  SummarizedExperiment::assay(x, "Canek") <- counts[["Batches Integrated"]]
-
-  x
+  RunCanek(x, assay = assay, ...)
 }
 
 #' @rdname RunCanek
 #' @export
 RunCanek.list <- function(x, ...) {
-  Correct_Batches(x, ...)
+  obj <- unique(sapply(x, class))
+  if (length(obj) != 1) stop("Required list of identical object types.")
+  switch(obj,
+    "Seurat" = RunCanek_Seurat(x, ...),
+    "SingleCellExperiment" = RunCanek_SingleCellExperiment(x, ...),
+    "matrix" = Correct_Batches(x, ...)
+  )
+
+}
+
+RunCanek_Seurat <- function(x, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", fvf.nfeatures = 2000, ...) {
+  x <- lapply(x, Seurat::DietSeurat)
+
+  if (is.null(features)) {
+    features <- Seurat::SelectIntegrationFeatures(x, fvf.nfeatures = fvf.nfeatures, selection.method = selection.method, verbose = FALSE)
+  }
+
+
+  counts <- lapply(x, function(xx) {
+    Seurat::GetAssayData(xx[features, ], slot = slot, assay = assay)
+  })
+
+  counts <- Canek::Correct_Batches(counts, ...)
+  integrated <- Seurat::CreateAssayObject(counts = counts[["Batches Integrated"]])
+  x <- Reduce(merge, x)
+
+  x[["Canek"]] <- integrated
+  Seurat::DefaultAssay(x) <- "Canek"
+
+  Seurat::VariableFeatures(x, assay = assay) <- features # needed?
+  Seurat::VariableFeatures(x, assay = "Canek") <- features
+  x
+}
+
+RunCanek_SingleCellExperiment <- function(x, assay = NULL, ...) {
+  counts <- lapply(x, SummarizedExperiment::assay, i = assay)
+  counts <- Canek::Correct_Batches(counts, ...)
+
+
+  x <- Reduce(SummarizedExperiment::cbind, x)
+  SummarizedExperiment::assay(x, "Canek") <- counts[["Batches Integrated"]]
+
+  x
 }
