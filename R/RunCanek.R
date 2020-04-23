@@ -51,12 +51,10 @@ RunCanek.list <- function(x, ...) {
 }
 
 RunCanek_Seurat <- function(x, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", fvf.nfeatures = 2000, ...) {
-  x <- lapply(x, Seurat::DietSeurat)
 
   if (is.null(features)) {
     features <- Seurat::SelectIntegrationFeatures(x, fvf.nfeatures = fvf.nfeatures, selection.method = selection.method, verbose = FALSE)
   }
-
 
   counts <- lapply(x, function(xx) {
     Seurat::GetAssayData(xx[features, ], slot = slot, assay = assay)
@@ -69,7 +67,6 @@ RunCanek_Seurat <- function(x, slot = "data", assay = "RNA", features = NULL, se
   x[["Canek"]] <- integrated
   Seurat::DefaultAssay(x) <- "Canek"
 
-  Seurat::VariableFeatures(x, assay = assay) <- features # needed?
   Seurat::VariableFeatures(x, assay = "Canek") <- features
   x
 }
