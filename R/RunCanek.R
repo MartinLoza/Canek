@@ -43,14 +43,14 @@ RunCanek.list <- function(x, ...) {
   obj <- unique(sapply(x, class))
   if (length(obj) != 1) stop("Required list of identical object types.")
   switch(obj,
-    "Seurat" = RunCanek_Seurat(x, ...),
-    "SingleCellExperiment" = RunCanek_SingleCellExperiment(x, ...),
+    "Seurat" = RunCanekSeurat(x, ...),
+    "SingleCellExperiment" = RunCanekSingleCellExperiment(x, ...),
     "matrix" = Correct_Batches(x, ...)
   )
 
 }
 
-RunCanek_Seurat <- function(x, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, ...) {
+RunCanekSeurat <- function(x, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, ...) {
 
   if (is.null(features)) {
     features <- Seurat::SelectIntegrationFeatures(x, nfeatures = nfeatures, fvf.nfeatures = fvf.nfeatures, selection.method = selection.method, verbose = FALSE)
@@ -71,7 +71,7 @@ RunCanek_Seurat <- function(x, slot = "data", assay = "RNA", features = NULL, se
   LogSeuratCommand(x)
 }
 
-RunCanek_SingleCellExperiment <- function(x, assay = NULL, ...) {
+RunCanekSingleCellExperiment <- function(x, assay = NULL, ...) {
   counts <- lapply(x, SummarizedExperiment::assay, i = assay)
   counts <- Canek::Correct_Batches(counts, ...)
 
