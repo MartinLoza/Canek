@@ -1,7 +1,7 @@
 Package: Canek
 Type: Package
 Title: Batch Correction of Single-Cell Data Using Extended Kalman Filter
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Martin", "Loza", email = "martin.loza.lopez@gmail.com", role = c("aut", "cre")),
     person("Diego", "Diez", email = "diego10ruiz@gmail.com", role = c("aut"))
