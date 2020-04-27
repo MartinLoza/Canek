@@ -57,7 +57,7 @@ RunCanek_Seurat <- function(x, slot = "data", assay = "RNA", features = NULL, se
   }
 
   counts <- lapply(x, function(xx) {
-    Seurat::GetAssayData(xx[features, ], slot = slot, assay = assay)
+    Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
   })
 
   counts <- Canek::Correct_Batches(counts, ...)
