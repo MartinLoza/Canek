@@ -68,7 +68,7 @@ RunCanek_Seurat <- function(x, slot = "data", assay = "RNA", features = NULL, se
   Seurat::DefaultAssay(x) <- "Canek"
 
   Seurat::VariableFeatures(x, assay = "Canek") <- features
-  x
+  LogSeuratCommand(x)
 }
 
 RunCanek_SingleCellExperiment <- function(x, assay = NULL, ...) {
