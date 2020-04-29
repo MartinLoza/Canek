@@ -40,9 +40,9 @@ RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "counts", .
 #' @rdname RunCanek
 #' @export
 RunCanek.list <- function(x, ...) {
-  obj <- unique(sapply(x, class))
-  if (length(obj) != 1) stop("Required list of identical object types.")
-  switch(obj,
+  objtype <- unique(sapply(lapply(x, class), "[", x = 1))
+  if (length(objtype) != 1) stop("Required list of identical object types.")
+  switch(objtype,
     "Seurat" = RunCanekSeurat(x, ...),
     "SingleCellExperiment" = RunCanekSingleCellExperiment(x, ...),
     "matrix" = Correct_Batches(x, ...)
