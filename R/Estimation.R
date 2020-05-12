@@ -80,8 +80,10 @@ EKF_BE <- function(B1,
 
   ## INIT VARIABLES
   Number_Samples_Epoch <- Number_Samples*Epochs
-  Q <- 2
-  R <- 5
+  Q <- 25
+  R <- 100
+  # Q <- 2
+  # R <- 5
   Correction_Vector <- rep(0,Num_genes)
 
 
@@ -93,7 +95,8 @@ EKF_BE <- function(B1,
   xs <- matrix(0, nrow = Num_genes, ncol = Number_Samples_Epoch)
 
 
-  P[, 1] <- 10
+  # P[, 1] <- 10
+  P[, 1] <- 100
   Index_Epoch <- 2
 
   #Estimation using Extendend Kalman Filter over the samples
