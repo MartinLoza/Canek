@@ -137,7 +137,7 @@ EKF_BE <- function(B1,
 }
 
 
-Sub_BE <- function(B1,
+Average_BE <- function(B1,
                    B2,
                    Pairs,
                    Verbose = FALSE
