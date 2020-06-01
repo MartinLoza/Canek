@@ -53,7 +53,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Verbose = FALSE,
                             Gain = 0.5,
                             Cosine_Norm = TRUE,
-                            Estimation = "EKF",
+                            Estimation = "Average",
                             ...
                             ){
 
@@ -271,7 +271,7 @@ Correct_Batch <- function(Reference_Batch,
                           Verbose = FALSE,
                           Gain = 0.5,
                           Cosine_Norm = TRUE,
-                          Estimation = "EKF"
+                          Estimation = "Average"
                           ){
 
   if(Verbose)
@@ -497,14 +497,14 @@ Correct_Batch <- function(Reference_Batch,
                                  Gain = Gain)
      }
 
-     if(Estimation == "Sub"){
+     if(Estimation == "Average"){
        if(Verbose)
-         cat("\n\n\tSubstraction")
+         cat("\n\n\tAverage Method")
 
-       Estimation_Data <- Sub_BE(B1 = B1_Selected,
-                                 B2 = B2_Selected,
-                                 Pairs = Selected_Pairs,
-                                 Verbose = Verbose)
+       Estimation_Data <- Average_BE(B1 = B1_Selected,
+                                     B2 = B2_Selected,
+                                     Pairs = Selected_Pairs,
+                                     Verbose = Verbose)
      }
 
      Correction_Vector <- Estimation_Data[["Correction Vector"]]

@@ -23,7 +23,7 @@ Correct_Batch(
   Verbose = FALSE,
   Gain = 0.5,
   Cosine_Norm = TRUE,
-  Estimation = "EKF"
+  Estimation = "Average"
 )
 }
 \arguments{
