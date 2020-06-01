@@ -11,6 +11,6 @@ test_that("Correct_Batch works", {
   expect_equal(length(which(is.na(z$`Corrected Query Batch`))), 0)
   expect_equal(length(z), 4)
   expect_equal(names(z), c("Reference Batch (B1)", "Query Batch (B2)", "Corrected Query Batch", "Correction Data"))
-  expect_equal(z$`Corrected Query Batch`[1,1], 6.689331, tolerance = 0.0001)
+  expect_equal(z$`Corrected Query Batch`[1,1], 6.685501, tolerance = 0.0001)
   expect_equal(dim(z$`Corrected Query Batch`), dim(y) )
 })
