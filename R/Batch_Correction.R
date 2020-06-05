@@ -582,7 +582,7 @@ Correct_Batch <- function(Reference_Batch,
 
  }
 
- B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships) )
+ B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships/rowSums(Correction_Memberships)) )
 
  ### Set data lists to return
   Membership_Data <- list("Cluster Membership" = Cluster_Membership, "Membership Correction Data" = Membership_Correction_Data )
