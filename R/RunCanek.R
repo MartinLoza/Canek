@@ -22,8 +22,8 @@ RunCanek <- function(x, ...) {
 #' @rdname RunCanek
 #' @export
 RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", fvf.nfeatures = 2000, ...) {
-
-  RunCanek(Seurat::SplitObject(x, split.by = batches), ...)
+  x <- Seurat::SplitObject(x, split.by = batches)
+  RunCanek(x, slot = slot, assay = assay, features = features, selection.method = selection.method, fvf.nfeatures = fvf.nfeatures, ...)
 }
 
 #' @rdname RunCanek
