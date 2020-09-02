@@ -53,7 +53,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Verbose = FALSE,
                             Gain = 0.5,
                             Cosine_Norm = TRUE,
-                            Estimation = "Average",
+                            Estimation = "Average", Type = "Correction",
                             ...
                             ){
 
@@ -140,7 +140,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                     Verbose = Verbose,
                                     Gain = Gain,
                                     Cosine_Norm = Cosine_Norm,
-                                    Estimation = Estimation
+                                    Estimation = Estimation, Type = Type
                                     )
 
         New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
@@ -188,7 +188,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                   Verbose = Verbose,
                                   Gain = Gain,
                                   Cosine_Norm = Cosine_Norm,
-                                  Estimation = Estimation
+                                  Estimation = Estimation, Type = Type
                                   )
 
       New_Name <- paste(Names_Batches[1],Names_Batches[i],sep = "/")
@@ -196,7 +196,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       names(Corrected_Batches[[New_Name]]) <- c(paste("Reference Batch (",Names_Batches[1] ,")", sep = ""),
                                                 paste("Query Batch (",Names_Batches[i] , ")", sep = ""),
                                                 "Corrected Query Batch", "Correction Data")
-      Batches[[1]] <- cbind( Ref, Correction[["Corrected Query Batch"]] )
+      Batches[[1]] <- cbind(Correction[["Reference Batch (B1)"]], Correction[["Corrected Query Batch"]] )
       Names_Batches[1] <- New_Name
 
     }
@@ -271,7 +271,7 @@ Correct_Batch <- function(Reference_Batch,
                           Verbose = FALSE,
                           Gain = 0.5,
                           Cosine_Norm = TRUE,
-                          Estimation = "Average"
+                          Estimation = "Average", Type = "Correction"
                           ){
 
   if(Verbose)
@@ -362,7 +362,7 @@ Correct_Batch <- function(Reference_Batch,
   }
 
   if(is.null(Pairs) ) {
-    if(PCA == TRUE){
+    if((PCA == TRUE) || (Type == "Integration") ){
 
       if(Cosine_Norm == TRUE){
         PCA_Batches <- prcomp_irlba( t(cbind(cnB1, cnB2)), n = Dimensions)
@@ -398,15 +398,23 @@ Correct_Batch <- function(Reference_Batch,
     Pairs <- Pairs$Pairs
   }
 
+  if(Type == "Integration"){
+    B1_Selected <- t(PCA_B1)
+    B2_Selected <- t(PCA_B2)
+    B1 <- B1_Selected
+    B2 <- B2_Selected
+    Num_genes <- Dimensions
+  }
+
  if(Verbose)
-  cat(paste( '\n\tNumber of MNN pairs found:', nrow(Pairs) ))
+  cat(paste('\n\tNumber of MNN pairs found:', nrow(Pairs) ))
 
  if( is.null(Num_Memberships) ){
 
    if(Verbose)
     cat("\n\nFinding number of memberships")
 
-   if( !exists("PCA_B2") ){
+   if(!exists("PCA_B2")){
      PCA_B2 <- prcomp_irlba( t(B2_Selected) )
      PCA_B2 <- PCA_B2$x
    }
