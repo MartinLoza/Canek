@@ -67,7 +67,7 @@ DimPlot(x, group.by = "cell_type")
 We pass the column containing the batch information.
 
 ```{r}
-x <- RunCanek(x, "orig.ident")
+x <- RunCanek(x, "orig.ident", Type = "Integration", Cosine_Norm = TRUE, Similar_Cells = "Low", Verbose = TRUE, Dimensions = 50, k_Neighbors = 10)
 ```
 
 
@@ -88,7 +88,7 @@ x <- RunPCA(x)
 ## PCA plot after correction
 
 ```{r}
-DimPlot(x, group.by = "orig.ident")
-DimPlot(x, group.by = "cell_type")
+DimPlot(x, group.by = "orig.ident", reduction = "Canek")
+DimPlot(x, group.by = "cell_type", reduction = "Canek")
 ```
 
