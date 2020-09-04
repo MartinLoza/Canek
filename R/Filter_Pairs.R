@@ -28,6 +28,7 @@ Pairs_Selection <- function(B1,B2, Pairs, Num_Clusters = 1, Verbose = FALSE){
   SD <- matrix(0L, nrow = Num_Clusters, ncol = 1)
 
   # Clustering to select pairs
+  #Cluster <- kmeans(t(B2)[,1:10],Num_Clusters)
   Cluster <- kmeans(t(B2),Num_Clusters)
 
   #Initialization of variables for the correction
