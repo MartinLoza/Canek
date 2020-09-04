@@ -24,7 +24,6 @@ EKF_BE <- function(B1,
                    Pairs,
                    Sampling=NULL,
                    Number_Samples= NULL,
-                   Gain=0.5,
                    Verbose = FALSE
                    ){
 
@@ -38,6 +37,7 @@ EKF_BE <- function(B1,
   Progress <- Num_genes/10
   Progress <- floor(Progress)
   Min_Samples <- 300
+  Gain=0.5
 
   if(Num_Pairs < 20){
     Sampling <- FALSE
