@@ -40,18 +40,17 @@
 #' @export
 #'
 Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
-                            Similar_Cells = "Medium",
+                            Similar_Cells = "High",
                             Num_Clusters = NULL,
                             Sampling = NULL,
                             Number_Samples = NULL,
-                            k_Neighbors = 25,
+                            k_Neighbors = 30,
                             PCA = TRUE,
-                            Dimensions = 30,
+                            Dimensions = 50,
                             Max_Membership = 5,
                             Fuzzy = TRUE,
                             Hierarchical = TRUE,
                             Verbose = FALSE,
-                            Gain = 0.5,
                             Cosine_Norm = TRUE,
                             Estimation = "Average",
                             ...
@@ -66,6 +65,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
   Corrected_Batches <- list()
   Batches_Integrated <- NULL
   Order <- NULL
+  change <- FALSE
   Was_Integrated <- matrix(FALSE, nrow = Num_Batches, ncol = 1 )
   rownames(Was_Integrated) <- c( as.character(1:nrow(Was_Integrated)) )
 
@@ -122,6 +122,14 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
         Ref <- i
         Names_Batches <- names(Batches)
 
+        # TODO: ver si sirve, sino borrarlo
+        if(ncol(Batches[[Ref]]) < ncol(Batches[[Query]]) ){
+          temp <- Ref
+          Ref <- Query
+          Query <- temp
+          rm(temp)
+        }
+
         if(Verbose)
           cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
 
@@ -138,7 +146,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                     Max_Membership = Max_Membership,
                                     Fuzzy = Fuzzy,
                                     Verbose = Verbose,
-                                    Gain = Gain,
                                     Cosine_Norm = Cosine_Norm,
                                     Estimation = Estimation
                                     )
@@ -170,8 +177,23 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       Ref <- Batches[[1]]
       Query <- Batches[[i]]
 
-      if(Verbose)
-        cat(paste('\nINTEGRATING', Names_Batches[i],"INTO", Names_Batches[1],"\n", sep = " ") )
+      # TODO: ver si sirve, sino borrarlo
+      if(ncol(Ref) < ncol(Query) ){
+        temp <- Ref
+        Ref <- Query
+        Query <- temp
+        rm(temp)
+        change = TRUE
+      }
+
+      if(Verbose){
+       if(change == FALSE){
+         cat(paste('\nINTEGRATING', Names_Batches[i],"INTO", Names_Batches[1],"\n", sep = " ") )
+       }else{
+         cat(paste('\nINTEGRATING', Names_Batches[1] ,"INTO", Names_Batches[i] ,"\n", sep = " ") )
+       }
+      }
+
 
       Correction <- Correct_Batch(Reference_Batch = Ref,
                                   Query_Batch = Query,
@@ -186,7 +208,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                   Max_Membership = Max_Membership,
                                   Fuzzy = Fuzzy,
                                   Verbose = Verbose,
-                                  Gain = Gain,
                                   Cosine_Norm = Cosine_Norm,
                                   Estimation = Estimation
                                   )
@@ -198,6 +219,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                                 "Corrected Query Batch", "Correction Data")
       Batches[[1]] <- cbind( Ref, Correction[["Corrected Query Batch"]] )
       Names_Batches[1] <- New_Name
+
+      change = FALSE
 
     }
 
@@ -257,19 +280,18 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 Correct_Batch <- function(Reference_Batch,
                           Query_Batch,
                           Query_Batch_Cell_Types = "Surprise-me",
-                          Similar_Cells = "Medium",
+                          Similar_Cells = "High",
                           Num_Clusters = NULL,
                           Sampling = NULL,
                           Number_Samples = NULL,
                           Pairs = NULL,
                           Cells_Index_Query = NULL,
                           Cells_Index_Reference = NULL,
-                          k_Neighbors = 25, PCA = TRUE,
-                          Dimensions = 30,
+                          k_Neighbors = 30, PCA = TRUE,
+                          Dimensions = 50,
                           Max_Membership = 5,
                           Fuzzy = TRUE,
                           Verbose = FALSE,
-                          Gain = 0.5,
                           Cosine_Norm = TRUE,
                           Estimation = "Average"
                           ){
@@ -422,14 +444,16 @@ Correct_Batch <- function(Reference_Batch,
                           usepam = usepam
                           )
 
-   Num_Memberships <- (Num_Memberships$nc)^2
+   #Num_Memberships <- (Num_Memberships$nc)^2
+   Num_Memberships <- (Num_Memberships$nc)
 
    if(Verbose)
     cat(paste('\n\tNumber of memberships found:', Num_Memberships) )
  }
 
  #Cluster in memberships
- Cluster_Membership <- kmeans(PCA_B2[,1:2],Num_Memberships)
+ #Cluster_Membership <- kmeans(PCA_B2[,1:10],Num_Memberships)
+ Cluster_Membership <- kmeans(PCA_B2, Num_Memberships)
 
  #INIT Correction Matrix
  Correction_Matrix <- matrix(0, nrow = Num_genes, ncol = Num_Memberships)
@@ -462,7 +486,12 @@ Correct_Batch <- function(Reference_Batch,
    if( Num_Clusters != 1 ){
 
      if (length(Membership_Pairs)>20){
-        Pairs_Select <- Pairs_Selection(B1 = t(PCA_B1), B2 = t(PCA_B2), Pairs = Membership_Pairs, Num_Clusters = Num_Clusters, Verbose = Verbose)
+        Pairs_Select <- Pairs_Selection(B1 = t(PCA_B1),
+                                        #B2 = t(PCA_B2)[,Membership_Cells_Index],
+                                        B2 = t(PCA_B2),
+                                        Pairs = Membership_Pairs,
+                                        Num_Clusters = Num_Clusters,
+                                        Verbose = Verbose)
         Selected_Pairs <- Pairs_Select[['Selected Pairs']]
 
         if(Verbose)
@@ -477,8 +506,10 @@ Correct_Batch <- function(Reference_Batch,
       Selected_Pairs <- Membership_Pairs
       Pairs_Select <- NULL
    }
-
-   if ( length(Selected_Pairs) > 40 ){
+   # TODO : borrar, is just a test
+   norNumPairs <- (ceiling(nrow(Selected_Pairs)/k_Neighbors))/(ncol(B2_Membership))
+   #if ( length(Selected_Pairs) > 40 ){
+   if ( norNumPairs > 0.1 ){
 
       ####################################
       ###Estimation of the batch effect###
@@ -494,7 +525,7 @@ Correct_Batch <- function(Reference_Batch,
                                  Sampling = Sampling,
                                  Number_Samples = Number_Samples,
                                  Verbose = Verbose,
-                                 Gain = Gain)
+                                 )
      }
 
      if(Estimation == "Average"){
@@ -504,7 +535,8 @@ Correct_Batch <- function(Reference_Batch,
        Estimation_Data <- Average_BE(B1 = B1_Selected,
                                      B2 = B2_Selected,
                                      Pairs = Selected_Pairs,
-                                     Verbose = Verbose)
+                                     Verbose = Verbose,
+                                     )
      }
 
      Correction_Vector <- Estimation_Data[["Correction Vector"]]
