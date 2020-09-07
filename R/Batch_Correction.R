@@ -534,8 +534,7 @@ Correct_Batch <- function(Reference_Batch,
 
        Estimation_Data <- Average_BE(B1 = B1_Selected,
                                      B2 = B2_Selected,
-                                     Pairs = Selected_Pairs,
-                                     Verbose = Verbose,
+                                     Pairs = Selected_Pairs
                                      )
      }
 

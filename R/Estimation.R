@@ -137,11 +137,7 @@ EKF_BE <- function(B1,
 }
 
 
-Average_BE <- function(B1,
-                   B2,
-                   Pairs,
-                   Verbose = FALSE
-                   ){
+Average_BE <- function(B1, B2, Pairs ){
 
   # Model -> g_ref = g_que + be
   # be -> g_ref - g_que
