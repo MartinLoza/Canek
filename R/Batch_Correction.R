@@ -53,6 +53,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Verbose = FALSE,
                             Cosine_Norm = TRUE,
                             Estimation = "Average",
+                            FilterPairs = FALSE,
                             ...
                             ){
 
@@ -147,7 +148,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                     Fuzzy = Fuzzy,
                                     Verbose = Verbose,
                                     Cosine_Norm = Cosine_Norm,
-                                    Estimation = Estimation
+                                    Estimation = Estimation,
+                                    FilterPairs = FilterPairs
                                     )
 
         New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
@@ -209,7 +211,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                   Fuzzy = Fuzzy,
                                   Verbose = Verbose,
                                   Cosine_Norm = Cosine_Norm,
-                                  Estimation = Estimation
+                                  Estimation = Estimation,
+                                  FilterPairs = FilterPairs
                                   )
 
       New_Name <- paste(Names_Batches[1],Names_Batches[i],sep = "/")
@@ -293,7 +296,8 @@ Correct_Batch <- function(Reference_Batch,
                           Fuzzy = TRUE,
                           Verbose = FALSE,
                           Cosine_Norm = TRUE,
-                          Estimation = "Average"
+                          Estimation = "Average",
+                          FilterPairs = FALSE
                           ){
 
   if(Verbose)
@@ -354,29 +358,29 @@ Correct_Batch <- function(Reference_Batch,
   Num_genes <- nrow(B1_Selected)
 
   #Setting the Number of Clusters
-  if(is.null(Num_Clusters)){
-    if(Similar_Cells == "Low"){
-      #if(B2_Selected_Num_Cells > 100){
-       # Num_Clusters <- 100
-        if(B2_Selected_Num_Cells > 10){
-          Num_Clusters <- 10
-      }else{
-        Num_Clusters <- 10
-      }
-      if(is.null(Sampling))
-        Sampling <- FALSE
-    }else if(Similar_Cells == "Medium"){
-      Num_Clusters <- 3
-      if(is.null(Sampling))
-        Sampling <- FALSE
-    }else{
-      if(Similar_Cells != "High")
-          warning('\nWarning: Similar_Cells set value not recognized. Using "High" instead', call. = TRUE)
-      Num_Clusters <- 1
-      if(is.null(Sampling))
-        Sampling <- TRUE
-    }
-  }
+  # if(is.null(Num_Clusters)){
+  #   if(Similar_Cells == "Low"){
+  #     #if(B2_Selected_Num_Cells > 100){
+  #      # Num_Clusters <- 100
+  #       if(B2_Selected_Num_Cells > 10){
+  #         Num_Clusters <- 10
+  #     }else{
+  #       Num_Clusters <- 10
+  #     }
+  #     if(is.null(Sampling))
+  #       Sampling <- FALSE
+  #   }else if(Similar_Cells == "Medium"){
+  #     Num_Clusters <- 3
+  #     if(is.null(Sampling))
+  #       Sampling <- FALSE
+  #   }else{
+  #     if(Similar_Cells != "High")
+  #         warning('\nWarning: Similar_Cells set value not recognized. Using "High" instead', call. = TRUE)
+  #     Num_Clusters <- 1
+  #     if(is.null(Sampling))
+  #       Sampling <- TRUE
+  #   }
+  # }
 
   if(Cosine_Norm == TRUE){
     cnB1 <- batchelor::cosineNorm(B1_Selected)
@@ -483,7 +487,8 @@ Correct_Batch <- function(Reference_Batch,
    #########################
    ###Pairs by clustering###
    #########################
-   if( Num_Clusters != 1 ){
+   #if( Num_Clusters != 1 ){
+   if(FilterPairs){
 
      if (length(Membership_Pairs)>20){
         Pairs_Select <- Pairs_Selection(B1 = t(PCA_B1),
@@ -492,6 +497,7 @@ Correct_Batch <- function(Reference_Batch,
                                         Pairs = Membership_Pairs,
                                         Num_Clusters = Num_Clusters,
                                         Verbose = Verbose)
+
         Selected_Pairs <- Pairs_Select[['Selected Pairs']]
 
         if(Verbose)
