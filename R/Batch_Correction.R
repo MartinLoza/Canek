@@ -443,7 +443,7 @@ Correct_Batch <- function(Reference_Batch,
      usepam <- FALSE
    }
 
-   Num_Memberships <- pamk(PCA_B2[,1:3],
+   Num_Memberships <- pamk(PCA_B2[,1:10],
                           krange = 1:Max_Membership,
                           usepam = usepam
                           )
