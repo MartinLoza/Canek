@@ -456,8 +456,8 @@ Correct_Batch <- function(Reference_Batch,
  }
 
  #Cluster in memberships
- #Cluster_Membership <- kmeans(PCA_B2[,1:10],Num_Memberships)
- Cluster_Membership <- kmeans(PCA_B2, Num_Memberships)
+ Cluster_Membership <- kmeans(PCA_B2[,1:10],Num_Memberships)
+ #Cluster_Membership <- kmeans(PCA_B2, Num_Memberships)
 
  #INIT Correction Matrix
  Correction_Matrix <- matrix(0, nrow = Num_genes, ncol = Num_Memberships)
