@@ -5,7 +5,6 @@
 #'
 #' @param Batches List of batches to integrate. Batches should contain the same number of genes as rows.
 #' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
-#' @param Similar_Cells A string value indicating in a semi-supervised the way MNNs pairs should be filtered. Accepted input values are "Low", "Medium" and "High".
 #' @param Num_Clusters Number of clusters used to filter MNNs pairs.
 #' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs samples used on the estimation process.
@@ -40,7 +39,6 @@
 #' @export
 #'
 Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
-                            Similar_Cells = "High",
                             Num_Clusters = NULL,
                             Sampling = NULL,
                             Number_Samples = NULL,
@@ -138,7 +136,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
         Correction <- Correct_Batch(Reference_Batch = Batches[[Ref]],
                                     Query_Batch = Batches[[Query]],
                                     Query_Batch_Cell_Types = Query_Batch_Cell_Types,
-                                    Similar_Cells = Similar_Cells,
                                     Num_Clusters = Num_Clusters,
                                     Sampling = Sampling,
                                     Number_Samples = Number_Samples,
@@ -202,7 +199,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       Correction <- Correct_Batch(Reference_Batch = Ref,
                                   Query_Batch = Query,
                                   Query_Batch_Cell_Types = Query_Batch_Cell_Types,
-                                  Similar_Cells = Similar_Cells,
                                   Num_Clusters = Num_Clusters,
                                   Sampling = Sampling,
                                   Number_Samples = Number_Samples,
@@ -246,7 +242,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @param Reference_Batch Batch to use as reference for the integration.
 #' @param Query_Batch Batch to correct.
 #' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
-#' @param Similar_Cells A string value indicating in a semi-supervised the way MNNs pairs should be filtered. Accepted input values are "Low", "Medium" and "High".
 #' @param Num_Clusters Number of clusters used to filter MNNs pairs.
 #' @param Sampling Whether or not samples MNNs pairs' samples are used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs' samples used on the estimation process.
@@ -286,7 +281,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 Correct_Batch <- function(Reference_Batch,
                           Query_Batch,
                           Query_Batch_Cell_Types = "Surprise-me",
-                          Similar_Cells = "High",
                           Num_Clusters = NULL,
                           Sampling = NULL,
                           Number_Samples = NULL,
@@ -360,31 +354,6 @@ Correct_Batch <- function(Reference_Batch,
   B2_Selected_Num_Cells <- ncol(B2_Selected)
   Num_Cells <-B1_Selected_Num_Cells + B2_Selected_Num_Cells
   Num_genes <- nrow(B1_Selected)
-
-  #Setting the Number of Clusters
-  # if(is.null(Num_Clusters)){
-  #   if(Similar_Cells == "Low"){
-  #     #if(B2_Selected_Num_Cells > 100){
-  #      # Num_Clusters <- 100
-  #       if(B2_Selected_Num_Cells > 10){
-  #         Num_Clusters <- 10
-  #     }else{
-  #       Num_Clusters <- 10
-  #     }
-  #     if(is.null(Sampling))
-  #       Sampling <- FALSE
-  #   }else if(Similar_Cells == "Medium"){
-  #     Num_Clusters <- 3
-  #     if(is.null(Sampling))
-  #       Sampling <- FALSE
-  #   }else{
-  #     if(Similar_Cells != "High")
-  #         warning('\nWarning: Similar_Cells set value not recognized. Using "High" instead', call. = TRUE)
-  #     Num_Clusters <- 1
-  #     if(is.null(Sampling))
-  #       Sampling <- TRUE
-  #   }
-  # }
 
   if(Cosine_Norm == TRUE){
     cnB1 <- batchelor::cosineNorm(B1_Selected)
@@ -461,7 +430,6 @@ Correct_Batch <- function(Reference_Batch,
 
  #Cluster in memberships
  Cluster_Membership <- kmeans(PCA_B2[,1:10],Num_Memberships)
- #Cluster_Membership <- kmeans(PCA_B2, Num_Memberships)
 
  #INIT Correction Matrix
  Correction_Matrix <- matrix(0, nrow = Num_genes, ncol = Num_Memberships)
