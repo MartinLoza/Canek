@@ -4,15 +4,7 @@
 \alias{EKF_BE}
 \title{Title EKF_BE}
 \usage{
-EKF_BE(
-  B1,
-  B2,
-  Pairs,
-  Sampling = NULL,
-  Number_Samples = NULL,
-  Gain = 0.5,
-  Verbose = FALSE
-)
+EKF_BE(B1, B2, Pairs, Sampling = NULL, Number_Samples = NULL, Verbose = FALSE)
 }
 \arguments{
 \item{B1}{Reference batch single-cell data.}
@@ -25,9 +17,9 @@ EKF_BE(
 
 \item{Number_Samples}{Number of MNNs pairs samples used on the estimation process.}
 
-\item{Gain}{Gain used when updating the estimated values.}
-
 \item{Verbose}{Print output.}
+
+\item{Gain}{Gain used when updating the estimated values.}
 }
 \value{
 A list containing the estimated correction vector and MNNs pair samples used on the estimation process.
