@@ -54,6 +54,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Cosine_Norm = TRUE,
                             Estimation = "Average",
                             FilterPairs = FALSE,
+                            perCellMNN = 0.08,
                             ...
                             ){
 
@@ -149,7 +150,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                     Verbose = Verbose,
                                     Cosine_Norm = Cosine_Norm,
                                     Estimation = Estimation,
-                                    FilterPairs = FilterPairs
+                                    FilterPairs = FilterPairs,
+                                    perCellMNN = perCellMNN
                                     )
 
         New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
@@ -212,7 +214,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                   Verbose = Verbose,
                                   Cosine_Norm = Cosine_Norm,
                                   Estimation = Estimation,
-                                  FilterPairs = FilterPairs
+                                  FilterPairs = FilterPairs,
+                                  perCellMNN = perCellMNN
                                   )
 
       New_Name <- paste(Names_Batches[1],Names_Batches[i],sep = "/")
@@ -297,7 +300,8 @@ Correct_Batch <- function(Reference_Batch,
                           Verbose = FALSE,
                           Cosine_Norm = TRUE,
                           Estimation = "Average",
-                          FilterPairs = FALSE
+                          FilterPairs = FALSE,
+                          perCellMNN = 0.08
                           ){
 
   if(Verbose)
@@ -512,10 +516,10 @@ Correct_Batch <- function(Reference_Batch,
       Selected_Pairs <- Membership_Pairs
       Pairs_Select <- NULL
    }
-   # TODO : borrar, is just a test
+
    norNumPairs <- (ceiling(nrow(Selected_Pairs)/k_Neighbors))/(ncol(B2_Membership))
-   #if ( length(Selected_Pairs) > 40 ){
-   if ( norNumPairs > 0.1 ){
+
+   if ( norNumPairs > perCellMNN ){
 
       ####################################
       ###Estimation of the batch effect###
