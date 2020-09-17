@@ -19,7 +19,8 @@ Imports:
     fpc,
     ape,
     spdep,
-    batchelor
+    batchelor,
+    matrixStats
 Suggests:
     testthat (>= 2.1.0),
     Seurat,

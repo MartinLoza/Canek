@@ -13,4 +13,5 @@
 #' @importFrom spdep Rotation
 #' @importFrom FNN get.knnx
 #' @importFrom batchelor cosineNorm
+#' @importFrom matrixStats rowMedians
 NULL
