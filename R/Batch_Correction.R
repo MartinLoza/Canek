@@ -444,7 +444,7 @@ Correct_Batch <- function(Reference_Batch,
    #Membership cell index
    Membership_Cells_Index <- which(Cluster_Membership$cluster == Membership)
    #Membership cells subset
-   B2_Membership <- B2_Selected[,Membership_Cells_Index]
+   numCellMembership <- ncol(B2_Selected[,Membership_Cells_Index])
 
    #########################
    ###Pairs by membership###
@@ -485,7 +485,7 @@ Correct_Batch <- function(Reference_Batch,
       Pairs_Select <- NULL
    }
 
-   norNumPairs <- (ceiling(nrow(Selected_Pairs)/k_Neighbors))/(ncol(B2_Membership))
+   norNumPairs <- (ceiling(nrow(Selected_Pairs)/k_Neighbors))/(numCellMembership)
 
    if ( norNumPairs > perCellMNN ){
 
