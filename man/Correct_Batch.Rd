@@ -8,22 +8,22 @@ Correct_Batch(
   Reference_Batch,
   Query_Batch,
   Query_Batch_Cell_Types = "Surprise-me",
-  Similar_Cells = "Medium",
   Num_Clusters = NULL,
   Sampling = NULL,
   Number_Samples = NULL,
   Pairs = NULL,
   Cells_Index_Query = NULL,
   Cells_Index_Reference = NULL,
-  k_Neighbors = 25,
+  k_Neighbors = 30,
   PCA = TRUE,
-  Dimensions = 30,
+  Dimensions = 50,
   Max_Membership = 5,
   Fuzzy = TRUE,
   Verbose = FALSE,
-  Gain = 0.5,
   Cosine_Norm = TRUE,
-  Estimation = "Average"
+  Estimation = "Average",
+  FilterPairs = FALSE,
+  perCellMNN = 0.08
 )
 }
 \arguments{
@@ -32,8 +32,6 @@ Correct_Batch(
 \item{Query_Batch}{Batch to correct.}
 
 \item{Query_Batch_Cell_Types}{A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.}
-
-\item{Similar_Cells}{A string value indicating in a semi-supervised the way MNNs pairs should be filtered. Accepted input values are "Low", "Medium" and "High".}
 
 \item{Num_Clusters}{Number of clusters used to filter MNNs pairs.}
 
@@ -59,11 +57,11 @@ Correct_Batch(
 
 \item{Verbose}{Print output}
 
-\item{Gain}{TODO}
-
 \item{Cosine_Norm}{TODO}
 
 \item{Estimation}{TODO}
+
+\item{Gain}{TODO}
 }
 \value{
 A list containing the corrected batch as a matrix and correction data
