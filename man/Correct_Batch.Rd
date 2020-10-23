@@ -61,7 +61,9 @@ Correct_Batch(
 
 \item{Estimation}{TODO}
 
-\item{Gain}{TODO}
+\item{FilterPairs}{whether to perform pair filtering (default: FALSE)}
+
+\item{perCellMNN}{TODO}
 }
 \value{
 A list containing the corrected batch as a matrix and correction data

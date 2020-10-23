@@ -53,9 +53,11 @@ Correct_Batches(
 
 \item{Estimation}{TODO}
 
-\item{...}{pass down methods from RunCanek().}
+\item{FilterPairs}{whether to perform pair filtering (default: FALSE)}
 
-\item{Gain}{TODO}
+\item{perCellMNN}{TODO}
+
+\item{...}{pass down methods from RunCanek().}
 }
 \value{
 A list containing the integrated datasets as matrix and the correction data .
