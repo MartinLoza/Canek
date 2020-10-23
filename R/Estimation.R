@@ -9,7 +9,6 @@
 #' @param Pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
 #' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs samples used on the estimation process.
-#' @param Gain Gain used when updating the estimated values.
 #' @param Verbose Print output.
 #'
 #' @return A list containing the estimated correction vector and MNNs pair samples used on the estimation process.

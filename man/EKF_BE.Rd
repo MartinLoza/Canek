@@ -18,8 +18,6 @@ EKF_BE(B1, B2, Pairs, Sampling = NULL, Number_Samples = NULL, Verbose = FALSE)
 \item{Number_Samples}{Number of MNNs pairs samples used on the estimation process.}
 
 \item{Verbose}{Print output.}
-
-\item{Gain}{Gain used when updating the estimated values.}
 }
 \value{
 A list containing the estimated correction vector and MNNs pair samples used on the estimation process.
