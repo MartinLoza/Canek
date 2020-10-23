@@ -77,7 +77,7 @@ RunCanekSingleCellExperiment <- function(x, assay = NULL, ...) {
 
 
   x <- Reduce(SummarizedExperiment::cbind, x)
-  SummarizedExperiment::assay(x, "Canek") <- counts[["Batches Integrated"]]
+  SummarizedExperiment::assays(x, withDimnames = FALSE)[["Canek"]] <- counts[["Batches Integrated"]]
 
   x
 }
