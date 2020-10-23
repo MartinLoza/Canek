@@ -6,7 +6,7 @@
 ## usethis namespace: start
 ## usethis namespace: end
 #' @import  tictoc numbers
-#' @importFrom stats dist kmeans sd
+#' @importFrom stats dist kmeans sd quantile
 #' @importFrom irlba prcomp_irlba
 #' @importFrom fpc pamk
 #' @importFrom ape mst
