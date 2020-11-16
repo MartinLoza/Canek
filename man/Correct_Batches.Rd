@@ -7,7 +7,6 @@
 Correct_Batches(
   Batches,
   Query_Batch_Cell_Types = "Surprise-me",
-  Num_Clusters = NULL,
   Sampling = NULL,
   Number_Samples = NULL,
   k_Neighbors = 30,
@@ -28,8 +27,6 @@ Correct_Batches(
 \item{Batches}{List of batches to integrate. Batches should contain the same number of genes as rows.}
 
 \item{Query_Batch_Cell_Types}{A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.}
-
-\item{Num_Clusters}{Number of clusters used to filter MNNs pairs.}
 
 \item{Sampling}{Whether or not sampling of MNNs pairs is used on the estimation process.}
 

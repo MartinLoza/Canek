@@ -5,7 +5,6 @@
 #'
 #' @param Batches List of batches to integrate. Batches should contain the same number of genes as rows.
 #' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
-#' @param Num_Clusters Number of clusters used to filter MNNs pairs.
 #' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs samples used on the estimation process.
 #' @param k_Neighbors Number of k-nearest-neighbors used to find MNNs pairs.
@@ -40,7 +39,6 @@
 #' @export
 #'
 Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
-                            Num_Clusters = NULL,
                             Sampling = NULL,
                             Number_Samples = NULL,
                             k_Neighbors = 30,
@@ -137,7 +135,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
         Correction <- Correct_Batch(Reference_Batch = Batches[[Ref]],
                                     Query_Batch = Batches[[Query]],
                                     Query_Batch_Cell_Types = Query_Batch_Cell_Types,
-                                    Num_Clusters = Num_Clusters,
                                     Sampling = Sampling,
                                     Number_Samples = Number_Samples,
                                     k_Neighbors = k_Neighbors,
@@ -200,7 +197,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       Correction <- Correct_Batch(Reference_Batch = Ref,
                                   Query_Batch = Query,
                                   Query_Batch_Cell_Types = Query_Batch_Cell_Types,
-                                  Num_Clusters = Num_Clusters,
                                   Sampling = Sampling,
                                   Number_Samples = Number_Samples,
                                   k_Neighbors = k_Neighbors,
@@ -243,7 +239,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @param Reference_Batch Batch to use as reference for the integration.
 #' @param Query_Batch Batch to correct.
 #' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
-#' @param Num_Clusters Number of clusters used to filter MNNs pairs.
 #' @param Sampling Whether or not samples MNNs pairs' samples are used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs' samples used on the estimation process.
 #' @param Pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
@@ -283,7 +278,6 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 Correct_Batch <- function(Reference_Batch,
                           Query_Batch,
                           Query_Batch_Cell_Types = "Surprise-me",
-                          Num_Clusters = NULL,
                           Sampling = NULL,
                           Number_Samples = NULL,
                           Pairs = NULL,
@@ -461,7 +455,6 @@ Correct_Batch <- function(Reference_Batch,
    #########################
    ###Pairs by clustering###
    #########################
-   #if( Num_Clusters != 1 ){
    if(FilterPairs){
 
      if (length(Membership_Pairs)>20){
@@ -469,7 +462,6 @@ Correct_Batch <- function(Reference_Batch,
                                         #B2 = t(PCA_B2)[,Membership_Cells_Index],
                                         B2 = t(PCA_B2),
                                         Pairs = Membership_Pairs,
-                                        Num_Clusters = Num_Clusters,
                                         Verbose = Verbose)
 
         Selected_Pairs <- Pairs_Select[['Selected Pairs']]

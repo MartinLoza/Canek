@@ -8,7 +8,6 @@ Correct_Batch(
   Reference_Batch,
   Query_Batch,
   Query_Batch_Cell_Types = "Surprise-me",
-  Num_Clusters = NULL,
   Sampling = NULL,
   Number_Samples = NULL,
   Pairs = NULL,
@@ -32,8 +31,6 @@ Correct_Batch(
 \item{Query_Batch}{Batch to correct.}
 
 \item{Query_Batch_Cell_Types}{A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.}
-
-\item{Num_Clusters}{Number of clusters used to filter MNNs pairs.}
 
 \item{Sampling}{Whether or not samples MNNs pairs' samples are used on the estimation process.}
 
