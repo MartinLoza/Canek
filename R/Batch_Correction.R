@@ -169,7 +169,102 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 
     Corrected_Batches[["Batches Integrated"]] <- Batches_Integrated
 
-  }else{  #If the integration is not hierarchical
+  }
+  # if(Hierarchical == TRUE & Num_Batches > 2 ){
+  #
+  #   i <- 1
+  #
+  #   while (i < nrow(Was_Integrated)) {
+  #
+  #     if(Was_Integrated[i] == FALSE){
+  #
+  #       nCells_Bi <- ncol(Batches[[i]])
+  #       N_Pairs_Bj <- as.vector(NULL)
+  #       Last_Batch <- nrow(Was_Integrated)
+  #       Num_Batches_2_Integrates <- length(which(Was_Integrated == FALSE))
+  #
+  #       for(j in (i+1):Last_Batch){
+  #
+  #         if( (Was_Integrated[j] == FALSE) &  (Num_Batches_2_Integrates > 2) ){
+  #
+  #           nCells_Bj <- ncol(Batches[[j]])
+  #
+  #           #Cosine normalization before getting pairs
+  #           cnB1 <- batchelor::cosineNorm(Batches[[i]])
+  #           cnB2 <- batchelor::cosineNorm(Batches[[j]])
+  #
+  #           #PCA_Batches <- prcomp_irlba(  t( cbind(Batches[[i]], Batches[[j]]) ) )
+  #           PCA_Batches <- prcomp_irlba(  t( cbind(cnB1,cnB2) ) )
+  #           PCA_Bi <- PCA_Batches$x[1:nCells_Bi,]
+  #           PCA_Bj <- PCA_Batches$x[(nCells_Bi+1):(nCells_Bi + nCells_Bj),]
+  #
+  #           Pairs <- Get_MNN_Pairs(B1 = t(PCA_Bi),B2 = t(PCA_Bj),  k_Neighbors = 30)
+  #
+  #           #N_Pairs_Bj <- rbind(N_Pairs_Bj, (nrow(Pairs$Pairs)/nCells_Bj))
+  #           N_Pairs_Bj <- rbind(N_Pairs_Bj, nrow(Pairs$Pairs))
+  #           rownames(N_Pairs_Bj)[nrow(N_Pairs_Bj)] <- j
+  #         }
+  #
+  #       }
+  #
+  #       if(!is.null(N_Pairs_Bj)){
+  #         Query <- as.integer( rownames(N_Pairs_Bj)[ which(N_Pairs_Bj == max(N_Pairs_Bj) )] )
+  #       }else{
+  #         Query <- Last_Batch
+  #       }
+  #
+  #       Ref <- i
+  #       Names_Batches <- names(Batches)
+  #
+  #       # TODO: ver si sirve, sino borrarlo
+  #       if(ncol(Batches[[Ref]]) < ncol(Batches[[Query]]) ){
+  #         temp <- Ref
+  #         Ref <- Query
+  #         Query <- temp
+  #         rm(temp)
+  #       }
+  #
+  #       if(Verbose)
+  #         cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
+  #
+  #       Correction <- Correct_Batch(Reference_Batch = Batches[[Ref]],
+  #                                   Query_Batch = Batches[[Query]],
+  #                                   Query_Batch_Cell_Types = Query_Batch_Cell_Types,
+  #                                   Sampling = Sampling,
+  #                                   Number_Samples = Number_Samples,
+  #                                   k_Neighbors = k_Neighbors,
+  #                                   PCA = PCA,
+  #                                   Dimensions = Dimensions,
+  #                                   Max_Membership = Max_Membership,
+  #                                   Fuzzy = Fuzzy,
+  #                                   Verbose = Verbose,
+  #                                   Cosine_Norm = Cosine_Norm,
+  #                                   Estimation = Estimation,
+  #                                   FilterPairs = FilterPairs,
+  #                                   perCellMNN = perCellMNN
+  #                                   )
+  #
+  #       New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
+  #       Corrected_Batches[[New_Name]] <- Correction
+  #       Batches[[New_Name]] <- cbind( Batches[[Ref]], Correction[["Corrected Query Batch"]] )
+  #       Names_Batches <- c(Names_Batches, New_Name)
+  #       Was_Integrated[Ref] <- TRUE
+  #       Was_Integrated[Query] <- TRUE
+  #       Was_Integrated <- rbind(Was_Integrated, FALSE)
+  #
+  #     }
+  #     i <- i+1
+  #   }
+  #
+  #   Batches_Integrated <- Batches[[length(Batches)]]
+  #   for (Batch in 1:Num_Batches) {
+  #     Order <- c(Order, colnames(Batches[[Batch]]))
+  #   }
+  #   Batches_Integrated <- Batches_Integrated[,Order]
+  #
+  #   Corrected_Batches[["Batches Integrated"]] <- Batches_Integrated
+  #
+  else{  #If the integration is not hierarchical
 
     for(i in 2:Num_Batches){
 
