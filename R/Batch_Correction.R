@@ -508,7 +508,7 @@ Correct_Batch <- function(Reference_Batch,
    #Membership cell index
    Membership_Cells_Index <- which(Cluster_Membership$cluster == Membership)
    #Membership cells subset
-   numCellMembership <- ncol(B2_Selected[,Membership_Cells_Index])
+   numCellMembership <- ncol(B2[,Membership_Cells_Index])
 
    #########################
    ###Pairs by membership###
@@ -559,8 +559,8 @@ Correct_Batch <- function(Reference_Batch,
        if(Verbose)
          cat("\n\n\tEXTENDED KALMAN FILTER")
 
-       Estimation_Data <- EKF_BE(B1 = B1_Selected,
-                                 B2 = B2_Selected,
+       Estimation_Data <- EKF_BE(B1 = B1,
+                                 B2 = B2,
                                  Pairs = Selected_Pairs,
                                  Sampling = Sampling,
                                  Number_Samples = Number_Samples,
@@ -572,8 +572,8 @@ Correct_Batch <- function(Reference_Batch,
        if(Verbose)
          cat("\n\n\tAverage Method")
 
-       Estimation_Data <- Average_BE(B1 = B1_Selected,
-                                     B2 = B2_Selected,
+       Estimation_Data <- Average_BE(B1 = B1,
+                                     B2 = B2,
                                      Pairs = Selected_Pairs
                                      )
      }
@@ -599,7 +599,7 @@ Correct_Batch <- function(Reference_Batch,
  #################
 
  ####INIT####
- Correction_Memberships <- matrix(0, nrow = B2_Selected_Num_Cells, ncol = Num_Memberships )
+ Correction_Memberships <- matrix(0, nrow = nCellsB2, ncol = Num_Memberships )
 
  #Set column names according to number of memberships
  Name_Col <- NULL
@@ -609,7 +609,7 @@ Correct_Batch <- function(Reference_Batch,
  colnames(Correction_Memberships) <- Name_Col
 
  #Each cell is initialized according to its membership. Initilization is 1 to its membership and 0 to the other memberships
- for (Cell in 1:B2_Selected_Num_Cells){
+ for (Cell in 1:nCellsB2){
    Cell_Mem <- Cluster_Membership$cluster[Cell]
    Correction_Memberships[Cell,Cell_Mem] <- 1
  }
@@ -621,18 +621,16 @@ Correct_Batch <- function(Reference_Batch,
     cat('\n\nFUZZY ')
 
    Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership,
-                       Cells_PCA = PCA_B2,
+                       Cells_PCA = pcaB2,
                        Correction_Memberships = Correction_Memberships,
                        Verbose = Verbose
                        )
 
    Correction_Memberships <- Fuzzy_Data$`Fuzzy Memberships`
-   #B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Fuzzy_Data$`Fuzzy Memberships`) )
    MST <- Fuzzy_Data$MST
 
  }else{
    MST <- mst(dist(Cluster_Membership$centers[,1:2] ) )
-   #B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships) )
  }
 
  #No Zero Correction Vectors
