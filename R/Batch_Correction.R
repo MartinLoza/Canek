@@ -404,14 +404,12 @@ Correct_Batch <- function(Reference_Batch,
   B1 <- Reference_Batch
   B2 <- Query_Batch
 
-  B2_Corrected <- B2
   Membership_Pairs <- NULL
   Membership_Correction_Data <- list()
   Correction_Matrix <- NULL
   Fuzzy_Data <- NULL
-  Num_Memberships <- NULL
 
-  if( is.numeric(Query_Batch_Cell_Types) ){
+  if(is.numeric(Query_Batch_Cell_Types)){
     Num_Memberships <- Query_Batch_Cell_Types
   }else{
     if(Query_Batch_Cell_Types != "Surprise-me"){
