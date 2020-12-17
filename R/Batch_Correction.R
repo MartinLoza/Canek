@@ -324,108 +324,83 @@ Correct_Batch <- function(Reference_Batch,
     }
   }
 
-  if( !is.null(Cells_Index_Reference) ){
-    if ( Num_Memberships > 1 ){
-      warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
-      B1_Selected <- B1
-    } else{
-      B1_Selected <- B1[,Cells_Index_Reference]
-    }
-  } else{
-    B1_Selected <- B1
-  }
+  #TODO: eliminar esto y hacer el subset donde sea necesario
+  # if( !is.null(Cells_Index_Reference) ){
+  #   if ( Num_Memberships > 1 ){
+  #     warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
+  #     B1_Selected <- B1
+  #   } else{
+  #     B1_Selected <- B1[,Cells_Index_Reference]
+  #   }
+  # } else{
+  #   B1_Selected <- B1
+  # }
+  #
+  # if( !is.null(Cells_Index_Query) ){
+  #   if ( Num_Memberships > 1 ){
+  #     warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
+  #     B2 <- B2
+  #   }else{
+  #     B2_Selected <- B2[,Cells_Index_Query]
+  #   }
+  # }else{
+  #   B2_Selected <- B2
+  # }
 
-  if( !is.null(Cells_Index_Query) ){
-    if ( Num_Memberships > 1 ){
-      warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
-      B2_Selected <- B2
-    }else{
-      B2_Selected <- B2[,Cells_Index_Query]
-    }
-  }else{
-    B2_Selected <- B2
-  }
+  nCellsB1 <- ncol(B1)
+  nCellsB2 <- ncol(B2)
+  Num_Cells <-nCellsB1 + nCellsB2
+  Num_genes <- nrow(B1)
 
-  B1_Selected_Num_Cells <- ncol(B1_Selected)
-  B2_Selected_Num_Cells <- ncol(B2_Selected)
-  Num_Cells <-B1_Selected_Num_Cells + B2_Selected_Num_Cells
-  Num_genes <- nrow(B1_Selected)
+  if(is.null(Pairs)){
 
-  if(Cosine_Norm == TRUE){
-    cnB1 <- batchelor::cosineNorm(B1_Selected)
-    cnB2 <- batchelor::cosineNorm(B2_Selected)
-  }
-
-  if(is.null(Pairs) ) {
-    if(PCA == TRUE){
+    if(is.null(pcaB1) | is.null(pcaB2)){
 
       if(Cosine_Norm == TRUE){
-        PCA_Batches <- prcomp_irlba( t(cbind(cnB1, cnB2)), n = Dimensions)
+        cnB1 <- batchelor::cosineNorm(B1)
+        cnB2 <- batchelor::cosineNorm(B2)
       }else{
-        PCA_Batches <- prcomp_irlba( t(cbind(B1_Selected, B2_Selected)), n = Dimensions)
+        cnB1 <- B1
+        cnB2 <- B2
       }
 
-      PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
-      PCA_B2 <- PCA_Batches$x[(B1_Selected_Num_Cells+1):Num_Cells,]
+      # TODO: cambiar estos nombres
+      PCA_Batches <- prcomp_irlba(t(cbind(cnB1, cnB2)), n = Dimensions)
+      pcaB1 <- PCA_Batches$x[1:nCellsB1,]
+      pcaB2 <- PCA_Batches$x[(nCellsB1+1):Num_Cells,]
+    }#pca = NULL
 
-      if(Verbose)
-        cat( paste("\n\nFinding mutual nearest neighbors from ", k_Neighbors,"nearest neighbors") )
+    if(Verbose)
+      cat(paste("\n\nFinding mutual nearest neighbors from ", k_Neighbors,"nearest neighbors"))
 
-      Pairs <- Get_MNN_Pairs(B1 = t(PCA_B1),
-                             B2 = t(PCA_B2),
-                             k_Neighbors = k_Neighbors
-                             )
-
-    }else{
-      if(Cosine_Norm == TRUE){
-        Pairs <- Get_MNN_Pairs(B1 = cnB1,
-                               B2 = cnB2 ,
-                               k_Neighbors = k_Neighbors
-                               )
-      }else{
-        Pairs <- Get_MNN_Pairs(B1 = B1_Selected,
-                               B2 = B2_Selected,
-                               k_Neighbors = k_Neighbors
-                               )
-      }
-    }
+    Pairs <- Get_MNN_Pairs(B1 = t(pcaB1), B2 = t(pcaB2),
+                           k_Neighbors = k_Neighbors)
 
     Pairs <- Pairs$Pairs
-  }
+  }# Pairs = NULL
 
  if(Verbose)
-  cat(paste( '\n\tNumber of MNN pairs found:', nrow(Pairs) ))
+  cat(paste('\n\tNumber of MNN pairs found:', nrow(Pairs)))
 
- if( is.null(Num_Memberships) ){
+ if(!exists("Num_Memberships")){
 
    if(Verbose)
     cat("\n\nFinding number of memberships")
 
-   if( !exists("PCA_B2") ){
-     PCA_B2 <- prcomp_irlba( t(B2_Selected) )
-     PCA_B2 <- PCA_B2$x
+   if(!exists("pcaB2")){
+     pcaB2 <- prcomp_irlba(t(B2))
+     pcaB2 <- pcaB2$x
    }
 
-   if(ncol(B2_Selected) < 2000){
-     usepam <- TRUE
-   }else{
-     usepam <- FALSE
-   }
-
-   Num_Memberships <- pamk(PCA_B2[,1:10],
-                          krange = 1:Max_Membership,
-                          usepam = usepam
-                          )
-
-   #Num_Memberships <- (Num_Memberships$nc)^2
-   Num_Memberships <- (Num_Memberships$nc)
+   Num_Memberships <- pamk(pcaB2[,1:10], krange = 1:Max_Membership,
+                           usepam = (if(nrow(pcaB2) > 2000) FALSE else TRUE))$nc
 
    if(Verbose)
-    cat(paste('\n\tNumber of memberships found:', Num_Memberships) )
+    cat(paste('\n\tNumber of memberships found:', Num_Memberships))
  }
 
  #Cluster in memberships
- Cluster_Membership <- kmeans(PCA_B2[,1:10],Num_Memberships)
+ Cluster_Membership <- kmeans(pcaB2[,1:10],Num_Memberships)
 
  #INIT Correction Matrix
  Correction_Matrix <- matrix(0, nrow = Num_genes, ncol = Num_Memberships)
