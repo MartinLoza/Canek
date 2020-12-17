@@ -389,7 +389,7 @@ Correct_Batch <- function(Reference_Batch,
                           FilterPairs = FALSE,
                           perCellMNN = 0.08
                           ){
-
+## TODO: CAMBIAR pcaB1 a pcaRef. Lo mismo para B2
   if(Verbose)
     tic("\n Correction time")
 
