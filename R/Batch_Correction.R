@@ -526,9 +526,9 @@ Correct_Batch <- function(Reference_Batch,
    if(FilterPairs){
 
      if (length(Membership_Pairs)>20){
-        Pairs_Select <- Pairs_Selection(B1 = t(PCA_B1),
-                                        #B2 = t(PCA_B2)[,Membership_Cells_Index],
-                                        B2 = t(PCA_B2),
+        Pairs_Select <- Pairs_Selection(B1 = t(pcaB1),
+                                        #B2 = t(pcaB2)[,Membership_Cells_Index],
+                                        B2 = t(pcaB2),
                                         Pairs = Membership_Pairs,
                                         Verbose = Verbose)
 
