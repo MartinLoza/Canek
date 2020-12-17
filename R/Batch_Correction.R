@@ -147,7 +147,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                     Estimation = Estimation,
                                     FilterPairs = FilterPairs,
                                     perCellMNN = perCellMNN
-                                    )
+        )
 
         New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
         Corrected_Batches[[New_Name]] <- Correction
