@@ -398,27 +398,26 @@ Correct_Batch <- function(refBatch, queBatch,
 
    #Membership cell index
    Membership_Cells_Index <- which(Cluster_Membership$cluster == Membership)
-   #Membership cells subset
+   #Membership cells number
    numCellMembership <- ncol(queBatch[,Membership_Cells_Index])
 
    #########################
    ###Pairs by membership###
    #########################
-   Membership_Pairs_Index <- which(Pairs[,1]==Membership_Cells_Index[1])
-   for (j in 2:length(Membership_Cells_Index) ) {
+   Membership_Pairs_Index <- integer()
+   for (j in 1:length(Membership_Cells_Index)) {
      Membership_Pairs_Index <- c(Membership_Pairs_Index,which(Pairs[,1]==Membership_Cells_Index[j]))
    }
    #Subset of pairs corresponding to the membership
-   Membership_Pairs <- Pairs[Membership_Pairs_Index,]
+   Membership_Pairs <- Pairs[Membership_Pairs_Index, ]
 
    #########################
    ###Pairs by clustering###
    #########################
    if(FilterPairs){
 
-     if (length(Membership_Pairs)>20){
+     if (nrow(Membership_Pairs) > 10){
         Pairs_Select <- Pairs_Selection(B1 = t(pcaRef),
-                                        #B2 = t(pcaQue)[,Membership_Cells_Index],
                                         B2 = t(pcaQue),
                                         Pairs = Membership_Pairs,
                                         Verbose = Verbose)
@@ -440,7 +439,7 @@ Correct_Batch <- function(refBatch, queBatch,
 
    norNumPairs <- (ceiling(nrow(Selected_Pairs)/k_Neighbors))/(numCellMembership)
 
-   if ( norNumPairs > perCellMNN ){
+   if (norNumPairs > perCellMNN){
 
       ####################################
       ###Estimation of the batch effect###
