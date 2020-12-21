@@ -75,100 +75,122 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 
   #In hierarchical mode, the pairs of the batches are checked in order to decide which batches are integrated first. The logic
   #is that more similar batches would share a higher number of pairs
-  if(Hierarchical == TRUE & Num_Batches >2 ){
+  if(Hierarchical == TRUE & Num_Batches > 2 ){
 
-    i <- 1
+    nCells <- lapply(Batches, ncol)
 
-    while (i < nrow(Was_Integrated)) {
+    cnBatches <- lapply(Batches, batchelor::cosineNorm)
 
-      if(Was_Integrated[i] == FALSE){
+    # pcaBatches <- prcomp_irlba(t(Reduce(cbind, cnBatches)), n = 50)
+    pcaBatches <- lapply(cnBatches, function(x){prcomp_irlba(t(x), n = 50)})
 
-        nCells_Bi <- ncol(Batches[[i]])
-        N_Pairs_Bj <- as.vector(NULL)
-        Last_Batch <- nrow(Was_Integrated)
-        Num_Batches_2_Integrates <- length(which(Was_Integrated == FALSE))
+    # splitPCA <- function(pcaData, inputBatches){
+    #   pcaData <- pcaData$x
+    #   nCells <- lapply(inputBatches, ncol)
+    #   ls <- list()
+    #
+    #   for (i in seq_along(inputBatches)){
+    #     idx <- 1:nCells[[i]]
+    #     ls[[i]] <- pcaData[idx,]
+    #     pcaData <- pcaData[-idx,]
+    #   }
+    #
+    #   names(ls) <- names(inputBatches)
+    #
+    #   return(ls)
+    # }
+    #
+    # project <- list("center" = pcaBatches$center, "rotation" = pcaBatches$rotation)
+    # #separarlos
+    # pcaBatches <- splitPCA(pcaData = pcaBatches, inputBatches = Batches)
+    #
+    # nMemberships <- lapply(pcaBatches, function(x){pamk(data = x[,1:10],
+    #                                                     krange = 1:Max_Membership,
+    #                                                     usepam = (if(nrow(x) > 2000) FALSE else TRUE))$nc})
 
-        for(j in (i+1):Last_Batch){
+    nMemberships <- lapply(pcaBatches, function(x){pamk(data = x$x[,1:10],
+                                                        krange = 1:Max_Membership,
+                                                        usepam = (if(nrow(x$x) > 2000) FALSE else TRUE))$nc})
 
-          if( (Was_Integrated[j] == FALSE) &  (Num_Batches_2_Integrates > 2) ){
+    orderHierarchical <- function(nMemberships = NULL, nCells = NULL){
 
-            nCells_Bj <- ncol(Batches[[j]])
+      nBatches <- length(nMemberships)
+      order <- data.frame(Batches = names(nMemberships),
+                          nMemberships = t(as.data.frame(nMemberships)),
+                          nCells = t(as.data.frame(nCells)))
+      order <- order[sort(order$nMemberships,decreasing = TRUE, index.return = TRUE)$ix,]
 
-            #Cosine normalization before getting pairs
-            cnB1 <- batchelor::cosineNorm(Batches[[i]])
-            cnB2 <- batchelor::cosineNorm(Batches[[j]])
-
-            #PCA_Batches <- prcomp_irlba(  t( cbind(Batches[[i]], Batches[[j]]) ) )
-            PCA_Batches <- prcomp_irlba(  t( cbind(cnB1,cnB2) ) )
-            PCA_Bi <- PCA_Batches$x[1:nCells_Bi,]
-            PCA_Bj <- PCA_Batches$x[(nCells_Bi+1):(nCells_Bi + nCells_Bj),]
-
-            Pairs <- Get_MNN_Pairs(B1 = t(PCA_Bi),B2 = t(PCA_Bj),  k_Neighbors = 30)
-
-            #N_Pairs_Bj <- rbind(N_Pairs_Bj, (nrow(Pairs$Pairs)/nCells_Bj))
-            N_Pairs_Bj <- rbind(N_Pairs_Bj, nrow(Pairs$Pairs))
-            rownames(N_Pairs_Bj)[nrow(N_Pairs_Bj)] <- j
-          }
-
-        }
-
-        if(!is.null(N_Pairs_Bj)){
-          Query <- as.integer( rownames(N_Pairs_Bj)[ which(N_Pairs_Bj == max(N_Pairs_Bj) )] )
-        }else{
-          Query <- Last_Batch
-        }
-
-        Ref <- i
-        Names_Batches <- names(Batches)
-
-        # TODO: ver si sirve, sino borrarlo
-        if(ncol(Batches[[Ref]]) < ncol(Batches[[Query]]) ){
-          temp <- Ref
-          Ref <- Query
-          Query <- temp
-          rm(temp)
-        }
-
-        if(Verbose)
-          cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
-
-        Correction <- Correct_Batch(Reference_Batch = Batches[[Ref]],
-                                    Query_Batch = Batches[[Query]],
-                                    Query_Batch_Cell_Types = Query_Batch_Cell_Types,
-                                    Sampling = Sampling,
-                                    Number_Samples = Number_Samples,
-                                    k_Neighbors = k_Neighbors,
-                                    PCA = PCA,
-                                    Dimensions = Dimensions,
-                                    Max_Membership = Max_Membership,
-                                    Fuzzy = Fuzzy,
-                                    Verbose = Verbose,
-                                    Cosine_Norm = Cosine_Norm,
-                                    Estimation = Estimation,
-                                    FilterPairs = FilterPairs,
-                                    perCellMNN = perCellMNN
-        )
-
-        New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
-        Corrected_Batches[[New_Name]] <- Correction
-        Batches[[New_Name]] <- cbind( Batches[[Ref]], Correction[["Corrected Query Batch"]] )
-        Names_Batches <- c(Names_Batches, New_Name)
-        Was_Integrated[Ref] <- TRUE
-        Was_Integrated[Query] <- TRUE
-        Was_Integrated <- rbind(Was_Integrated, FALSE)
-
+      for(i in unique(order$nMemberships)){
+        idx <- which(order$nMemberships == i)
+        order[idx,] <- order[idx[sort(order$nCells[idx], decreasing = TRUE, index.return = TRUE)$ix],]
       }
-      i <- i+1
+
+      return(order)
     }
 
-    Batches_Integrated <- Batches[[length(Batches)]]
-    for (Batch in 1:Num_Batches) {
-      Order <- c(Order, colnames(Batches[[Batch]]))
+    order <- orderHierarchical(nMemberships = nMemberships, nCells = nCells)
+  #test: borrar
+    project <- list("center" = pcaBatches[[order$Batches[1]]]$center,
+                    "rotation" = pcaBatches[[order$Batches[1]]]$rotation)
+
+    pcaBatches <- lapply(cnBatches, function(x){t(x) %*% project$rotation})
+
+    for(i in 1:(length(order$Batches)-1)){
+
+      # if(Verbose)
+      #   cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
+
+      Correction <- Correct_Batch(Reference_Batch = Batches[[order$Batches[i]]],
+                                  Query_Batch = Batches[[order$Batches[i+1]]],
+                                  pcaB1 = pcaBatches[[order$Batches[i]]],
+                                  pcaB2 = pcaBatches[[order$Batches[i+1]]],
+                                  Query_Batch_Cell_Types =  order$nMemberships[i+1],
+                                  Sampling = Sampling,
+                                  Number_Samples = Number_Samples,
+                                  k_Neighbors = k_Neighbors,
+                                  PCA = PCA,
+                                  Dimensions = Dimensions,
+                                  Max_Membership = Max_Membership,
+                                  Fuzzy = Fuzzy,
+                                  Verbose = Verbose,
+                                  Cosine_Norm = Cosine_Norm,
+                                  Estimation = Estimation,
+                                  FilterPairs = FilterPairs,
+                                  perCellMNN = perCellMNN)
+
+      Batches[[order$Batches[i]]] <- "DONE"
+      Batches[[order$Batches[i+1]]] <- cbind(Correction$`Reference Batch (B1)`,
+                                             Correction$`Corrected Query Batch`)
+
+      pcaBatches[[order$Batches[i+1]]] <- t(batchelor::cosineNorm(Batches[[order$Batches[i+1]]])) %*%
+        project$rotation
+
     }
-    Batches_Integrated <- Batches_Integrated[,Order]
 
-    Corrected_Batches[["Batches Integrated"]] <- Batches_Integrated
+    Integrated <- Batches[[order$Batches[length(order$Batches)]]]
 
+    orderCells <- function(order = NULL, namesInBatch = NULL){
+
+      # output order vector
+      outOrder <- character()
+      for(i in seq_len(nrow(order))){
+        outOrder <- c(outOrder, rep(order$Batches[i], order$nCells[i]))
+      }
+
+      # rearrange the output order according with the input Order
+      mOrder <- integer()
+      for(i in names(Batches)){
+        mOrder <- c(mOrder, which(outOrder == i))
+      }
+
+      return(mOrder)
+    }
+
+    mOrder <- orderCells(order = order, namesInBatch = names(Batches))
+
+    Integrated <- Integrated[,mOrder]
+
+    Corrected_Batches[["Batches Integrated"]] <- Integrated
   }
   # if(Hierarchical == TRUE & Num_Batches > 2 ){
   #
