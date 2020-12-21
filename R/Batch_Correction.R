@@ -338,10 +338,9 @@ Correct_Batch <- function(refBatch, queBatch,
   #   B2_Selected <- queBatch
   # }
 
-  B1_Selected_Num_Cells <- ncol(refBatch)
-  B2_Selected_Num_Cells <- ncol(queBatch)
-  Num_Cells <-B1_Selected_Num_Cells + B2_Selected_Num_Cells
-  Num_genes <- nrow(refBatch)
+  nCellsRef <- ncol(refBatch)
+  nCellsQue <- ncol(queBatch)
+  Num_Cells <-nCellsRef + nCellsQue
 
   if(is.null(Pairs)){
 
@@ -349,8 +348,8 @@ Correct_Batch <- function(refBatch, queBatch,
                                         batchelor::cosineNorm(queBatch))),
                                 n = Dimensions)
 
-    PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
-    PCA_B2 <- PCA_Batches$x[(B1_Selected_Num_Cells+1):Num_Cells,]
+    PCA_B1 <- PCA_Batches$x[1:nCellsRef,]
+    PCA_B2 <- PCA_Batches$x[(nCellsRef+1):Num_Cells,]
 
     rm(PCA_Batches)
 
@@ -398,7 +397,7 @@ Correct_Batch <- function(refBatch, queBatch,
  Cluster_Membership <- kmeans(PCA_B2[,1:10],Num_Memberships)
 
  #INIT Correction Matrix
- Correction_Matrix <- matrix(0, nrow = Num_genes, ncol = Num_Memberships)
+ Correction_Matrix <- matrix(0, nrow = nrow(refBatch), ncol = Num_Memberships)
 
  Zero_Correction <- rep(FALSE, Num_Memberships)
 
@@ -501,7 +500,7 @@ Correct_Batch <- function(refBatch, queBatch,
  #################
 
  ####INIT####
- Correction_Memberships <- matrix(0, nrow = B2_Selected_Num_Cells, ncol = Num_Memberships )
+ Correction_Memberships <- matrix(0, nrow = nCellsQue, ncol = Num_Memberships )
 
  #Set column names according to number of memberships
  Name_Col <- NULL
@@ -511,7 +510,7 @@ Correct_Batch <- function(refBatch, queBatch,
  colnames(Correction_Memberships) <- Name_Col
 
  #Each cell is initialized according to its membership. Initilization is 1 to its membership and 0 to the other memberships
- for (Cell in 1:B2_Selected_Num_Cells){
+ for (Cell in 1:nCellsQue){
    Cell_Mem <- Cluster_Membership$cluster[Cell]
    Correction_Memberships[Cell,Cell_Mem] <- 1
  }
