@@ -345,19 +345,20 @@ Correct_Batch <- function(refBatch, queBatch,
 
   if(is.null(Pairs)){
 
-    cnRefBatch <- batchelor::cosineNorm(refBatch)
-    cnQueBatch <- batchelor::cosineNorm(queBatch)
-
-    PCA_Batches <- prcomp_irlba( t(cbind(cnRefBatch, cnQueBatch)), n = Dimensions)
+    PCA_Batches <- prcomp_irlba(t(cbind(batchelor::cosineNorm(refBatch),
+                                        batchelor::cosineNorm(queBatch))),
+                                n = Dimensions)
 
     PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
     PCA_B2 <- PCA_Batches$x[(B1_Selected_Num_Cells+1):Num_Cells,]
 
-    if(Verbose)
-      cat( paste("\n\nFinding mutual nearest neighbors from ", k_Neighbors,"nearest neighbors") )
+    rm(PCA_Batches)
 
-    Pairs <- Get_MNN_Pairs(B1 = cnRefBatch,
-                           B2 = cnQueBatch ,
+    if(Verbose)
+      cat(paste("\n\nFinding mutual nearest neighbors from", k_Neighbors,"nearest neighbors"))
+
+    Pairs <- Get_MNN_Pairs(B1 = t(PCA_B1),
+                           B2 = t(PCA_B2),
                            k_Neighbors = k_Neighbors)
 
     Pairs <- Pairs$Pairs
@@ -371,7 +372,7 @@ Correct_Batch <- function(refBatch, queBatch,
    if(Verbose)
     cat("\n\nFinding number of memberships")
 
-   if( !exists("PCA_B2") ){
+   if(!exists("PCA_B2")){
      PCA_B2 <- prcomp_irlba( t(queBatch) )
      PCA_B2 <- PCA_B2$x
    }
