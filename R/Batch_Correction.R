@@ -460,7 +460,7 @@ Correct_Batch <- function(refBatch, queBatch,
 
      if(Estimation == "Average"){
        if(Verbose)
-         cat("\n\n\tAverage Method")
+         cat("\n\n\tMedian Method")
 
        Estimation_Data <- Average_BE(B1 = refBatch,
                                      B2 = queBatch,
