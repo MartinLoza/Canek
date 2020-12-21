@@ -383,7 +383,7 @@ Correct_Batch <- function(refBatch, queBatch,
 
    Num_Memberships <- pamk(PCA_B2[,1:10],
                           krange = 1:Max_Membership,
-                          usepam = usepam
+                          usepam = (if(nCellsQue < 2000) TRUE else FALSE)
                           )
 
    Num_Memberships <- (Num_Memberships$nc)
