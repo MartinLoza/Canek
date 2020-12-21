@@ -95,11 +95,10 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
             nCells_Bj <- ncol(Batches[[j]])
 
             #Cosine normalization before getting pairs
-            cnB1 <- batchelor::cosineNorm(Batches[[i]])
-            cnB2 <- batchelor::cosineNorm(Batches[[j]])
+            cnRefBatch <- batchelor::cosineNorm(Batches[[i]])
+            cnQueBatch <- batchelor::cosineNorm(Batches[[j]])
 
-            #PCA_Batches <- prcomp_irlba(  t( cbind(Batches[[i]], Batches[[j]]) ) )
-            PCA_Batches <- prcomp_irlba(  t( cbind(cnB1,cnB2) ) )
+            PCA_Batches <- prcomp_irlba(  t( cbind(cnRefBatch,cnQueBatch) ) )
             PCA_Bi <- PCA_Batches$x[1:nCells_Bi,]
             PCA_Bj <- PCA_Batches$x[(nCells_Bi+1):(nCells_Bi + nCells_Bj),]
 
@@ -374,13 +373,13 @@ Correct_Batch <- function(refBatch, queBatch,
 
     }else{
       if(Cosine_Norm == TRUE){
-        Pairs <- Get_MNN_Pairs(B1 = cnB1,
-                               B2 = cnB2 ,
+        Pairs <- Get_MNN_Pairs(B1 = cnRefBatch,
+                               B2 = cnQueBatch ,
                                k_Neighbors = k_Neighbors
                                )
       }else{
-        Pairs <- Get_MNN_Pairs(B1 = B1_Selected,
-                               B2 = B2_Selected,
+        Pairs <- Get_MNN_Pairs(B1 = refBatch,
+                               B2 = queBatch,
                                k_Neighbors = k_Neighbors
                                )
       }
@@ -398,11 +397,11 @@ Correct_Batch <- function(refBatch, queBatch,
     cat("\n\nFinding number of memberships")
 
    if( !exists("PCA_B2") ){
-     PCA_B2 <- prcomp_irlba( t(B2_Selected) )
+     PCA_B2 <- prcomp_irlba( t(queBatch) )
      PCA_B2 <- PCA_B2$x
    }
 
-   if(ncol(B2_Selected) < 2000){
+   if(ncol(queBatch) < 2000){
      usepam <- TRUE
    }else{
      usepam <- FALSE
@@ -435,7 +434,7 @@ Correct_Batch <- function(refBatch, queBatch,
    #Membership cell index
    Membership_Cells_Index <- which(Cluster_Membership$cluster == Membership)
    #Membership cells subset
-   numCellMembership <- ncol(B2_Selected[,Membership_Cells_Index])
+   numCellMembership <- ncol(queBatch[,Membership_Cells_Index])
 
    #########################
    ###Pairs by membership###
@@ -486,8 +485,8 @@ Correct_Batch <- function(refBatch, queBatch,
        if(Verbose)
          cat("\n\n\tEXTENDED KALMAN FILTER")
 
-       Estimation_Data <- EKF_BE(B1 = B1_Selected,
-                                 B2 = B2_Selected,
+       Estimation_Data <- EKF_BE(B1 = refBatch,
+                                 B2 = queBatch,
                                  Pairs = Selected_Pairs,
                                  Sampling = Sampling,
                                  Number_Samples = Number_Samples,
@@ -499,8 +498,8 @@ Correct_Batch <- function(refBatch, queBatch,
        if(Verbose)
          cat("\n\n\tAverage Method")
 
-       Estimation_Data <- Average_BE(B1 = B1_Selected,
-                                     B2 = B2_Selected,
+       Estimation_Data <- Average_BE(B1 = refBatch,
+                                     B2 = queBatch,
                                      Pairs = Selected_Pairs
                                      )
      }
