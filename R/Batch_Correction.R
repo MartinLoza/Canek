@@ -348,23 +348,23 @@ Correct_Batch <- function(refBatch, queBatch,
                                         batchelor::cosineNorm(queBatch))),
                                 n = Dimensions)
 
-    PCA_B1 <- PCA_Batches$x[1:nCellsRef,]
-    PCA_B2 <- PCA_Batches$x[(nCellsRef+1):Num_Cells,]
+    pcaRef <- PCA_Batches$x[1:nCellsRef,]
+    pcaQue <- PCA_Batches$x[(nCellsRef+1):Num_Cells,]
 
     rm(PCA_Batches)
 
     if(Verbose)
       cat(paste("\n\nFinding mutual nearest neighbors from", k_Neighbors,"nearest neighbors"))
 
-    Pairs <- Get_MNN_Pairs(B1 = t(PCA_B1),
-                           B2 = t(PCA_B2),
+    Pairs <- Get_MNN_Pairs(B1 = t(pcaRef),
+                           B2 = t(pcaQue),
                            k_Neighbors = k_Neighbors)
 
     Pairs <- Pairs$Pairs
   }else{
 
-    PCA_B2 <- prcomp_irlba(t(queBatch),n = 10)
-    PCA_B2 <- PCA_B2$x
+    pcaQue <- prcomp_irlba(t(queBatch),n = 10)
+    pcaQue <- pcaQue$x
   }
 
  if(Verbose)
@@ -375,13 +375,7 @@ Correct_Batch <- function(refBatch, queBatch,
    if(Verbose)
     cat("\n\nFinding number of memberships")
 
-   if(ncol(queBatch) < 2000){
-     usepam <- TRUE
-   }else{
-     usepam <- FALSE
-   }
-
-   Num_Memberships <- pamk(PCA_B2[,1:10],
+   Num_Memberships <- pamk(pcaQue[,1:10],
                           krange = 1:Max_Membership,
                           usepam = (if(nCellsQue < 2000) TRUE else FALSE)
                           )
@@ -393,7 +387,7 @@ Correct_Batch <- function(refBatch, queBatch,
  }
 
  #Cluster in memberships
- Cluster_Membership <- kmeans(PCA_B2[,1:10],Num_Memberships)
+ Cluster_Membership <- kmeans(pcaQue[,1:10],Num_Memberships)
 
  #INIT Correction Matrix
  Correction_Matrix <- matrix(0, nrow = nrow(refBatch), ncol = Num_Memberships)
@@ -426,9 +420,9 @@ Correct_Batch <- function(refBatch, queBatch,
    if(FilterPairs){
 
      if (length(Membership_Pairs)>20){
-        Pairs_Select <- Pairs_Selection(B1 = t(PCA_B1),
-                                        #B2 = t(PCA_B2)[,Membership_Cells_Index],
-                                        B2 = t(PCA_B2),
+        Pairs_Select <- Pairs_Selection(B1 = t(pcaRef),
+                                        #B2 = t(pcaQue)[,Membership_Cells_Index],
+                                        B2 = t(pcaQue),
                                         Pairs = Membership_Pairs,
                                         Verbose = Verbose)
 
@@ -521,7 +515,7 @@ Correct_Batch <- function(refBatch, queBatch,
     cat('\n\nFUZZY ')
 
    Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership,
-                       Cells_PCA = PCA_B2,
+                       Cells_PCA = pcaQue,
                        Correction_Memberships = Correction_Memberships,
                        Verbose = Verbose
                        )
