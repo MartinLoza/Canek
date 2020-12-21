@@ -132,8 +132,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
         if(Verbose)
           cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
 
-        Correction <- Correct_Batch(Reference_Batch = Batches[[Ref]],
-                                    Query_Batch = Batches[[Query]],
+        Correction <- Correct_Batch(refBatch = Batches[[Ref]],
+                                    queBatch = Batches[[Query]],
                                     Query_Batch_Cell_Types = Query_Batch_Cell_Types,
                                     Sampling = Sampling,
                                     Number_Samples = Number_Samples,
@@ -194,8 +194,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       }
 
 
-      Correction <- Correct_Batch(Reference_Batch = Ref,
-                                  Query_Batch = Query,
+      Correction <- Correct_Batch(refBatch = Ref,
+                                  queBatch = Query,
                                   Query_Batch_Cell_Types = Query_Batch_Cell_Types,
                                   Sampling = Sampling,
                                   Number_Samples = Number_Samples,
@@ -236,8 +236,8 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #'
 #' Function to correct batch effect over two batches
 #'
-#' @param Reference_Batch Batch to use as reference for the integration.
-#' @param Query_Batch Batch to correct.
+#' @param refBatch Batch to use as reference for the integration.
+#' @param queBatch Batch to correct.
 #' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
 #' @param Sampling Whether or not samples MNNs pairs' samples are used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs' samples used on the estimation process.
@@ -275,8 +275,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @export
 #'
 #'
-Correct_Batch <- function(Reference_Batch,
-                          Query_Batch,
+Correct_Batch <- function(refBatch, queBatch,
                           Query_Batch_Cell_Types = "Surprise-me",
                           Sampling = NULL,
                           Number_Samples = NULL,
@@ -298,18 +297,13 @@ Correct_Batch <- function(Reference_Batch,
     tic("\n Correction time")
 
   #Check input batches as matrices
-  if(!is.matrix(Reference_Batch)){
-    Reference_Batch <- as.matrix(Reference_Batch)
+  if(!is.matrix(refBatch)){
+    refBatch <- as.matrix(refBatch)
   }
-  if(!is.matrix(Query_Batch)){
-    Query_Batch <- as.matrix(Query_Batch)
+  if(!is.matrix(queBatch)){
+    queBatch <- as.matrix(queBatch)
   }
 
-  #Initialization of variables
-  B1 <- Reference_Batch
-  B2 <- Query_Batch
-
-  B2_Corrected <- B2
   Membership_Pairs <- NULL
   Membership_Correction_Data <- list()
   Correction_Matrix <- NULL
@@ -324,26 +318,28 @@ Correct_Batch <- function(Reference_Batch,
     }
   }
 
+  # TODO: correguir esto para no crear nuevos datasets, solo crear un indice
+
   if( !is.null(Cells_Index_Reference) ){
     if ( Num_Memberships > 1 ){
       warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
-      B1_Selected <- B1
+      B1_Selected <- refBatch
     } else{
-      B1_Selected <- B1[,Cells_Index_Reference]
+      B1_Selected <- refBatch[,Cells_Index_Reference]
     }
   } else{
-    B1_Selected <- B1
+    B1_Selected <- refBatch
   }
 
   if( !is.null(Cells_Index_Query) ){
     if ( Num_Memberships > 1 ){
       warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
-      B2_Selected <- B2
+      B2_Selected <- queBatch
     }else{
-      B2_Selected <- B2[,Cells_Index_Query]
+      B2_Selected <- queBatch[,Cells_Index_Query]
     }
   }else{
-    B2_Selected <- B2
+    B2_Selected <- queBatch
   }
 
   B1_Selected_Num_Cells <- ncol(B1_Selected)
@@ -417,7 +413,6 @@ Correct_Batch <- function(Reference_Batch,
                           usepam = usepam
                           )
 
-   #Num_Memberships <- (Num_Memberships$nc)^2
    Num_Memberships <- (Num_Memberships$nc)
 
    if(Verbose)
@@ -559,12 +554,10 @@ Correct_Batch <- function(Reference_Batch,
                        )
 
    Correction_Memberships <- Fuzzy_Data$`Fuzzy Memberships`
-   #B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Fuzzy_Data$`Fuzzy Memberships`) )
    MST <- Fuzzy_Data$MST
 
  }else{
    MST <- mst(dist(Cluster_Membership$centers[,1:2] ) )
-   #B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships) )
  }
 
  #No Zero Correction Vectors
@@ -585,7 +578,7 @@ Correct_Batch <- function(Reference_Batch,
 
  }
 
- B2_Corrected <-  B2 + (Correction_Matrix  %*% t(Correction_Memberships/rowSums(Correction_Memberships)) )
+ B2_Corrected <-  queBatch + (Correction_Matrix  %*% t(Correction_Memberships/rowSums(Correction_Memberships)) )
 
  ### Set data lists to return
   Membership_Data <- list("Cluster Membership" = Cluster_Membership, "Membership Correction Data" = Membership_Correction_Data )
@@ -593,7 +586,7 @@ Correct_Batch <- function(Reference_Batch,
   Correction_Data <- list("Correction Matrix" = Correction_Matrix, "MNN Pairs" = Pairs,
                           "Membership Data" = Membership_Data, "Fuzzy Data" = Fuzzy_Data )
 
-  Corrected_Batches <- list("Reference Batch (B1)" = B1, "Query Batch (B2)" = B2,
+  Corrected_Batches <- list("Reference Batch (B1)" = refBatch, "Query Batch (B2)" = queBatch,
                             "Corrected Query Batch"= B2_Corrected, "Correction Data" = Correction_Data )
 
   if(Verbose)
