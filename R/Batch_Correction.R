@@ -8,13 +8,11 @@
 #' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs samples used on the estimation process.
 #' @param k_Neighbors Number of k-nearest-neighbors used to find MNNs pairs.
-#' @param PCA Whether or not MNNs pairs are found under a principal components representation.
 #' @param Dimensions PCA dimensions used to find MNNs pairs.
 #' @param Max_Membership Maximum number of memberships used when memberships are automatically defined.
 #' @param Fuzzy Whether or not a fuzzy logic join is used on the local correction vectors.
 #' @param Hierarchical Whether or not a hiearchical integration scheme is used when correcting more than two batches.
 #' @param Verbose Print output
-#' @param Cosine_Norm TODO
 #' @param Estimation TODO
 #' @param FilterPairs whether to perform pair filtering (default: FALSE)
 #' @param perCellMNN TODO
@@ -42,13 +40,13 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Sampling = NULL,
                             Number_Samples = NULL,
                             k_Neighbors = 30,
-                            PCA = TRUE,
+                            #PCA = TRUE,
                             Dimensions = 50,
                             Max_Membership = 5,
                             Fuzzy = TRUE,
                             Hierarchical = TRUE,
                             Verbose = FALSE,
-                            Cosine_Norm = TRUE,
+                            #Cosine_Norm = TRUE,
                             Estimation = "Average",
                             FilterPairs = FALSE,
                             perCellMNN = 0.08,
@@ -137,12 +135,12 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                     Sampling = Sampling,
                                     Number_Samples = Number_Samples,
                                     k_Neighbors = k_Neighbors,
-                                    PCA = PCA,
+                                    #PCA = PCA,
                                     Dimensions = Dimensions,
                                     Max_Membership = Max_Membership,
                                     Fuzzy = Fuzzy,
                                     Verbose = Verbose,
-                                    Cosine_Norm = Cosine_Norm,
+                                    #Cosine_Norm = Cosine_Norm,
                                     Estimation = Estimation,
                                     FilterPairs = FilterPairs,
                                     perCellMNN = perCellMNN
@@ -199,12 +197,12 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                                   Sampling = Sampling,
                                   Number_Samples = Number_Samples,
                                   k_Neighbors = k_Neighbors,
-                                  PCA = PCA,
+                                  #PCA = PCA,
                                   Dimensions = Dimensions,
                                   Max_Membership = Max_Membership,
                                   Fuzzy = Fuzzy,
                                   Verbose = Verbose,
-                                  Cosine_Norm = Cosine_Norm,
+                                  #Cosine_Norm = Cosine_Norm,
                                   Estimation = Estimation,
                                   FilterPairs = FilterPairs,
                                   perCellMNN = perCellMNN
@@ -244,12 +242,10 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #' @param Cells_Index_Query Index of cells from the query-batch used as observations of the batch-effect.
 #' @param Cells_Index_Reference Index of cells from the reference-batch used as observations of the batch-effect.
 #' @param k_Neighbors Number of k-nearest-neighbors used to find MNNs pairs.
-#' @param PCA Whether or not MNNs pairs are found under a principal components representation.
 #' @param Dimensions PCA dimensions used to find MNNs pairs.
 #' @param Max_Membership Maximum number of memberships used when memberships are automatically defined.
 #' @param Fuzzy Whether or not a fuzzy logic join is used on the local correction vectors.
 #' @param Verbose Print output
-#' @param Cosine_Norm TODO
 #' @param Estimation TODO
 #' @param FilterPairs whether to perform pair filtering (default: FALSE)
 #' @param perCellMNN TODO
@@ -281,12 +277,13 @@ Correct_Batch <- function(refBatch, queBatch,
                           Pairs = NULL,
                           Cells_Index_Query = NULL,
                           Cells_Index_Reference = NULL,
-                          k_Neighbors = 30, PCA = TRUE,
+                          k_Neighbors = 30,
+                          #PCA = TRUE, #TODO:implement for different input data
                           Dimensions = 50,
                           Max_Membership = 5,
                           Fuzzy = TRUE,
                           Verbose = FALSE,
-                          Cosine_Norm = TRUE,
+                          #Cosine_Norm = TRUE, # TODO: implement for different input data
                           Estimation = "Average",
                           FilterPairs = FALSE,
                           perCellMNN = 0.08
@@ -346,44 +343,22 @@ Correct_Batch <- function(refBatch, queBatch,
   Num_Cells <-B1_Selected_Num_Cells + B2_Selected_Num_Cells
   Num_genes <- nrow(refBatch)
 
-  if(Cosine_Norm == TRUE){
+  if(is.null(Pairs)){
+
     cnRefBatch <- batchelor::cosineNorm(refBatch)
     cnQueBatch <- batchelor::cosineNorm(queBatch)
-  }
 
-  if(is.null(Pairs)) {
-    if(PCA == TRUE){
+    PCA_Batches <- prcomp_irlba( t(cbind(cnRefBatch, cnQueBatch)), n = Dimensions)
 
-      if(Cosine_Norm == TRUE){
-        PCA_Batches <- prcomp_irlba( t(cbind(cnRefBatch, cnQueBatch)), n = Dimensions)
-      }else{
-        PCA_Batches <- prcomp_irlba( t(cbind(refBatch, queBatch)), n = Dimensions)
-      }
+    PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
+    PCA_B2 <- PCA_Batches$x[(B1_Selected_Num_Cells+1):Num_Cells,]
 
-      PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
-      PCA_B2 <- PCA_Batches$x[(B1_Selected_Num_Cells+1):Num_Cells,]
+    if(Verbose)
+      cat( paste("\n\nFinding mutual nearest neighbors from ", k_Neighbors,"nearest neighbors") )
 
-      if(Verbose)
-        cat( paste("\n\nFinding mutual nearest neighbors from ", k_Neighbors,"nearest neighbors") )
-
-      Pairs <- Get_MNN_Pairs(B1 = t(PCA_B1),
-                             B2 = t(PCA_B2),
-                             k_Neighbors = k_Neighbors
-                             )
-
-    }else{
-      if(Cosine_Norm == TRUE){
-        Pairs <- Get_MNN_Pairs(B1 = cnRefBatch,
-                               B2 = cnQueBatch ,
-                               k_Neighbors = k_Neighbors
-                               )
-      }else{
-        Pairs <- Get_MNN_Pairs(B1 = refBatch,
-                               B2 = queBatch,
-                               k_Neighbors = k_Neighbors
-                               )
-      }
-    }
+    Pairs <- Get_MNN_Pairs(B1 = cnRefBatch,
+                           B2 = cnQueBatch ,
+                           k_Neighbors = k_Neighbors)
 
     Pairs <- Pairs$Pairs
   }
