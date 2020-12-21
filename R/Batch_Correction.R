@@ -317,47 +317,47 @@ Correct_Batch <- function(refBatch, queBatch,
     }
   }
 
-  # TODO: correguir esto para no crear nuevos datasets, solo crear un indice
+  # TODO: correguir esto para no crear nuevos datasets, solo crear un indice. USAR INDICE SOLO EN ENCONTRAR MNN
 
-  if( !is.null(Cells_Index_Reference) ){
-    if ( Num_Memberships > 1 ){
-      warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
-      B1_Selected <- refBatch
-    } else{
-      B1_Selected <- refBatch[,Cells_Index_Reference]
-    }
-  } else{
-    B1_Selected <- refBatch
-  }
+  # if( !is.null(Cells_Index_Reference) ){
+  #   if ( Num_Memberships > 1 ){
+  #     warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
+  #     B1_Selected <- refBatch
+  #   } else{
+  #     B1_Selected <- refBatch[,Cells_Index_Reference]
+  #   }
+  # } else{
+  #   B1_Selected <- refBatch
+  # }
+  #
+  # if( !is.null(Cells_Index_Query) ){
+  #   if ( Num_Memberships > 1 ){
+  #     warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
+  #     B2_Selected <- queBatch
+  #   }else{
+  #     B2_Selected <- queBatch[,Cells_Index_Query]
+  #   }
+  # }else{
+  #   B2_Selected <- queBatch
+  # }
 
-  if( !is.null(Cells_Index_Query) ){
-    if ( Num_Memberships > 1 ){
-      warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
-      B2_Selected <- queBatch
-    }else{
-      B2_Selected <- queBatch[,Cells_Index_Query]
-    }
-  }else{
-    B2_Selected <- queBatch
-  }
-
-  B1_Selected_Num_Cells <- ncol(B1_Selected)
-  B2_Selected_Num_Cells <- ncol(B2_Selected)
+  B1_Selected_Num_Cells <- ncol(refBatch)
+  B2_Selected_Num_Cells <- ncol(queBatch)
   Num_Cells <-B1_Selected_Num_Cells + B2_Selected_Num_Cells
-  Num_genes <- nrow(B1_Selected)
+  Num_genes <- nrow(refBatch)
 
   if(Cosine_Norm == TRUE){
-    cnB1 <- batchelor::cosineNorm(B1_Selected)
-    cnB2 <- batchelor::cosineNorm(B2_Selected)
+    cnRefBatch <- batchelor::cosineNorm(refBatch)
+    cnQueBatch <- batchelor::cosineNorm(queBatch)
   }
 
-  if(is.null(Pairs) ) {
+  if(is.null(Pairs)) {
     if(PCA == TRUE){
 
       if(Cosine_Norm == TRUE){
-        PCA_Batches <- prcomp_irlba( t(cbind(cnB1, cnB2)), n = Dimensions)
+        PCA_Batches <- prcomp_irlba( t(cbind(cnRefBatch, cnQueBatch)), n = Dimensions)
       }else{
-        PCA_Batches <- prcomp_irlba( t(cbind(B1_Selected, B2_Selected)), n = Dimensions)
+        PCA_Batches <- prcomp_irlba( t(cbind(refBatch, queBatch)), n = Dimensions)
       }
 
       PCA_B1 <- PCA_Batches$x[1:B1_Selected_Num_Cells,]
