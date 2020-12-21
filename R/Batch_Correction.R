@@ -361,20 +361,19 @@ Correct_Batch <- function(refBatch, queBatch,
                            k_Neighbors = k_Neighbors)
 
     Pairs <- Pairs$Pairs
+  }else{
+
+    PCA_B2 <- prcomp_irlba(t(queBatch),n = 10)
+    PCA_B2 <- PCA_B2$x
   }
 
  if(Verbose)
-  cat(paste( '\n\tNumber of MNN pairs found:', nrow(Pairs) ))
+  cat(paste( '\n\tNumber of MNN pairs:', nrow(Pairs) ))
 
- if( is.null(Num_Memberships) ){
+ if(is.null(Num_Memberships)){
 
    if(Verbose)
     cat("\n\nFinding number of memberships")
-
-   if(!exists("PCA_B2")){
-     PCA_B2 <- prcomp_irlba( t(queBatch) )
-     PCA_B2 <- PCA_B2$x
-   }
 
    if(ncol(queBatch) < 2000){
      usepam <- TRUE
