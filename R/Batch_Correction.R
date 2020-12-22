@@ -384,7 +384,7 @@ Correct_Batch <- function(refBatch, queBatch,
  }
 
  #Cluster in memberships
- Cluster_Membership <- kmeans(pcaQue[,1:10],nMem)
+ cluMem <- kmeans(pcaQue[,1:10],nMem)
 
  #INIT Correction Matrix
  corGene <- matrix(0, nrow = nrow(refBatch), ncol = nMem)
@@ -397,7 +397,7 @@ Correct_Batch <- function(refBatch, queBatch,
     cat(paste('\n\nAnalyzing Membership ', Membership) )
 
    #Membership cell index
-   Membership_Cells_Index <- which(Cluster_Membership$cluster == Membership)
+   Membership_Cells_Index <- which(cluMem$cluster == Membership)
    #Membership cells number
    numCellMembership <- ncol(queBatch[,Membership_Cells_Index])
 
@@ -495,7 +495,7 @@ Correct_Batch <- function(refBatch, queBatch,
    MST <- Fuzzy_Data$MST
 
  }else{
-   MST <- mst(dist(Cluster_Membership$centers[,1:2] ) )
+   MST <- mst(dist(cluMem$centers[,1:2] ) )
  }
 
  #No Zero Correction Vectors
@@ -516,7 +516,7 @@ Correct_Batch <- function(refBatch, queBatch,
 
  }
 
- B2_Corrected <-  queBatch + (corMatrix  %*% t(Correction_Memberships/rowSums(Correction_Memberships)) )
+ B2_Corrected <-  queBatch + (corGene  %*% t(corCell/rowSums(corCell)) )
 
  ### Set data lists to return
   Membership_Data <- list("Cluster Membership" = Cluster_Membership, "Membership Correction Data" = Membership_Correction_Data )
