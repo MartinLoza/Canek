@@ -292,14 +292,6 @@ Correct_Batch <- function(refBatch, queBatch,
   if(Verbose)
     tic("\n Correction time")
 
-  #Check input batches as matrices
-  if(!is.matrix(refBatch)){
-    refBatch <- as.matrix(refBatch)
-  }
-  if(!is.matrix(queBatch)){
-    queBatch <- as.matrix(queBatch)
-  }
-
   memPairs <- NULL
   Membership_Correction_Data <- list()
   corGene <- NULL
