@@ -485,11 +485,10 @@ Correct_Batch <- function(refBatch, queBatch,
    if(Verbose)
     cat('\n\nFUZZY ')
 
-   Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership, Cells_PCA = pcaQue,
-                       Correction_Memberships = Correction_Memberships,
-                       Verbose = Verbose)
+   Fuzzy_Data <- Fuzzy(cluMem = cluMem, Cells_PCA = pcaQue,
+                       corCell = corCell, Verbose = Verbose)
 
-   Correction_Memberships <- Fuzzy_Data$`Fuzzy Memberships`
+   corCell <- Fuzzy_Data$`Fuzzy Memberships`
    MST <- Fuzzy_Data$MST
 
  }else{
@@ -503,21 +502,21 @@ Correct_Batch <- function(refBatch, queBatch,
  }else if( (length(Is_Zero) != 0) ){
 
    No_Zero_CV <- CheckZeroCV(MST = Fuzzy_Data$MST,
-                             Cluster_Membership = Cluster_Membership,
+                             Cluster_Membership = nMem,
                              Membership_Correction_Data = Membership_Correction_Data,
-                             corMatrix = corMatrix,
+                             corGene = corGene,
                              Zero_Correction = Zero_Correction
                              )
 
    Membership_Correction_Data <- No_Zero_CV[["Membership_Correction_Data"]]
-   corMatrix <- No_Zero_CV[["Correction_Matrix"]]
+   corGene <- No_Zero_CV[["Correction_Matrix"]]
 
  }
 
  B2_Corrected <-  queBatch + (corGene  %*% t(corCell/rowSums(corCell)) )
 
  ### Set data lists to return
-  Membership_Data <- list("Cluster Membership" = Cluster_Membership, "Membership Correction Data" = Membership_Correction_Data )
+  Membership_Data <- list("Cluster Membership" = nMem, "Membership Correction Data" = Membership_Correction_Data )
 
   Correction_Data <- list("Correction Matrix" = corGene, "MNN Pairs" = Pairs,
                           "Membership Data" = Membership_Data, "Fuzzy Data" = Fuzzy_Data )

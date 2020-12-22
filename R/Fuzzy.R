@@ -161,11 +161,11 @@ Get_Rotation_Angle <- function( PCA_Coordinates = NULL ){
 #' @param MST Minimum Spanning Tree
 #' @param Cluster_Membership Clusters used on MST
 #' @param Membership_Correction_Data Data to correct
-#' @param Correction_Matrix Data to correct
+#' @param corGene Data to correct
 #' @param Zero_Correction Vector indicating which membership has a zero correction vector
 #'
 CheckZeroCV <-function(MST = NULL, Cluster_Membership = NULL,
-                       Membership_Correction_Data = NULL, Correction_Matrix = NULL,
+                       Membership_Correction_Data = NULL, corGene = NULL,
                        Zero_Correction = NULL){
 
   Is_Zero <- which(Zero_Correction == TRUE)
