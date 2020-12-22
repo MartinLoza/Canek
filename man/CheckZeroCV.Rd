@@ -6,20 +6,20 @@
 \usage{
 CheckZeroCV(
   MST = NULL,
-  Cluster_Membership = NULL,
+  cluMem = NULL,
   Membership_Correction_Data = NULL,
-  Correction_Matrix = NULL,
+  corGene = NULL,
   Zero_Correction = NULL
 )
 }
 \arguments{
 \item{MST}{Minimum Spanning Tree}
 
-\item{Cluster_Membership}{Clusters used on MST}
+\item{cluMem}{Clusters used on MST}
 
 \item{Membership_Correction_Data}{Data to correct}
 
-\item{Correction_Matrix}{Data to correct}
+\item{corGene}{Data to correct}
 
 \item{Zero_Correction}{Vector indicating which membership has a zero correction vector}
 }
