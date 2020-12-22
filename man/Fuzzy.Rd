@@ -4,19 +4,14 @@
 \alias{Fuzzy}
 \title{Title Fuzzy}
 \usage{
-Fuzzy(
-  Cluster_Membership = NULL,
-  Cells_PCA = NULL,
-  Correction_Memberships = NULL,
-  Verbose = FALSE
-)
+Fuzzy(cluMem = NULL, Cells_PCA = NULL, corCell = NULL, Verbose = FALSE)
 }
 \arguments{
-\item{Cluster_Membership}{Memberships' clustering data.}
+\item{cluMem}{Memberships' clustering data.}
 
 \item{Cells_PCA}{PCA representation of the cells.}
 
-\item{Correction_Memberships}{Matrix containing the initial membership assignment.
+\item{corCell}{Matrix containing the initial membership assignment.
 Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.}
 
 \item{Verbose}{Print output.}

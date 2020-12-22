@@ -5,7 +5,7 @@
 #'
 #' @param cluMem Memberships' clustering data.
 #' @param Cells_PCA PCA representation of the cells.
-#' @param Correction_Memberships Matrix containing the initial membership assignment.
+#' @param corCell Matrix containing the initial membership assignment.
 #' Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.
 #' @param Verbose Print output.
 #'
@@ -13,14 +13,14 @@
 #'  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
 #'   for each of the edges of the MST.#'
 #'
-Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corGene = NULL, Verbose = FALSE){
+Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corCell = NULL, Verbose = FALSE){
 
   #INIT
   Num_Cells <- nrow(Cells_PCA)
-  Num_Memberships <- nrow(Cluster_Membership$centers)
+  Num_Memberships <- nrow(cluMem$centers)
   PCA_Max <- 2
   Fuzzied <- rep(FALSE, Num_Cells)
-  Fuzzy_Memberships <- Correction_Memberships
+  Fuzzy_Memberships <- corCell
   Edges_Data <- list()
 
 
@@ -28,7 +28,7 @@ Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corGene = NULL, Verbose = FAL
   if(Verbose)
     cat( '\n\tObtaining Minimum Spanning Tree' )
 
-  Mst <- mst(dist( Cluster_Membership$centers[,1:PCA_Max] ) )  #TODO: If possible change to higher dimensions
+  Mst <- mst(dist( cluMem$centers[,1:PCA_Max] ) )  #TODO: If possible change to higher dimensions
 
   #Get edges from MST
   Edges <- Get_Edges(Mst)
@@ -45,8 +45,8 @@ Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corGene = NULL, Verbose = FAL
     OUT_Membership <- list()
     IN_Node <- Edges[ Edge, 1 ]
     OUT_Node <- Edges[ Edge, 2 ]
-    IN_Node_PCA <- Cluster_Membership$centers[ IN_Node, 1:PCA_Max ]
-    OUT_Node_PCA <- Cluster_Membership$centers[ OUT_Node, 1:PCA_Max ]
+    IN_Node_PCA <- cluMem$centers[ IN_Node, 1:PCA_Max ]
+    OUT_Node_PCA <- cluMem$centers[ OUT_Node, 1:PCA_Max ]
 
     #Translate OUT node according to IN node PCA coordinates
     OUT_Node_PCA_Transformed <- OUT_Node_PCA - IN_Node_PCA
@@ -56,12 +56,12 @@ Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corGene = NULL, Verbose = FAL
     names(Alpha)<-"Alpha"
 
     #Get cells from both IN and OUT memberships
-    IN_Membership_Cells_Index <- which(Cluster_Membership$cluster == IN_Node)
+    IN_Membership_Cells_Index <- which(cluMem$cluster == IN_Node)
     IN_Membership_Cells <- Cells_PCA[IN_Membership_Cells_Index, 1:PCA_Max ]
     rownames(IN_Membership_Cells) <- IN_Membership_Cells_Index
 
-    OUT_Membership_Cells_Index <- which(Cluster_Membership$cluster == OUT_Node)
-    OUT_Membership_Cells <- Cells_PCA[which(Cluster_Membership$cluster == OUT_Node), 1:PCA_Max ]
+    OUT_Membership_Cells_Index <- which(cluMem$cluster == OUT_Node)
+    OUT_Membership_Cells <- Cells_PCA[which(cluMem$cluster == OUT_Node), 1:PCA_Max ]
     rownames(OUT_Membership_Cells) <- OUT_Membership_Cells_Index
 
     #Translate according cells from both memberships according to IN node PCA coordinates
@@ -159,17 +159,17 @@ Get_Rotation_Angle <- function( PCA_Coordinates = NULL ){
 #' CheckZeroCV
 #'
 #' @param MST Minimum Spanning Tree
-#' @param Cluster_Membership Clusters used on MST
+#' @param cluMem Clusters used on MST
 #' @param Membership_Correction_Data Data to correct
 #' @param corGene Data to correct
 #' @param Zero_Correction Vector indicating which membership has a zero correction vector
 #'
-CheckZeroCV <-function(MST = NULL, Cluster_Membership = NULL,
+CheckZeroCV <-function(MST = NULL, cluMem = NULL,
                        Membership_Correction_Data = NULL, corGene = NULL,
                        Zero_Correction = NULL){
 
   Is_Zero <- which(Zero_Correction == TRUE)
-  Cluster_Dist <- as.matrix(dist(Cluster_Membership$centers,upper = TRUE))
+  Cluster_Dist <- as.matrix(dist(cluMem$centers,upper = TRUE))
 
   Node = 1
   while(length(Is_Zero) != 0){
@@ -183,7 +183,7 @@ CheckZeroCV <-function(MST = NULL, Cluster_Membership = NULL,
       }
       #Assign correction vector
       Membership_Correction_Data[[Is_Zero[Node]]] <- Membership_Correction_Data[[Related_Edges_No_Zero]]
-      Correction_Matrix[,Is_Zero[Node]] <- Membership_Correction_Data[[Related_Edges_No_Zero]]$`Correction Vector`
+      corGene[,Is_Zero[Node]] <- Membership_Correction_Data[[Related_Edges_No_Zero]]$`Correction Vector`
       Zero_Correction[Is_Zero[Node]] <- FALSE
 
       Node = 1
@@ -218,7 +218,7 @@ CheckZeroCV <-function(MST = NULL, Cluster_Membership = NULL,
   # }
 
   return(list("Membership_Correction_Data" = Membership_Correction_Data,
-              "Correction_Matrix" = Correction_Matrix))
+              "Correction_Matrix" = corGene))
 }
 
 
