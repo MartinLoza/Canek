@@ -304,10 +304,10 @@ Correct_Batch <- function(refBatch, queBatch,
   Membership_Correction_Data <- list()
   corMatrix <- NULL
   Fuzzy_Data <- NULL
-  Num_Memberships <- NULL
+  nMem <- NULL
 
   if( is.numeric(Query_Batch_Cell_Types) ){
-    Num_Memberships <- Query_Batch_Cell_Types
+    nMem <- Query_Batch_Cell_Types
   }else{
     if(Query_Batch_Cell_Types != "Surprise-me"){
       warning('\nWarning: Query_Batch_Cell_Types set value not recognized. Using "Surprise-me" instead', call. = TRUE)
@@ -317,7 +317,7 @@ Correct_Batch <- function(refBatch, queBatch,
   # TODO: correguir esto para no crear nuevos datasets, solo crear un indice. USAR INDICE SOLO EN ENCONTRAR MNN
 
   # if( !is.null(Cells_Index_Reference) ){
-  #   if ( Num_Memberships > 1 ){
+  #   if ( nMem > 1 ){
   #     warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
   #     B1_Selected <- refBatch
   #   } else{
@@ -328,7 +328,7 @@ Correct_Batch <- function(refBatch, queBatch,
   # }
   #
   # if( !is.null(Cells_Index_Query) ){
-  #   if ( Num_Memberships > 1 ){
+  #   if ( nMem > 1 ){
   #     warning('\nWarning: CELLS INDEX NOT USED. Cannot use cells index for more than one membership function', call. = TRUE)
   #     B2_Selected <- queBatch
   #   }else{
@@ -370,28 +370,28 @@ Correct_Batch <- function(refBatch, queBatch,
  if(Verbose)
   cat(paste( '\n\tNumber of MNN pairs:', nrow(Pairs) ))
 
- if(is.null(Num_Memberships)){
+ if(is.null(nMem)){
 
    if(Verbose)
     cat("\n\nFinding number of memberships")
 
-   Num_Memberships <- pamk(pcaQue[,1:10],
-                          krange = 1:Max_Membership,
-                          usepam = (if(nCellsQue < 2000) TRUE else FALSE))$nc
+   nMem <- pamk(pcaQue[,1:10],
+                krange = 1:Max_Membership,
+                usepam = (if(nCellsQue < 2000) TRUE else FALSE))$nc
 
    if(Verbose)
-    cat(paste('\n\tNumber of memberships found:', Num_Memberships) )
+    cat(paste('\n\tNumber of memberships found:', nMem) )
  }
 
  #Cluster in memberships
- Cluster_Membership <- kmeans(pcaQue[,1:10],Num_Memberships)
+ Cluster_Membership <- kmeans(pcaQue[,1:10],nMem)
 
  #INIT Correction Matrix
- corMatrix <- matrix(0, nrow = nrow(refBatch), ncol = Num_Memberships)
+ corMatrix <- matrix(0, nrow = nrow(refBatch), ncol = nMem)
 
- Zero_Correction <- rep(FALSE, Num_Memberships)
+ Zero_Correction <- rep(FALSE, nMem)
 
- for(Membership in 1:Num_Memberships){
+ for(Membership in 1:nMem){
 
    if(Verbose)
     cat(paste('\n\nAnalyzing Membership ', Membership) )
@@ -462,7 +462,6 @@ Correct_Batch <- function(refBatch, queBatch,
 
    Membership_Correction_Data[[paste("Membership", Membership)]] <- list("Cells Index" = Membership_Cells_Index,
                                                                          "Correction Vector" = corVector)
-
  }
 
  #################
@@ -470,7 +469,7 @@ Correct_Batch <- function(refBatch, queBatch,
  #################
 
  ####INIT####
- Correction_Memberships <- matrix(0, nrow = nCellsQue, ncol = Num_Memberships )
+ Correction_Memberships <- matrix(0, nrow = nCellsQue, ncol = nMem )
 
  #Set column names according to number of memberships
  Name_Col <- NULL
@@ -486,16 +485,14 @@ Correct_Batch <- function(refBatch, queBatch,
  }
 
  #Fuzzy process and Correction
- if(Fuzzy == TRUE & Num_Memberships > 1 ){
+ if(Fuzzy == TRUE & nMem > 1){
 
    if(Verbose)
     cat('\n\nFUZZY ')
 
-   Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership,
-                       Cells_PCA = pcaQue,
+   Fuzzy_Data <- Fuzzy(Cluster_Membership = Cluster_Membership, Cells_PCA = pcaQue,
                        Correction_Memberships = Correction_Memberships,
-                       Verbose = Verbose
-                       )
+                       Verbose = Verbose)
 
    Correction_Memberships <- Fuzzy_Data$`Fuzzy Memberships`
    MST <- Fuzzy_Data$MST
@@ -506,8 +503,8 @@ Correct_Batch <- function(refBatch, queBatch,
 
  #No Zero Correction Vectors
  Is_Zero <- which(Zero_Correction == TRUE)
- if(length(Is_Zero) == Num_Memberships){
-   warning('\nWarning: No correction vectors where found. Consider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
+ if(length(Is_Zero) == nMem){
+   warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
  }else if( (length(Is_Zero) != 0) ){
 
    No_Zero_CV <- CheckZeroCV(MST = Fuzzy_Data$MST,
