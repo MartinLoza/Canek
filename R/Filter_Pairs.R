@@ -11,7 +11,7 @@
 #'
 #' @return A matrix containing the filtered pairs. First column corresponds to query-batch cell indexes.
 #'
-#' @details Filter pairs to used on batch effect correction by quantiles.
+#' @details Filter MNN pairs by quantiles.
 #'
 Pairs_Selection <- function(B1,B2, Pairs, Verbose = FALSE){
 
@@ -30,12 +30,7 @@ Pairs_Selection <- function(B1,B2, Pairs, Verbose = FALSE){
 
     outliers <- c(which(d < (q["25%"] - (1.5*IQR))), which(d > (q["75%"] + (1.5*IQR))))
 
-    selPairs <- Pairs[-outliers,]
-
-    return(list("Selected Pairs" = selPairs,
-                "Clusters" = NULL,
-                "Selected Cluster" = NULL))
-
+    return(Pairs[-outliers,])
 }
 
 
