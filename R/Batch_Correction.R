@@ -300,9 +300,9 @@ Correct_Batch <- function(refBatch, queBatch,
     queBatch <- as.matrix(queBatch)
   }
 
-  Membership_Pairs <- NULL
+  memPairs <- NULL
   Membership_Correction_Data <- list()
-  Correction_Matrix <- NULL
+  corMatrix <- NULL
   Fuzzy_Data <- NULL
   Num_Memberships <- NULL
 
@@ -523,21 +523,21 @@ Correct_Batch <- function(refBatch, queBatch,
    No_Zero_CV <- CheckZeroCV(MST = Fuzzy_Data$MST,
                              Cluster_Membership = Cluster_Membership,
                              Membership_Correction_Data = Membership_Correction_Data,
-                             Correction_Matrix = Correction_Matrix,
+                             corMatrix = corMatrix,
                              Zero_Correction = Zero_Correction
                              )
 
    Membership_Correction_Data <- No_Zero_CV[["Membership_Correction_Data"]]
-   Correction_Matrix <- No_Zero_CV[["Correction_Matrix"]]
+   corMatrix <- No_Zero_CV[["Correction_Matrix"]]
 
  }
 
- B2_Corrected <-  queBatch + (Correction_Matrix  %*% t(Correction_Memberships/rowSums(Correction_Memberships)) )
+ B2_Corrected <-  queBatch + (corMatrix  %*% t(Correction_Memberships/rowSums(Correction_Memberships)) )
 
  ### Set data lists to return
   Membership_Data <- list("Cluster Membership" = Cluster_Membership, "Membership Correction Data" = Membership_Correction_Data )
 
-  Correction_Data <- list("Correction Matrix" = Correction_Matrix, "MNN Pairs" = Pairs,
+  Correction_Data <- list("Correction Matrix" = corMatrix, "MNN Pairs" = Pairs,
                           "Membership Data" = Membership_Data, "Fuzzy Data" = Fuzzy_Data )
 
   Corrected_Batches <- list("Reference Batch (B1)" = refBatch, "Query Batch (B2)" = queBatch,
