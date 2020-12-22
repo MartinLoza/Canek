@@ -4,7 +4,7 @@
 #' Batch-Effect correction over a list of single cell batches
 #'
 #' @param Batches List of batches to integrate. Batches should contain the same number of genes as rows.
-#' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
+#' @param queBatchCelltypes A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
 #' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs samples used on the estimation process.
 #' @param k_Neighbors Number of k-nearest-neighbors used to find MNNs pairs.
@@ -36,7 +36,7 @@
 #' @return A list containing the integrated datasets as matrix and the correction data .
 #' @export
 #'
-Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
+Correct_Batches <- function(Batches, queBatchCelltypes = "Surprise-me",
                             Sampling = NULL,
                             Number_Samples = NULL,
                             k_Neighbors = 30,
@@ -88,7 +88,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 
         for(j in (i+1):Last_Batch){
 
-          if( (Was_Integrated[j] == FALSE) &  (Num_Batches_2_Integrates > 2) ){
+          if((Was_Integrated[j] == FALSE) & (Num_Batches_2_Integrates > 2)){
 
             nCells_Bj <- ncol(Batches[[j]])
 
@@ -131,7 +131,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 
         Correction <- Correct_Batch(refBatch = Batches[[Ref]],
                                     queBatch = Batches[[Query]],
-                                    Query_Batch_Cell_Types = Query_Batch_Cell_Types,
+                                    queBatchCelltypes = queBatchCelltypes,
                                     Sampling = Sampling,
                                     Number_Samples = Number_Samples,
                                     k_Neighbors = k_Neighbors,
@@ -190,10 +190,9 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
        }
       }
 
-
       Correction <- Correct_Batch(refBatch = Ref,
                                   queBatch = Query,
-                                  Query_Batch_Cell_Types = Query_Batch_Cell_Types,
+                                  queBatchCelltypes = queBatchCelltypes,
                                   Sampling = Sampling,
                                   Number_Samples = Number_Samples,
                                   k_Neighbors = k_Neighbors,
@@ -213,7 +212,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
       names(Corrected_Batches[[New_Name]]) <- c(paste("Reference Batch (",Names_Batches[1] ,")", sep = ""),
                                                 paste("Query Batch (",Names_Batches[i] , ")", sep = ""),
                                                 "Corrected Query Batch", "Correction Data")
-      Batches[[1]] <- cbind( Ref, Correction[["Corrected Query Batch"]] )
+      Batches[[1]] <- cbind(Ref, Correction[["Corrected Query Batch"]])
       Names_Batches[1] <- New_Name
 
       change = FALSE
@@ -235,7 +234,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #'
 #' @param refBatch Batch to use as reference for the integration.
 #' @param queBatch Batch to correct.
-#' @param Query_Batch_Cell_Types A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
+#' @param queBatchCelltypes A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.
 #' @param Sampling Whether or not samples MNNs pairs' samples are used on the estimation process.
 #' @param Number_Samples Number of MNNs pairs' samples used on the estimation process.
 #' @param Pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
@@ -271,34 +270,23 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #'
 #'
 Correct_Batch <- function(refBatch, queBatch,
-                          Query_Batch_Cell_Types = "Surprise-me",
-                          Sampling = NULL,
-                          Number_Samples = NULL,
-                          Pairs = NULL,
+                          queBatchCelltypes = NULL,
+                          Pairs = NULL, k_Neighbors = 30,
+                          Sampling = NULL, Number_Samples = NULL,
+                          Dimensions = 50, Max_Membership = 5,
+                          perCellMNN = 0.08, Fuzzy = TRUE,
+                          Estimation = "Median", FilterPairs = FALSE,
+                          Verbose = FALSE,
                           Cells_Index_Query = NULL,
                           Cells_Index_Reference = NULL,
-                          k_Neighbors = 30,
                           #PCA = TRUE, #TODO:implement for different input data
-                          Dimensions = 50,
-                          Max_Membership = 5,
-                          Fuzzy = TRUE,
-                          Verbose = FALSE,
-                          #Cosine_Norm = TRUE, # TODO: implement for different input data
-                          Estimation = "Median",
-                          FilterPairs = FALSE,
-                          perCellMNN = 0.08
+                          #Cosine_Norm = TRUE # TODO: implement for different input data
+
+
                           ){
 
   if(Verbose)
     tic("\n Correction time")
-
-  #Check input batches as matrices
-  if(!is.matrix(refBatch)){
-    refBatch <- as.matrix(refBatch)
-  }
-  if(!is.matrix(queBatch)){
-    queBatch <- as.matrix(queBatch)
-  }
 
   memPairs <- NULL
   Membership_Correction_Data <- list()
@@ -306,12 +294,8 @@ Correct_Batch <- function(refBatch, queBatch,
   Fuzzy_Data <- NULL
   nMem <- NULL
 
-  if( is.numeric(Query_Batch_Cell_Types) ){
-    nMem <- Query_Batch_Cell_Types
-  }else{
-    if(Query_Batch_Cell_Types != "Surprise-me"){
-      warning('\nWarning: Query_Batch_Cell_Types set value not recognized. Using "Surprise-me" instead', call. = TRUE)
-    }
+  if(!is.null(queBatchCelltypes)){
+    nMem <- queBatchCelltypes
   }
 
   # TODO: correguir esto para no crear nuevos datasets, solo crear un indice. USAR INDICE SOLO EN ENCONTRAR MNN
@@ -501,22 +485,19 @@ Correct_Batch <- function(refBatch, queBatch,
    warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
  }else if(length(Is_Zero) != 0){
 
-   No_Zero_CV <- CheckZeroCV(MST = MST,
-                             cluMem = cluMem,
+   No_Zero_CV <- CheckZeroCV(MST = MST, cluMem = cluMem,
                              Membership_Correction_Data = Membership_Correction_Data,
-                             corGene = corGene,
-                             Zero_Correction = Zero_Correction
-                             )
+                             corGene = corGene, Zero_Correction = Zero_Correction)
 
    Membership_Correction_Data <- No_Zero_CV[["Membership_Correction_Data"]]
    corGene <- No_Zero_CV[["Correction_Matrix"]]
-
  }
 
  B2_Corrected <-  queBatch + (corGene  %*% t(corCell/rowSums(corCell)) )
 
  ### Set data lists to return
-  Membership_Data <- list("Cluster Membership" = nMem, "Membership Correction Data" = Membership_Correction_Data )
+  Membership_Data <- list("Cluster Membership" = nMem,
+                          "Membership Correction Data" = Membership_Correction_Data )
 
   Correction_Data <- list("Correction Matrix" = corGene, "MNN Pairs" = Pairs,
                           "Membership Data" = Membership_Data, "Fuzzy Data" = Fuzzy_Data )
