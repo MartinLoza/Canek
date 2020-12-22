@@ -47,7 +47,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
                             Hierarchical = TRUE,
                             Verbose = FALSE,
                             #Cosine_Norm = TRUE,
-                            Estimation = "Average",
+                            Estimation = "Median",
                             FilterPairs = FALSE,
                             perCellMNN = 0.08,
                             ...
@@ -284,7 +284,7 @@ Correct_Batch <- function(refBatch, queBatch,
                           Fuzzy = TRUE,
                           Verbose = FALSE,
                           #Cosine_Norm = TRUE, # TODO: implement for different input data
-                          Estimation = "Average",
+                          Estimation = "Median",
                           FilterPairs = FALSE,
                           perCellMNN = 0.08
                           ){
@@ -449,38 +449,29 @@ Correct_Batch <- function(refBatch, queBatch,
        if(Verbose)
          cat("\n\n\tEXTENDED KALMAN FILTER")
 
-       Estimation_Data <- EKF_BE(B1 = refBatch,
-                                 B2 = queBatch,
-                                 Pairs = Selected_Pairs,
-                                 Sampling = Sampling,
-                                 Number_Samples = Number_Samples,
-                                 Verbose = Verbose
-                                 )
+       corVector <- EKF_BE(B1 = refBatch, B2 = queBatch,
+                           Pairs = memPairs, Sampling = Sampling,
+                           Number_Samples = Number_Samples, Verbose = Verbose)[["Correction Vector"]]
      }
 
-     if(Estimation == "Average"){
+     if(Estimation == "Median"){
        if(Verbose)
          cat("\n\n\tMedian Method")
 
-       Estimation_Data <- Average_BE(B1 = refBatch,
-                                     B2 = queBatch,
-                                     Pairs = Selected_Pairs
-                                     )
+       corVector <- Average_BE(B1 = refBatch, B2 = queBatch,
+                               Pairs = memPairs)[["Correction Vector"]]
      }
 
-     Correction_Vector <- Estimation_Data[["Correction Vector"]]
-     Correction_Matrix[,Membership] <- Correction_Vector
+     corMatrix[,Membership] <- corVector
 
     }else{
       warning('\nWarning: Not enough pairs found for this Membership. No correction is performed', call. = TRUE)
-      Estimation_Data <- NULL
-      Correction_Vector <- Correction_Matrix[,Membership]
+      corVector <- corMatrix[,Membership]
       Zero_Correction[Membership] <- TRUE
     }
 
-   Membership_Correction_Data[[paste("Membership", Membership)]] <- list( "Cells Index" = Membership_Cells_Index, "Pairs Selection Data" = Pairs_Select,
-                                                                          "Sampled MNN Pairs" = Estimation_Data[["Sampled Pairs"]],
-                                                                          "Correction Vector" = Correction_Vector   )
+   Membership_Correction_Data[[paste("Membership", Membership)]] <- list("Cells Index" = Membership_Cells_Index,
+                                                                         "Correction Vector" = corVector)
 
  }
 
