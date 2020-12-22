@@ -3,7 +3,7 @@
 #'
 #' Function to score cell's memberships by fuzzy logic
 #'
-#' @param Cluster_Membership Memberships' clustering data.
+#' @param cluMem Memberships' clustering data.
 #' @param Cells_PCA PCA representation of the cells.
 #' @param Correction_Memberships Matrix containing the initial membership assignment.
 #' Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.
@@ -13,7 +13,7 @@
 #'  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
 #'   for each of the edges of the MST.#'
 #'
-Fuzzy <- function(Cluster_Membership = NULL, Cells_PCA = NULL, Correction_Memberships = NULL, Verbose = FALSE){
+Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corGene = NULL, Verbose = FALSE){
 
   #INIT
   Num_Cells <- nrow(Cells_PCA)
