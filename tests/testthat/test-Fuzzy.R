@@ -3,7 +3,7 @@ context("test-Fuzzy")
 set.seed(0)
 
 Batches <- SimBatches$batches
-z <- Correct_Batches(Batches, Query_Batch_Cell_Types = 2)
+z <- Correct_Batches(Batches, queNumCelltypes = 2)
 Fuzzy_Data <- z$`B1/B2`$`Correction Data`$`Fuzzy Data`
 
 test_that("Fuzzy works", {
