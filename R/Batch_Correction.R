@@ -492,7 +492,7 @@ Correct_Batch <- function(refBatch, queBatch,
    MST <- Fuzzy_Data$MST
 
  }else{
-   MST <- mst(dist(cluMem$centers[,1:2] ) )
+   MST <- mst(dist(cluMem$centers[,1:2]))
  }
 
  #No Zero Correction Vectors
@@ -502,7 +502,7 @@ Correct_Batch <- function(refBatch, queBatch,
  }else if(length(Is_Zero) != 0){
 
    No_Zero_CV <- CheckZeroCV(MST = MST,
-                             Cluster_Membership = nMem,
+                             cluMem = cluMem,
                              Membership_Correction_Data = Membership_Correction_Data,
                              corGene = corGene,
                              Zero_Correction = Zero_Correction
