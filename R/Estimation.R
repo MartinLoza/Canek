@@ -152,5 +152,4 @@ Average_BE <- function(B1, B2, Pairs ){
   be <- pRef-pQue
 
   return(list("Correction Vector" = rowMedians(be), "Sampled Pairs" = NULL))
-  #return(list("Correction Vector" = rowMeans(be), "Sampled Pairs" = NULL))
 }
