@@ -5,8 +5,8 @@
 \title{Correct_Batch}
 \usage{
 Correct_Batch(
-  Reference_Batch,
-  Query_Batch,
+  refBatch,
+  queBatch,
   Query_Batch_Cell_Types = "Surprise-me",
   Sampling = NULL,
   Number_Samples = NULL,
@@ -14,21 +14,19 @@ Correct_Batch(
   Cells_Index_Query = NULL,
   Cells_Index_Reference = NULL,
   k_Neighbors = 30,
-  PCA = TRUE,
   Dimensions = 50,
   Max_Membership = 5,
   Fuzzy = TRUE,
   Verbose = FALSE,
-  Cosine_Norm = TRUE,
-  Estimation = "Average",
+  Estimation = "Median",
   FilterPairs = FALSE,
   perCellMNN = 0.08
 )
 }
 \arguments{
-\item{Reference_Batch}{Batch to use as reference for the integration.}
+\item{refBatch}{Batch to use as reference for the integration.}
 
-\item{Query_Batch}{Batch to correct.}
+\item{queBatch}{Batch to correct.}
 
 \item{Query_Batch_Cell_Types}{A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.}
 
@@ -44,8 +42,6 @@ Correct_Batch(
 
 \item{k_Neighbors}{Number of k-nearest-neighbors used to find MNNs pairs.}
 
-\item{PCA}{Whether or not MNNs pairs are found under a principal components representation.}
-
 \item{Dimensions}{PCA dimensions used to find MNNs pairs.}
 
 \item{Max_Membership}{Maximum number of memberships used when memberships are automatically defined.}
@@ -53,8 +49,6 @@ Correct_Batch(
 \item{Fuzzy}{Whether or not a fuzzy logic join is used on the local correction vectors.}
 
 \item{Verbose}{Print output}
-
-\item{Cosine_Norm}{TODO}
 
 \item{Estimation}{TODO}
 

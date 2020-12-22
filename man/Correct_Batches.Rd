@@ -10,14 +10,12 @@ Correct_Batches(
   Sampling = NULL,
   Number_Samples = NULL,
   k_Neighbors = 30,
-  PCA = TRUE,
   Dimensions = 50,
   Max_Membership = 5,
   Fuzzy = TRUE,
   Hierarchical = TRUE,
   Verbose = FALSE,
-  Cosine_Norm = TRUE,
-  Estimation = "Average",
+  Estimation = "Median",
   FilterPairs = FALSE,
   perCellMNN = 0.08,
   ...
@@ -34,8 +32,6 @@ Correct_Batches(
 
 \item{k_Neighbors}{Number of k-nearest-neighbors used to find MNNs pairs.}
 
-\item{PCA}{Whether or not MNNs pairs are found under a principal components representation.}
-
 \item{Dimensions}{PCA dimensions used to find MNNs pairs.}
 
 \item{Max_Membership}{Maximum number of memberships used when memberships are automatically defined.}
@@ -45,8 +41,6 @@ Correct_Batches(
 \item{Hierarchical}{Whether or not a hiearchical integration scheme is used when correcting more than two batches.}
 
 \item{Verbose}{Print output}
-
-\item{Cosine_Norm}{TODO}
 
 \item{Estimation}{TODO}
 
