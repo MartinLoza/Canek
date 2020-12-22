@@ -36,7 +36,7 @@
 #' @return A list containing the integrated datasets as matrix and the correction data .
 #' @export
 #'
-Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
+Correct_Batches <- function(Batches, Query_Batch_Cell_Types = NULL,
                             Sampling = NULL,
                             Number_Samples = NULL,
                             k_Neighbors = 30,
@@ -271,7 +271,7 @@ Correct_Batches <- function(Batches, Query_Batch_Cell_Types = "Surprise-me",
 #'
 #'
 Correct_Batch <- function(refBatch, queBatch,
-                          Query_Batch_Cell_Types = "Surprise-me",
+                          Query_Batch_Cell_Types = NULL,
                           Sampling = NULL,
                           Number_Samples = NULL,
                           Pairs = NULL,
@@ -298,12 +298,8 @@ Correct_Batch <- function(refBatch, queBatch,
   Fuzzy_Data <- NULL
   nMem <- NULL
 
-  if( is.numeric(Query_Batch_Cell_Types) ){
+  if(!is.null(Query_Batch_Cell_Types)){
     nMem <- Query_Batch_Cell_Types
-  }else{
-    if(Query_Batch_Cell_Types != "Surprise-me"){
-      warning('\nWarning: Query_Batch_Cell_Types set value not recognized. Using "Surprise-me" instead', call. = TRUE)
-    }
   }
 
   # TODO: correguir esto para no crear nuevos datasets, solo crear un indice. USAR INDICE SOLO EN ENCONTRAR MNN
