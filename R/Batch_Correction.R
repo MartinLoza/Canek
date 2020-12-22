@@ -302,7 +302,7 @@ Correct_Batch <- function(refBatch, queBatch,
 
   memPairs <- NULL
   Membership_Correction_Data <- list()
-  corMatrix <- NULL
+  corGene <- NULL
   Fuzzy_Data <- NULL
   nMem <- NULL
 
@@ -387,7 +387,7 @@ Correct_Batch <- function(refBatch, queBatch,
  Cluster_Membership <- kmeans(pcaQue[,1:10],nMem)
 
  #INIT Correction Matrix
- corMatrix <- matrix(0, nrow = nrow(refBatch), ncol = nMem)
+ corGene <- matrix(0, nrow = nrow(refBatch), ncol = nMem)
 
  Zero_Correction <- rep(FALSE, nMem)
 
@@ -452,11 +452,11 @@ Correct_Batch <- function(refBatch, queBatch,
                                Pairs = memPairs)[["Correction Vector"]]
      }
 
-     corMatrix[,Membership] <- corVector
+     corGene[,Membership] <- corVector
 
     }else{
       warning('\nWarning: Not enough pairs found for this Membership. No correction is performed', call. = TRUE)
-      corVector <- corMatrix[,Membership]
+      corVector <- corGene[,Membership]
       Zero_Correction[Membership] <- TRUE
     }
 
@@ -469,7 +469,7 @@ Correct_Batch <- function(refBatch, queBatch,
  #################
 
  ####INIT####
- Correction_Memberships <- matrix(0, nrow = nCellsQue, ncol = nMem )
+ corCell <- matrix(0, nrow = nCellsQue, ncol = nMem )
 
  #Set column names according to number of memberships
  colnames(Correction_Memberships) <- paste0("Mem-", seq_len(nMem))
@@ -521,7 +521,7 @@ Correct_Batch <- function(refBatch, queBatch,
  ### Set data lists to return
   Membership_Data <- list("Cluster Membership" = Cluster_Membership, "Membership Correction Data" = Membership_Correction_Data )
 
-  Correction_Data <- list("Correction Matrix" = corMatrix, "MNN Pairs" = Pairs,
+  Correction_Data <- list("Correction Matrix" = corGene, "MNN Pairs" = Pairs,
                           "Membership Data" = Membership_Data, "Fuzzy Data" = Fuzzy_Data )
 
   Corrected_Batches <- list("Reference Batch (B1)" = refBatch, "Query Batch (B2)" = queBatch,
