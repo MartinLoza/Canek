@@ -22,5 +22,5 @@ A matrix containing the filtered pairs. First column corresponds to query-batch 
 Function to filter MNNs pairs
 }
 \details{
-Filter pairs to used on batch effect correction by quantiles.
+Filter MNN pairs by quantiles.
 }
