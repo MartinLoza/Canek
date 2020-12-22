@@ -472,13 +472,10 @@ Correct_Batch <- function(refBatch, queBatch,
  Correction_Memberships <- matrix(0, nrow = nCellsQue, ncol = nMem )
 
  #Set column names according to number of memberships
- Name_Col <- NULL
- for (Mem in 1:Num_Memberships) {
-   Name_Col <- rbind(Name_Col, paste("Mem",Mem,sep = "-") )
- }
- colnames(Correction_Memberships) <- Name_Col
+ colnames(Correction_Memberships) <- paste0("Mem-", seq_len(nMem))
 
- #Each cell is initialized according to its membership. Initilization is 1 to its membership and 0 to the other memberships
+ #Each cell is initialized to its membership.
+ #Initilization is 1 to its membership and 0 to the other memberships
  for (Cell in 1:nCellsQue){
    Cell_Mem <- Cluster_Membership$cluster[Cell]
    Correction_Memberships[Cell,Cell_Mem] <- 1
