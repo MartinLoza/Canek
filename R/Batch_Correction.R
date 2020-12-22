@@ -387,7 +387,7 @@ Correct_Batch <- function(refBatch, queBatch,
  Cluster_Membership <- kmeans(pcaQue[,1:10],Num_Memberships)
 
  #INIT Correction Matrix
- Correction_Matrix <- matrix(0, nrow = nrow(refBatch), ncol = Num_Memberships)
+ corMatrix <- matrix(0, nrow = nrow(refBatch), ncol = Num_Memberships)
 
  Zero_Correction <- rep(FALSE, Num_Memberships)
 
@@ -409,35 +409,25 @@ Correct_Batch <- function(refBatch, queBatch,
      Membership_Pairs_Index <- c(Membership_Pairs_Index,which(Pairs[,1]==Membership_Cells_Index[j]))
    }
    #Subset of pairs corresponding to the membership
-   Membership_Pairs <- Pairs[Membership_Pairs_Index, ]
+   memPairs <- Pairs[Membership_Pairs_Index, ]
 
    #########################
    ###Pairs by clustering###
    #########################
    if(FilterPairs){
 
-     if (nrow(Membership_Pairs) > 10){
-        Pairs_Select <- Pairs_Selection(B1 = t(pcaRef),
-                                        B2 = t(pcaQue),
-                                        Pairs = Membership_Pairs,
-                                        Verbose = Verbose)
-
-        Selected_Pairs <- Pairs_Select[['Selected Pairs']]
+     if (nrow(memPairs) > 10){
+       memPairs <- Pairs_Selection(B1 = t(pcaRef), B2 = t(pcaQue),
+                                   Pairs = memPairs, Verbose = Verbose)
 
         if(Verbose)
-          cat( paste( '\n\tNumber of selected pairs:', nrow(Selected_Pairs) ) )
+          cat( paste( '\n\tNumber of selected pairs:', nrow(memPairs) ) )
       }else {
-        warning('\nWarning: Not enough pairs found for this Membership. No pairs selection is performed', call. = TRUE)
-        Selected_Pairs <- Membership_Pairs
-        Pairs_Select <- NULL
+        warning('\nWarning: Not enough pairs found for this Membership.\nNo pairs selection is performed', call. = TRUE)
       }
-
-   }else{
-      Selected_Pairs <- Membership_Pairs
-      Pairs_Select <- NULL
    }
 
-   norNumPairs <- (ceiling(nrow(Selected_Pairs)/k_Neighbors))/(numCellMembership)
+   norNumPairs <- (ceiling(nrow(memPairs)/k_Neighbors))/(numCellMembership)
 
    if (norNumPairs > perCellMNN){
 
