@@ -192,30 +192,7 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
     }else{ #If we don't find any related node with no zero correction vector, we analize the next node
       Node = Node + 1
     }
-
-
   }
-
-  #i = 1
-  # while(length(Is_Zero) != 0){
-  #
-  #   Related_Edges <- MST[Is_Zero[i],]
-  #   Related <- which(Related_Edges !=0)
-  #   Related <- which(Cluster_Dist[Is_Zero[i],] == min(Cluster_Dist[Is_Zero[i],Related]))
-  #
-  #   #vemos que el que queremos asignar tenga un vector de correccion
-  #   if(Zero_Correction[Related]== FALSE){
-  #     #asignamos el vector de correcion
-  #     Membership_Correction_Data[[Is_Zero[i]]] <- Membership_Correction_Data[[Related]]
-  #     Correction_Matrix[,Is_Zero[i]] <- Membership_Correction_Data[[Related]]$`Correction Vector`
-  #     Zero_Correction[Is_Zero[i]] <- FALSE
-  #     i = 1
-  #   }else{
-  #     i = i+1
-  #   }
-  #
-  #   Is_Zero <- which(Zero_Correction == TRUE)
-  # }
 
   return(list("Membership_Correction_Data" = Membership_Correction_Data,
               "Correction_Matrix" = corGene))
