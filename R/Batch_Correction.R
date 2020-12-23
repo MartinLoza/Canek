@@ -67,9 +67,7 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
   rownames(Was_Integrated) <- c( as.character(1:nrow(Was_Integrated)) )
 
   #Check input batches as matrices
-  for (i in 1:Num_Batches) {
-    Batches[[i]] <- as.matrix(Batches[[i]])
-  }
+  Batches <- lapply(Batches, as.matrix)
 
   #In hierarchical mode, the pairs of the batches are checked in order to decide which batches are integrated first. The logic
   #is that more similar batches would share a higher number of pairs
