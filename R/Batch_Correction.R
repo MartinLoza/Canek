@@ -69,6 +69,9 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
   #Check input batches as matrices
   Batches <- lapply(Batches, as.matrix)
 
+  # Cosine normalize the input batches
+  cnBatches <- lapply(Batches, batchelor::cosineNorm)
+
   #In hierarchical mode, the pairs of the batches are checked in order to decide which batches are integrated first. The logic
   #is that more similar batches would share a higher number of pairs
   if(Hierarchical == TRUE & Num_Batches >2 ){
@@ -86,15 +89,12 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
 
         for(j in (i+1):Last_Batch){
 
-          if( (Was_Integrated[j] == FALSE) &  (Num_Batches_2_Integrates > 2) ){
+          if((Was_Integrated[j] == FALSE) & (Num_Batches_2_Integrates > 2)){
 
             nCells_Bj <- ncol(Batches[[j]])
 
             #Cosine normalization before getting pairs
-            cnRefBatch <- batchelor::cosineNorm(Batches[[i]])
-            cnQueBatch <- batchelor::cosineNorm(Batches[[j]])
-
-            PCA_Batches <- prcomp_irlba(  t( cbind(cnRefBatch,cnQueBatch) ) )
+            PCA_Batches <- prcomp_irlba(t( cbind(cnBatches[[i]],cnBatches[[j]])))
             PCA_Bi <- PCA_Batches$x[1:nCells_Bi,]
             PCA_Bj <- PCA_Batches$x[(nCells_Bi+1):(nCells_Bi + nCells_Bj),]
 
@@ -187,7 +187,6 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
          cat(paste('\nINTEGRATING', Names_Batches[1] ,"INTO", Names_Batches[i] ,"\n", sep = " ") )
        }
       }
-
 
       Correction <- Correct_Batch(refBatch = Ref,
                                   queBatch = Query,
