@@ -61,7 +61,7 @@ RunCanekSeurat <- function(x, slot = "data", assay = "RNA", features = NULL, sel
   })
 
   counts <- Canek::Correct_Batches(counts, ...)
-  integrated <- Seurat::CreateAssayObject(counts = counts[["Batches Integrated"]])
+  integrated <- Seurat::CreateAssayObject(counts = counts)
   x <- Reduce(merge, x)
 
   x[["Canek"]] <- integrated
@@ -77,7 +77,7 @@ RunCanekSingleCellExperiment <- function(x, assay = NULL, ...) {
 
 
   x <- Reduce(SummarizedExperiment::cbind, x)
-  SummarizedExperiment::assays(x, withDimnames = FALSE)[["Canek"]] <- counts[["Batches Integrated"]]
+  SummarizedExperiment::assays(x, withDimnames = FALSE)[["Canek"]] <- counts
 
   x
 }
