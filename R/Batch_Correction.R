@@ -161,6 +161,8 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
 #' @param Estimation TODO
 #' @param FilterPairs whether to perform pair filtering (default: FALSE)
 #' @param perCellMNN TODO
+#' @param cnRef TODO
+#' @param cnQue TODO
 #'
 #' @details Canek, a new non-linear/linear hybrid method for batch-effect correction that couples identification of similar cells
 #'  between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
