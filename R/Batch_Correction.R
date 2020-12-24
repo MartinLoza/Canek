@@ -60,12 +60,12 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
 
   #Init
   namesInBatches <- names(Batches)
-  Num_Batches <- length(Batches)
+  numBatches <- length(Batches)
 
   #Check input batches as matrices
   Batches <- lapply(Batches, as.matrix)
 
-  #order first batch is the one with highest number of cells
+  # First batch is the one with highest number of cells
   nCells <- as.data.frame(lapply(Batches, ncol))
   Batches <- Batches[sort(t(nCells), decreasing = TRUE, index.return = TRUE)$ix]
 
@@ -74,94 +74,57 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
 
   Order <- rep(namesInBatches[1], ncol(Batches[[1]]))
 
-  #In hierarchical mode, the pairs of the batches are checked in order to decide which batches are integrated first. The logic
-  #is that more similar batches would share a higher number of pairs
-  if(Hierarchical == TRUE & Num_Batches >2 ){
+  for(i in 2:numBatches){
 
-    for(i in 2:Num_Batches){
-      # ref at the beggining
-      namesBatches <- names(Batches)
+    namesBatches <- names(Batches)
 
-      # Get pairs
-      if(length(Batches) > 2){
+    # Hierarchical selection
+    if(Hierarchical == TRUE & length(Batches) > 2){
 
-        # pca with all the other batches
-        nCellsRef <- ncol(Batches[[1]])
+      # pca with all the other batches
+      nCellsRef <- ncol(Batches[[1]])
 
-        pcaBatches <- lapply(cnBatches[-1], function(x){prcomp_irlba(t(cbind(cnBatches[[1]],x)))})
+      pcaBatches <- lapply(cnBatches[-1], function(x){prcomp_irlba(t(cbind(cnBatches[[1]],x)))})
 
-        nPairs <- lapply(pcaBatches, function(x){
-          pairs <- Get_MNN_Pairs(B1 = t(x$x[1:nCellsRef,]),
-                                 B2 = t(x$x[(nCellsRef+1):nrow(x$x),]),
-                                 k_Neighbors = 30)$Pairs
-          return(nrow(pairs))
-        })
+      nPairs <- lapply(pcaBatches, function(x){
+        pairs <- Get_MNN_Pairs(B1 = t(x$x[1:nCellsRef,]),
+                               B2 = t(x$x[(nCellsRef+1):nrow(x$x),]),
+                               k_Neighbors = 30)$Pairs
+        return(nrow(pairs))
+      })
 
-        rm(pcaBatches)
+      rm(pcaBatches)
 
-        # Select query batch (max number of pairs)
-        nPairs <- as.data.frame(nPairs)
-        Query <- (1+which(nPairs == max(nPairs, na.rm = TRUE)))
-      }else{
-        Query <- 2
-      }
+      # Select query batch (max number of pairs)
+      nPairs <- as.data.frame(nPairs)
+      Query <- (1+which(nPairs == max(nPairs, na.rm = TRUE)))
 
-      Order <- c(Order, rep(namesBatches[Query], ncol(Batches[[Query]])))
-
-      # Eliminate unnecesary data
-      cnBatches <- cnBatches[-Query]
-
-      # correct
-      if(Verbose)
-        cat(paste('\nINTEGRATING', namesBatches[Query],"INTO", namesBatches[1],"\n", sep = " "))
-
-      Correction <- Correct_Batch(refBatch = Batches[[1]], queBatch = Batches[[Query]],
-                                  queNumCelltypes = queNumCelltypes, Dimensions = Dimensions,
-                                  Max_Membership = Max_Membership, k_Neighbors = k_Neighbors,
-                                  Fuzzy = Fuzzy, Estimation = Estimation,
-                                  FilterPairs = FilterPairs, perCellMNN = perCellMNN,
-                                  Sampling = Sampling, Number_Samples = Number_Samples,
-                                  #cnRef = cnBatches[[Ref]], cnQue = cnBatches[[Query]],
-                                  Verbose = Verbose)[["Corrected Query Batch"]]
-
-      # new ref at the beggining
-      Batches <- Batches[-Query]
-      Batches[[1]] <- cbind(Batches[[1]], Correction)
-      # new cb at the beggining
-      cnBatches[[1]] <- batchelor::cosineNorm(Batches[[1]])
-      names(Batches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
-      # repeat
+    }else{  #If the integration is not hierarchical
+      Query <- 2
     }
 
-  }else{  #If the integration is not hierarchical
-    Query <- 2
-    for(i in 2:Num_Batches){
+    Order <- c(Order, rep(namesBatches[Query], ncol(Batches[[Query]])))
 
-      namesBatches <- names(Batches)
+    # Correction
+    if(Verbose)
+      cat(paste('\nINTEGRATING', namesBatches[Query],"INTO", namesBatches[1],"\n", sep = " "))
 
-      Order <- c(Order, rep(namesBatches[Query], ncol(Batches[[Query]])))
+    Correction <- Correct_Batch(refBatch = Batches[[1]], queBatch = Batches[[Query]],
+                                queNumCelltypes = queNumCelltypes, Dimensions = Dimensions,
+                                Max_Membership = Max_Membership, k_Neighbors = k_Neighbors,
+                                Fuzzy = Fuzzy, Estimation = Estimation,
+                                FilterPairs = FilterPairs, perCellMNN = perCellMNN,
+                                Sampling = Sampling, Number_Samples = Number_Samples,
+                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
+                                Verbose = Verbose)[["Corrected Query Batch"]]
 
-      if(Verbose)
-        cat(paste('\nINTEGRATING', namesBatches[Query],"INTO", namesBatches[1],"\n", sep = " ") )
-
-      Correction <- Correct_Batch(refBatch = Batches[[1]], queBatch = Batches[[Query]],
-                                  queNumCelltypes = queNumCelltypes, Dimensions = Dimensions,
-                                  Max_Membership = Max_Membership, k_Neighbors = k_Neighbors,
-                                  Fuzzy = Fuzzy, Estimation = Estimation,
-                                  FilterPairs = FilterPairs, perCellMNN = perCellMNN,
-                                  Sampling = Sampling, Number_Samples = Number_Samples,
-                                  #cnRef = cnBatches[[1]], cnQue = cnBatches[[2]],
-                                  Verbose = Verbose)[["Corrected Query Batch"]]
-
-      # new ref at the beggining
-      Batches <- Batches[-Query]
-      cnBatches <- cnBatches[-Query]
-      Batches[[1]] <- cbind(Batches[[1]], Correction)
-      # new cb at the beggining
-      cnBatches[[1]] <- batchelor::cosineNorm(Batches[[1]])
-      names(Batches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
-
-    }
+    # new ref at the beggining
+    Batches <- Batches[-Query]
+    cnBatches <- cnBatches[-Query]
+    Batches[[1]] <- cbind(Batches[[1]], Correction)
+    # new cb at the beggining
+    cnBatches[[1]] <- batchelor::cosineNorm(Batches[[1]])
+    names(Batches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
   }
 
   #order output dataset
