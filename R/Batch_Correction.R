@@ -61,12 +61,6 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
   #Init
   namesInBatches <- names(Batches)
   Num_Batches <- length(Batches)
-  Corrected_Batches <- list()
-  Batches_Integrated <- NULL
-
-  change <- FALSE
-  Was_Integrated <- matrix(FALSE, nrow = Num_Batches, ncol = 1 )
-  rownames(Was_Integrated) <- c( as.character(1:nrow(Was_Integrated)) )
 
   #Check input batches as matrices
   Batches <- lapply(Batches, as.matrix)
@@ -82,8 +76,6 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
 
     for(i in 2:Num_Batches){
       # ref at the beggining
-
-
 
 
       # Get pairs
@@ -151,13 +143,6 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
 
     for(i in 2:Num_Batches){
 
-      if(ncol(Batches[[1]]) < ncol(Batches[[2]])){
-        Ref <- 2
-        Query <- 1
-      }else{
-        Ref <- 1
-        Query <- 2
-      }
 
       if(Verbose)
         cat(paste('\nINTEGRATING', namesInBatches[Query],"INTO", namesInBatches[Ref],"\n", sep = " ") )
@@ -168,18 +153,7 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
                                   Fuzzy = Fuzzy, Estimation = Estimation,
                                   FilterPairs = FilterPairs, perCellMNN = perCellMNN,
                                   Sampling = Sampling, Number_Samples = Number_Samples,
-                                  #cnRef = cnBatches[[Ref]], cnQue = cnBatches[[Query]],
-                                  Verbose = Verbose)
 
-      New_Name <- paste(namesInBatches[1],namesInBatches[i],sep = "/")
-      Corrected_Batches[[New_Name]] <- Correction
-      names(Corrected_Batches[[New_Name]]) <- c(paste("Reference Batch (",namesInBatches[1] ,")", sep = ""),
-                                                paste("Query Batch (",namesInBatches[i] , ")", sep = ""),
-                                                "Corrected Query Batch", "Correction Data")
-      Batches[[1]] <- cbind(Batches[[Ref]], Correction[["Corrected Query Batch"]] )
-      namesInBatches[1] <- New_Name
-
-      change = FALSE
 
     }
 
