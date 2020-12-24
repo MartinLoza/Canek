@@ -72,6 +72,7 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
   # Cosine normalize the input batches
   cnBatches <- lapply(Batches, batchelor::cosineNorm)
 
+  Order <- rep(namesInBatches[1], ncol(Batches[[1]]))
   #In hierarchical mode, the pairs of the batches are checked in order to decide which batches are integrated first. The logic
   #is that more similar batches would share a higher number of pairs
   if(Hierarchical == TRUE & Num_Batches >2 ){
@@ -133,20 +134,14 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
       # repeat
     }
 
-    #order output dataset
-    mOrder <- integer()
-    for(i in namesInBatches){
-      mOrder <- c(mOrder, which(Order == i))
-    }
-
-    Corrected_Batches[["Batches Integrated"]] <- Batches[[1]][,mOrder]
-
-
-
   }else{  #If the integration is not hierarchical
 
+    Query <- 2
     for(i in 2:Num_Batches){
 
+      namesBatches <- names(Batches)
+
+      Order <- c(Order, rep(namesBatches[Query], ncol(Batches[[Query]])))
 
       if(Verbose)
         cat(paste('\nINTEGRATING', namesInBatches[Query],"INTO", namesInBatches[Ref],"\n", sep = " ") )
@@ -162,8 +157,13 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
     }
 
     Corrected_Batches[["Batches Integrated"]] <- Batches[[1]]
+  #order output dataset
+  mOrder <- integer()
+  for(i in namesInBatches){
+    mOrder <- c(mOrder, which(Order == i))
   }
 
+  Batches[[1]] <- Batches[[1]][,mOrder]
   if(Verbose)
     toc()
 
