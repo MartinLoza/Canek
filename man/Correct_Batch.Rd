@@ -7,7 +7,7 @@
 Correct_Batch(
   refBatch,
   queBatch,
-  Query_Batch_Cell_Types = "Surprise-me",
+  queNumCelltypes = NULL,
   Sampling = NULL,
   Number_Samples = NULL,
   Pairs = NULL,
@@ -20,7 +20,9 @@ Correct_Batch(
   Verbose = FALSE,
   Estimation = "Median",
   FilterPairs = FALSE,
-  perCellMNN = 0.08
+  perCellMNN = 0.08,
+  cnRef = NULL,
+  cnQue = NULL
 )
 }
 \arguments{
@@ -28,7 +30,7 @@ Correct_Batch(
 
 \item{queBatch}{Batch to correct.}
 
-\item{Query_Batch_Cell_Types}{A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.}
+\item{queNumCelltypes}{A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.}
 
 \item{Sampling}{Whether or not samples MNNs pairs' samples are used on the estimation process.}
 
