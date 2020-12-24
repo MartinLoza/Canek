@@ -57,11 +57,11 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
     tic("\nTotal correction time ")
 
   #Init
-  Names_Batches <- names(Batches)
+  namesInBatches <- names(Batches)
   Num_Batches <- length(Batches)
   Corrected_Batches <- list()
   Batches_Integrated <- NULL
-  Order <- NULL
+
   change <- FALSE
   Was_Integrated <- matrix(FALSE, nrow = Num_Batches, ncol = 1 )
   rownames(Was_Integrated) <- c( as.character(1:nrow(Was_Integrated)) )
@@ -76,77 +76,74 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
   #is that more similar batches would share a higher number of pairs
   if(Hierarchical == TRUE & Num_Batches >2 ){
 
-    i <- 1
+    Order <- rep(namesInBatches[1], ncol(Batches[[1]]))
 
-    while (i < nrow(Was_Integrated)) {
-
-      if(Was_Integrated[i] == FALSE){
-
-        nCells_Bi <- ncol(Batches[[i]])
-        N_Pairs_Bj <- as.vector(NULL)
-        Last_Batch <- nrow(Was_Integrated)
-        Num_Batches_2_Integrates <- length(which(Was_Integrated == FALSE))
-
-        for(j in (i+1):Last_Batch){
-
-          if((Was_Integrated[j] == FALSE) & (Num_Batches_2_Integrates > 2)){
-
-            nCells_Bj <- ncol(Batches[[j]])
+    for(i in 2:Num_Batches){
+      # ref at the beggining
 
 
 
 
+      # Get pairs
+      if(length(Batches) > 2){
 
-        if(!is.null(N_Pairs_Bj)){
-          Query <- as.integer( rownames(N_Pairs_Bj)[ which(N_Pairs_Bj == max(N_Pairs_Bj) )] )
-        }else{
-          Query <- Last_Batch
-        }
+        # pca with all the other batches
+        nCellsRef <- ncol(Batches[[1]])
 
-        Ref <- i
-        Names_Batches <- names(Batches)
         pcaBatches <- lapply(cnBatches[-1], function(x){prcomp_irlba(t(cbind(cnBatches[[1]],x)))})
 
+        nPairs <- lapply(pcaBatches, function(x){
+          pairs <- Get_MNN_Pairs(B1 = t(x$x[1:nCellsRef,]),
+                                 B2 = t(x$x[(nCellsRef+1):nrow(x$x),]),
+                                 k_Neighbors = 30)$Pairs
+          return(nrow(pairs))
+        })
 
-        if(Verbose)
-          cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
+        rm(pcaBatches)
 
-        Correction <- Correct_Batch(refBatch = Batches[[Ref]],
-                                    queBatch = Batches[[Query]],
-                                    queNumCelltypes = queNumCelltypes,
-                                    Sampling = Sampling,
-                                    Number_Samples = Number_Samples,
-                                    k_Neighbors = k_Neighbors,
-                                    #PCA = PCA,
-                                    Dimensions = Dimensions,
-                                    Max_Membership = Max_Membership,
-                                    Fuzzy = Fuzzy,
-                                    Verbose = Verbose,
-                                    #Cosine_Norm = Cosine_Norm,
-                                    Estimation = Estimation,
-                                    FilterPairs = FilterPairs,
-                                    perCellMNN = perCellMNN
-                                    )
-
-        New_Name <- paste(Names_Batches[Ref],Names_Batches[Query],sep = "/")
-        Corrected_Batches[[New_Name]] <- Correction
-        Batches[[New_Name]] <- cbind( Batches[[Ref]], Correction[["Corrected Query Batch"]] )
-        Names_Batches <- c(Names_Batches, New_Name)
-        Was_Integrated[Ref] <- TRUE
-        Was_Integrated[Query] <- TRUE
-        Was_Integrated <- rbind(Was_Integrated, FALSE)
-
+        # Select query batch (max number of pairs)
+        nPairs <- as.data.frame(nPairs)
+        Query <- (1+which(nPairs == max(nPairs, na.rm = TRUE)))
+      }else{
+        Query <- 2
       }
-      i <- i+1
+
+      Order <- c(Order, rep(names(Batches)[Query], ncol(Batches[[Query]])))
+
+      # Eliminate unnecesary data
+      cnBatches <- cnBatches[-Query]
+
+      # correct
+      if(Verbose)
+        cat(paste('\nINTEGRATING', names(Batches)[Query],"INTO", names(Batches)[1],"\n", sep = " "))
+
+      Correction <- Correct_Batch(refBatch = Batches[[1]], queBatch = Batches[[Query]],
+                                  queNumCelltypes = queNumCelltypes, Dimensions = Dimensions,
+                                  Max_Membership = Max_Membership, k_Neighbors = k_Neighbors,
+                                  Fuzzy = Fuzzy, Estimation = Estimation,
+                                  FilterPairs = FilterPairs, perCellMNN = perCellMNN,
+                                  Sampling = Sampling, Number_Samples = Number_Samples,
+                                  #cnRef = cnBatches[[Ref]], cnQue = cnBatches[[Query]],
+                                  Verbose = Verbose)[["Corrected Query Batch"]]
+
+      # new ref at the beggining
+      Batches <- Batches[-Query]
+      Batches[[1]] <- cbind(Batches[[1]], Correction)
+      # new cb at the beggining
+      cnBatches[[1]] <- batchelor::cosineNorm(Batches[[1]])
+      names(Batches)[1] <- paste(names(Batches)[1],namesInBatches[Query],sep = "/")
+      # repeat
     }
 
-    Batches_Integrated <- Batches[[length(Batches)]]
-    for (Batch in 1:Num_Batches) {
-      Order <- c(Order, colnames(Batches[[Batch]]))
+    #order output dataset
+    mOrder <- integer()
+    for(i in namesInBatches){
+      mOrder <- c(mOrder, which(Order == i))
     }
-    Batches_Integrated <- Batches_Integrated[,Order]
 
-    Corrected_Batches[["Batches Integrated"]] <- Batches_Integrated
+    Corrected_Batches[["Batches Integrated"]] <- Batches[[1]][,mOrder]
+
+
 
   }else{  #If the integration is not hierarchical
 
@@ -160,38 +157,25 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
         Query <- 2
       }
 
-      if(Verbose){
-       if(change == FALSE){
-         cat(paste('\nINTEGRATING', Names_Batches[i],"INTO", Names_Batches[1],"\n", sep = " ") )
-       }else{
-         cat(paste('\nINTEGRATING', Names_Batches[1] ,"INTO", Names_Batches[i] ,"\n", sep = " ") )
-       }
-      }
+      if(Verbose)
+        cat(paste('\nINTEGRATING', namesInBatches[Query],"INTO", namesInBatches[Ref],"\n", sep = " ") )
 
-      Correction <- Correct_Batch(refBatch = Ref,
-                                  queBatch = Query,
-                                  queNumCelltypes = queNumCelltypes,
-                                  Sampling = Sampling,
-                                  Number_Samples = Number_Samples,
-                                  k_Neighbors = k_Neighbors,
-                                  #PCA = PCA,
-                                  Dimensions = Dimensions,
-                                  Max_Membership = Max_Membership,
-                                  Fuzzy = Fuzzy,
-                                  Verbose = Verbose,
-                                  #Cosine_Norm = Cosine_Norm,
-                                  Estimation = Estimation,
-                                  FilterPairs = FilterPairs,
-                                  perCellMNN = perCellMNN
-                                  )
+      Correction <- Correct_Batch(refBatch = Batches[[Ref]], queBatch = Batches[[Query]],
+                                  queNumCelltypes = queNumCelltypes, Dimensions = Dimensions,
+                                  Max_Membership = Max_Membership, k_Neighbors = k_Neighbors,
+                                  Fuzzy = Fuzzy, Estimation = Estimation,
+                                  FilterPairs = FilterPairs, perCellMNN = perCellMNN,
+                                  Sampling = Sampling, Number_Samples = Number_Samples,
+                                  #cnRef = cnBatches[[Ref]], cnQue = cnBatches[[Query]],
+                                  Verbose = Verbose)
 
-      New_Name <- paste(Names_Batches[1],Names_Batches[i],sep = "/")
+      New_Name <- paste(namesInBatches[1],namesInBatches[i],sep = "/")
       Corrected_Batches[[New_Name]] <- Correction
-      names(Corrected_Batches[[New_Name]]) <- c(paste("Reference Batch (",Names_Batches[1] ,")", sep = ""),
-                                                paste("Query Batch (",Names_Batches[i] , ")", sep = ""),
+      names(Corrected_Batches[[New_Name]]) <- c(paste("Reference Batch (",namesInBatches[1] ,")", sep = ""),
+                                                paste("Query Batch (",namesInBatches[i] , ")", sep = ""),
                                                 "Corrected Query Batch", "Correction Data")
-      Batches[[1]] <- cbind( Ref, Correction[["Corrected Query Batch"]] )
-      Names_Batches[1] <- New_Name
+      Batches[[1]] <- cbind(Batches[[Ref]], Correction[["Corrected Query Batch"]] )
+      namesInBatches[1] <- New_Name
 
       change = FALSE
 
@@ -263,7 +247,8 @@ Correct_Batch <- function(refBatch, queBatch,
                           #Cosine_Norm = TRUE, # TODO: implement for different input data
                           Estimation = "Median",
                           FilterPairs = FALSE,
-                          perCellMNN = 0.08
+                          perCellMNN = 0.08,
+                          cnRef = NULL, cnQue = NULL
                           ){
 
   if(Verbose)
@@ -309,8 +294,8 @@ Correct_Batch <- function(refBatch, queBatch,
 
   if(is.null(Pairs)){
 
-    PCA_Batches <- prcomp_irlba(t(cbind(batchelor::cosineNorm(refBatch),
-                                        batchelor::cosineNorm(queBatch))),
+    PCA_Batches <- prcomp_irlba(t(cbind(if(!is.null(cnRef)) cnRef else batchelor::cosineNorm(refBatch),
+                                        if(!is.null(cnQue)) cnQue else batchelor::cosineNorm(queBatch))),
                                 n = Dimensions)
 
     pcaRef <- PCA_Batches$x[1:nCellsRef,]
@@ -371,7 +356,7 @@ Correct_Batch <- function(refBatch, queBatch,
    #########################
    Membership_Pairs_Index <- integer()
    for (j in 1:length(Membership_Cells_Index)) {
-     Membership_Pairs_Index <- c(Membership_Pairs_Index,which(Pairs[,1]==Membership_Cells_Index[j]))
+     Membership_Pairs_Index <- c(Membership_Pairs_Index,which(Pairs[,1] == Membership_Cells_Index[j]))
    }
    #Subset of pairs corresponding to the membership
    memPairs <- Pairs[Membership_Pairs_Index, ]
