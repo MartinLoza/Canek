@@ -129,12 +129,11 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
       Batches[[1]] <- cbind(Batches[[1]], Correction)
       # new cb at the beggining
       cnBatches[[1]] <- batchelor::cosineNorm(Batches[[1]])
-      names(Batches)[1] <- paste(names(Batches)[1],namesInBatches[Query],sep = "/")
+      names(Batches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
       # repeat
     }
 
   }else{  #If the integration is not hierarchical
-
     Query <- 2
     for(i in 2:Num_Batches){
 
@@ -145,17 +144,26 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
       if(Verbose)
         cat(paste('\nINTEGRATING', namesBatches[Query],"INTO", namesBatches[1],"\n", sep = " ") )
 
-      Correction <- Correct_Batch(refBatch = Batches[[Ref]], queBatch = Batches[[Query]],
+      Correction <- Correct_Batch(refBatch = Batches[[1]], queBatch = Batches[[Query]],
                                   queNumCelltypes = queNumCelltypes, Dimensions = Dimensions,
                                   Max_Membership = Max_Membership, k_Neighbors = k_Neighbors,
                                   Fuzzy = Fuzzy, Estimation = Estimation,
                                   FilterPairs = FilterPairs, perCellMNN = perCellMNN,
                                   Sampling = Sampling, Number_Samples = Number_Samples,
+                                  #cnRef = cnBatches[[1]], cnQue = cnBatches[[2]],
+                                  Verbose = Verbose)[["Corrected Query Batch"]]
 
+      # new ref at the beggining
+      Batches <- Batches[-Query]
+      cnBatches <- cnBatches[-Query]
+      Batches[[1]] <- cbind(Batches[[1]], Correction)
+      # new cb at the beggining
+      cnBatches[[1]] <- batchelor::cosineNorm(Batches[[1]])
+      names(Batches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
 
     }
+  }
 
-    Corrected_Batches[["Batches Integrated"]] <- Batches[[1]]
   #order output dataset
   mOrder <- integer()
   for(i in namesInBatches){
@@ -163,10 +171,11 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
   }
 
   Batches[[1]] <- Batches[[1]][,mOrder]
+
   if(Verbose)
     toc()
 
-  return(Corrected_Batches)
+  return(Batches[[1]])
 }
 
 #' Correct_Batch
