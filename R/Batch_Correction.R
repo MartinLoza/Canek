@@ -73,15 +73,14 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
   cnBatches <- lapply(Batches, batchelor::cosineNorm)
 
   Order <- rep(namesInBatches[1], ncol(Batches[[1]]))
+
   #In hierarchical mode, the pairs of the batches are checked in order to decide which batches are integrated first. The logic
   #is that more similar batches would share a higher number of pairs
   if(Hierarchical == TRUE & Num_Batches >2 ){
 
-    Order <- rep(namesInBatches[1], ncol(Batches[[1]]))
-
     for(i in 2:Num_Batches){
       # ref at the beggining
-
+      namesBatches <- names(Batches)
 
       # Get pairs
       if(length(Batches) > 2){
@@ -107,14 +106,14 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
         Query <- 2
       }
 
-      Order <- c(Order, rep(names(Batches)[Query], ncol(Batches[[Query]])))
+      Order <- c(Order, rep(namesBatches[Query], ncol(Batches[[Query]])))
 
       # Eliminate unnecesary data
       cnBatches <- cnBatches[-Query]
 
       # correct
       if(Verbose)
-        cat(paste('\nINTEGRATING', names(Batches)[Query],"INTO", names(Batches)[1],"\n", sep = " "))
+        cat(paste('\nINTEGRATING', namesBatches[Query],"INTO", namesBatches[1],"\n", sep = " "))
 
       Correction <- Correct_Batch(refBatch = Batches[[1]], queBatch = Batches[[Query]],
                                   queNumCelltypes = queNumCelltypes, Dimensions = Dimensions,
@@ -144,7 +143,7 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
       Order <- c(Order, rep(namesBatches[Query], ncol(Batches[[Query]])))
 
       if(Verbose)
-        cat(paste('\nINTEGRATING', namesInBatches[Query],"INTO", namesInBatches[Ref],"\n", sep = " ") )
+        cat(paste('\nINTEGRATING', namesBatches[Query],"INTO", namesBatches[1],"\n", sep = " ") )
 
       Correction <- Correct_Batch(refBatch = Batches[[Ref]], queBatch = Batches[[Query]],
                                   queNumCelltypes = queNumCelltypes, Dimensions = Dimensions,
