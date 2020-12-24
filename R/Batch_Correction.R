@@ -93,19 +93,9 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
 
             nCells_Bj <- ncol(Batches[[j]])
 
-            #Cosine normalization before getting pairs
-            PCA_Batches <- prcomp_irlba(t( cbind(cnBatches[[i]],cnBatches[[j]])))
-            PCA_Bi <- PCA_Batches$x[1:nCells_Bi,]
-            PCA_Bj <- PCA_Batches$x[(nCells_Bi+1):(nCells_Bi + nCells_Bj),]
 
-            Pairs <- Get_MNN_Pairs(B1 = t(PCA_Bi),B2 = t(PCA_Bj),  k_Neighbors = 30)
 
-            #N_Pairs_Bj <- rbind(N_Pairs_Bj, (nrow(Pairs$Pairs)/nCells_Bj))
-            N_Pairs_Bj <- rbind(N_Pairs_Bj, nrow(Pairs$Pairs))
-            rownames(N_Pairs_Bj)[nrow(N_Pairs_Bj)] <- j
-          }
 
-        }
 
         if(!is.null(N_Pairs_Bj)){
           Query <- as.integer( rownames(N_Pairs_Bj)[ which(N_Pairs_Bj == max(N_Pairs_Bj) )] )
@@ -115,6 +105,7 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
 
         Ref <- i
         Names_Batches <- names(Batches)
+        pcaBatches <- lapply(cnBatches[-1], function(x){prcomp_irlba(t(cbind(cnBatches[[1]],x)))})
 
 
         if(Verbose)
