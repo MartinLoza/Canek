@@ -65,6 +65,10 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
   #Check input batches as matrices
   Batches <- lapply(Batches, as.matrix)
 
+  #order first batch is the one with highest number of cells
+  nCells <- as.data.frame(lapply(Batches, ncol))
+  Batches <- Batches[sort(t(nCells), decreasing = TRUE, index.return = TRUE)$ix]
+
   # Cosine normalize the input batches
   cnBatches <- lapply(Batches, batchelor::cosineNorm)
 
