@@ -116,13 +116,6 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
         Ref <- i
         Names_Batches <- names(Batches)
 
-        # TODO: ver si sirve, sino borrarlo
-        if(ncol(Batches[[Ref]]) < ncol(Batches[[Query]]) ){
-          temp <- Ref
-          Ref <- Query
-          Query <- temp
-          rm(temp)
-        }
 
         if(Verbose)
           cat(paste('\nINTEGRATING', Names_Batches[Query],"INTO", Names_Batches[Ref],"\n", sep = " ") )
@@ -168,16 +161,12 @@ Correct_Batches <- function(Batches, queNumCelltypes = NULL,
 
     for(i in 2:Num_Batches){
 
-      Ref <- Batches[[1]]
-      Query <- Batches[[i]]
-
-      # TODO: ver si sirve, sino borrarlo
-      if(ncol(Ref) < ncol(Query) ){
-        temp <- Ref
-        Ref <- Query
-        Query <- temp
-        rm(temp)
-        change = TRUE
+      if(ncol(Batches[[1]]) < ncol(Batches[[2]])){
+        Ref <- 2
+        Query <- 1
+      }else{
+        Ref <- 1
+        Query <- 2
       }
 
       if(Verbose){
