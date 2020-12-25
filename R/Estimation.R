@@ -1,36 +1,30 @@
 
 
-#' Title EKF_BE
+#' Title EkfBE
 #'
 #' Estimation of batch-effect by Extended Kalman Filter
 #'
-#' @param B1 Reference batch single-cell data.
-#' @param B2 Query's batch single-cell data.
-#' @param Pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
-#' @param Sampling Whether or not sampling of MNNs pairs is used on the estimation process.
-#' @param Number_Samples Number of MNNs pairs samples used on the estimation process.
-#' @param Verbose Print output.
+#' @param refBatch Reference batch single-cell data.
+#' @param queBatch Query's batch single-cell data.
+#' @param pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
+#' @param sampling Whether or not sampling of MNNs pairs is used on the estimation process.
+#' @param numSamples Number of MNNs pairs samples used on the estimation process.
+#' @param verbose Print output.
 #'
 #' @return A list containing the estimated correction vector and MNNs pair samples used on the estimation process.
 #' The length of the correction vector is equal to the number of genes.
 #'
-#' @details B1 is used as the reference batch and B2 is used as the query batch.
+#' @details refBatch is used as the reference batch and queBatch is used as the query batch.
 #' Input batches need to have the same number of genes.
 #'
 
-EKF_BE <- function(B1,
-                   B2,
-                   Pairs,
-                   Sampling=NULL,
-                   Number_Samples= NULL,
-                   Verbose = FALSE
-                   ){
+EkfBE <- function(refBatch, queBatch, pairs, sampling=NULL, numSamples= NULL, verbose = FALSE){
 
   #INIT
   Epochs <- 1
-  Pairs_Dim <- dim(Pairs)
+  Pairs_Dim <- dim(pairs)
   Num_Pairs <- Pairs_Dim[1]
-  B2_Dim <- dim(B2)
+  B2_Dim <- dim(queBatch)
   B2_NumCells <- B2_Dim[2]
   Num_genes <- B2_Dim[1]
   Progress <- Num_genes/10
@@ -39,46 +33,46 @@ EKF_BE <- function(B1,
   Gain=0.5
 
   if(Num_Pairs < 20){
-    Sampling <- FALSE
+    sampling <- FALSE
     warning('\nWarning: Low number of pairs', call. = TRUE)
   }
 
   #Set number of samples
-  if( is.null(Number_Samples) ){
-    if(Sampling == TRUE){
+  if( is.null(numSamples) ){
+    if(sampling == TRUE){
       if(Num_Pairs > Min_Samples){
-        Number_Samples <- round(Num_Pairs*0.2)
+        numSamples <- round(Num_Pairs*0.2)
       }else{
-        Number_Samples <- Min_Samples
+        numSamples <- Min_Samples
       }
     }else{
-      Number_Samples <- Num_Pairs
+      numSamples <- Num_Pairs
     }
   }
 
-  if(Num_Pairs < Number_Samples){
-    Epochs <- ceiling(Number_Samples/Num_Pairs)
-    Sampling <- FALSE
+  if(Num_Pairs < numSamples){
+    Epochs <- ceiling(numSamples/Num_Pairs)
+    sampling <- FALSE
     warning('\nWarning: Number of pairs is lower than number of samples', call. = TRUE)
 
-    if(Verbose)
+    if(verbose)
       cat(paste( "\n\tNumber of epochs: ", Epochs ))
   }
 
-  if (Sampling) {
-    Samples <- sample(c(1:Num_Pairs),size = Number_Samples, replace = FALSE)
-    Samples <- matrix(c(Pairs[Samples,1], Pairs[Samples,2] ), nrow = Number_Samples)
-    colnames(Samples) <- colnames(Pairs)
+  if (sampling) {
+    Samples <- sample(c(1:Num_Pairs),size = numSamples, replace = FALSE)
+    Samples <- matrix(c(pairs[Samples,1], pairs[Samples,2] ), nrow = numSamples)
+    colnames(Samples) <- colnames(pairs)
   } else {
-    Number_Samples <- Num_Pairs
-    Samples <- Pairs
+    numSamples <- Num_Pairs
+    Samples <- pairs
   }
 
-  if(Verbose)
-    cat(paste( '\n\tNumber of pairs used for the estimation:', Number_Samples ))
+  if(verbose)
+    cat(paste( '\n\tNumber of pairs used for the estimation:', numSamples ))
 
   ## INIT VARIABLES
-  Number_Samples_Epoch <- Number_Samples*Epochs
+  numSamples_Epoch <- numSamples*Epochs
   Q <- 25
   R <- 100
   # Q <- 2
@@ -88,10 +82,10 @@ EKF_BE <- function(B1,
 
   S <- rep(0, Num_genes)
   K <- rep(0, Num_genes)
-  w <- matrix(0, nrow = Num_genes, ncol = Number_Samples_Epoch)
-  P <- matrix(0, nrow = Num_genes, ncol = Number_Samples_Epoch)
-  x <- matrix(0, nrow = Num_genes, ncol = Number_Samples_Epoch)
-  xs <- matrix(0, nrow = Num_genes, ncol = Number_Samples_Epoch)
+  w <- matrix(0, nrow = Num_genes, ncol = numSamples_Epoch)
+  P <- matrix(0, nrow = Num_genes, ncol = numSamples_Epoch)
+  x <- matrix(0, nrow = Num_genes, ncol = numSamples_Epoch)
+  xs <- matrix(0, nrow = Num_genes, ncol = numSamples_Epoch)
 
 
   # P[, 1] <- 10
@@ -102,17 +96,17 @@ EKF_BE <- function(B1,
   for (ep in 1:Epochs){
 
     if(ep == 1){
-      Index_Vector <- c(2:Number_Samples)
+      Index_Vector <- c(2:numSamples)
     }else{
-      Index_Vector <- c(1:Number_Samples)
+      Index_Vector <- c(1:numSamples)
     }
 
      for (k in Index_Vector) {
 
       #Reference
-      x[, Index_Epoch] = B1[, Samples[k,2]]
+      x[, Index_Epoch] = refBatch[, Samples[k,2]]
       # Prediction
-      xs[, Index_Epoch] = B2[, Samples[k,1]] + w[, Index_Epoch-1]
+      xs[, Index_Epoch] = queBatch[, Samples[k,1]] + w[, Index_Epoch-1]
       #Error
       Error <- x[, Index_Epoch] - xs[, Index_Epoch]
       #Kalman Gain
@@ -130,24 +124,24 @@ EKF_BE <- function(B1,
 
     Correction_Vector = rowMeans(w)
 
-  Estimation_Data <- list("Sampled Pairs" = Samples ,"Correction Vector" = Correction_Vector)
+  Estimation_Data <- list("Correction Vector" = Correction_Vector, "Sampled Pairs" = Samples)
 
   return(Estimation_Data)
 }
 
 
-Average_BE <- function(B1, B2, Pairs ){
+MedianBE <- function(refBatch, queBatch, pairs ){
 
   # Model -> g_ref = g_que + be
   # be -> g_ref - g_que
 
   #Get pairs index
-  pQue <- Pairs[,1]
-  pRef <- Pairs[,2]
+  pQue <- pairs[,1]
+  pRef <- pairs[,2]
 
   #Subsetting
-  pRef <- B1[,pRef]
-  pQue <- B2[,pQue]
+  pRef <- refBatch[,pRef]
+  pQue <- queBatch[,pQue]
 
   be <- pRef-pQue
 

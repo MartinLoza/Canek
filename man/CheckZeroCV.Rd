@@ -7,9 +7,9 @@
 CheckZeroCV(
   MST = NULL,
   cluMem = NULL,
-  Membership_Correction_Data = NULL,
+  memCorrData = NULL,
   corGene = NULL,
-  Zero_Correction = NULL
+  zeroCorrection = NULL
 )
 }
 \arguments{
@@ -17,11 +17,11 @@ CheckZeroCV(
 
 \item{cluMem}{Clusters used on MST}
 
-\item{Membership_Correction_Data}{Data to correct}
+\item{memCorrData}{Data to correct}
 
 \item{corGene}{Data to correct}
 
-\item{Zero_Correction}{Vector indicating which membership has a zero correction vector}
+\item{zeroCorrection}{Vector indicating which membership has a zero correction vector}
 }
 \description{
 CheckZeroCV

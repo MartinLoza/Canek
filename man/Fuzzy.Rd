@@ -4,17 +4,17 @@
 \alias{Fuzzy}
 \title{Title Fuzzy}
 \usage{
-Fuzzy(cluMem = NULL, Cells_PCA = NULL, corCell = NULL, Verbose = FALSE)
+Fuzzy(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
 }
 \arguments{
 \item{cluMem}{Memberships' clustering data.}
 
-\item{Cells_PCA}{PCA representation of the cells.}
+\item{pcaQue}{PCA representation of the cells.}
 
 \item{corCell}{Matrix containing the initial membership assignment.
 Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.}
 
-\item{Verbose}{Print output.}
+\item{verbose}{Print output.}
 }
 \description{
 Function to score cell's memberships by fuzzy logic

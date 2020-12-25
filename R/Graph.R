@@ -1,10 +1,10 @@
 
-##Get_Edges##
+##GetEdges##
 #Get a vector with the edges from a minimum spanning tree
 # INPUT : Minimum spanning tree (MST object)
 #
 # OUTPUT : Vector with edges
-Get_Edges <- function( Mst = NULL ){
+GetEdges <- function( Mst = NULL ){
 
   Edges <- NULL
   Num_Nodes <- ncol(Mst)

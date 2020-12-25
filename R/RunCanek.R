@@ -45,7 +45,7 @@ RunCanek.list <- function(x, ...) {
   switch(objtype,
     "Seurat" = RunCanekSeurat(x, ...),
     "SingleCellExperiment" = RunCanekSingleCellExperiment(x, ...),
-    "matrix" = Correct_Batches(x, ...)
+    "matrix" = CorrectBatches(x, ...)
   )
 
 }
@@ -60,7 +60,7 @@ RunCanekSeurat <- function(x, slot = "data", assay = "RNA", features = NULL, sel
     Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
   })
 
-  counts <- Canek::Correct_Batches(counts, ...)
+  counts <- Canek::CorrectBatches(counts, ...)
   integrated <- Seurat::CreateAssayObject(counts = counts)
   x <- Reduce(merge, x)
 
@@ -73,7 +73,7 @@ RunCanekSeurat <- function(x, slot = "data", assay = "RNA", features = NULL, sel
 
 RunCanekSingleCellExperiment <- function(x, assay = NULL, ...) {
   counts <- lapply(x, SummarizedExperiment::assay, i = assay)
-  counts <- Canek::Correct_Batches(counts, ...)
+  counts <- Canek::CorrectBatches(counts, ...)
 
 
   x <- Reduce(SummarizedExperiment::cbind, x)

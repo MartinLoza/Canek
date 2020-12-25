@@ -4,19 +4,19 @@
 #' Function to score cell's memberships by fuzzy logic
 #'
 #' @param cluMem Memberships' clustering data.
-#' @param Cells_PCA PCA representation of the cells.
+#' @param pcaQue PCA representation of the cells.
 #' @param corCell Matrix containing the initial membership assignment.
 #' Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.
-#' @param Verbose Print output.
+#' @param verbose Print output.
 #'
 #' @details This function stablishes the fuzzification for the cells' membership.
 #'  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
 #'   for each of the edges of the MST.#'
 #'
-Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corCell = NULL, Verbose = FALSE){
+Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE){
 
   #INIT
-  Num_Cells <- nrow(Cells_PCA)
+  Num_Cells <- nrow(pcaQue)
   Num_Memberships <- nrow(cluMem$centers)
   PCA_Max <- 2
   Fuzzied <- rep(FALSE, Num_Cells)
@@ -25,16 +25,16 @@ Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corCell = NULL, Verbose = FAL
 
 
   # Create Minimum spanning tree (MST) by using centers of Memberships as nodes
-  if(Verbose)
+  if(verbose)
     cat( '\n\tObtaining Minimum Spanning Tree' )
 
   Mst <- mst(dist( cluMem$centers[,1:PCA_Max] ) )  #TODO: If possible change to higher dimensions
 
   #Get edges from MST
-  Edges <- Get_Edges(Mst)
+  Edges <- GetEdges(Mst)
 
   #Fuzzy process
-  if(Verbose)
+  if(verbose)
     cat('\n\tFuzzificating cells from each edge')
 
   for(Edge in 1:nrow(Edges)){
@@ -52,16 +52,16 @@ Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corCell = NULL, Verbose = FAL
     OUT_Node_PCA_Transformed <- OUT_Node_PCA - IN_Node_PCA
 
     #Find angle between the current nodes (we set it negative because we would correct this angle in further steps)
-    Alpha <- (-Get_Rotation_Angle ( OUT_Node_PCA_Transformed ) )
+    Alpha <- (-GetRotationAngle ( OUT_Node_PCA_Transformed ) )
     names(Alpha)<-"Alpha"
 
     #Get cells from both IN and OUT memberships
     IN_Membership_Cells_Index <- which(cluMem$cluster == IN_Node)
-    IN_Membership_Cells <- Cells_PCA[IN_Membership_Cells_Index, 1:PCA_Max ]
+    IN_Membership_Cells <- pcaQue[IN_Membership_Cells_Index, 1:PCA_Max ]
     rownames(IN_Membership_Cells) <- IN_Membership_Cells_Index
 
     OUT_Membership_Cells_Index <- which(cluMem$cluster == OUT_Node)
-    OUT_Membership_Cells <- Cells_PCA[which(cluMem$cluster == OUT_Node), 1:PCA_Max ]
+    OUT_Membership_Cells <- pcaQue[which(cluMem$cluster == OUT_Node), 1:PCA_Max ]
     rownames(OUT_Membership_Cells) <- OUT_Membership_Cells_Index
 
     #Translate according cells from both memberships according to IN node PCA coordinates
@@ -134,12 +134,12 @@ Fuzzy <- function(cluMem = NULL, Cells_PCA = NULL, corCell = NULL, Verbose = FAL
   return(Fuzzy_Data)
 }
 
-##Get_Rotation_Angle##
+##GetRotationAngle##
 #Get correction angle according to quadrant
 # INPUT : Node PCA coordinates
 #
 # OUTPUT : Angle in radians
-Get_Rotation_Angle <- function( PCA_Coordinates = NULL ){
+GetRotationAngle <- function( PCA_Coordinates = NULL ){
 
   Rotation_Angle <- atan(PCA_Coordinates['PC2']/PCA_Coordinates['PC1'])
 
@@ -160,41 +160,41 @@ Get_Rotation_Angle <- function( PCA_Coordinates = NULL ){
 #'
 #' @param MST Minimum Spanning Tree
 #' @param cluMem Clusters used on MST
-#' @param Membership_Correction_Data Data to correct
+#' @param memCorrData Data to correct
 #' @param corGene Data to correct
-#' @param Zero_Correction Vector indicating which membership has a zero correction vector
+#' @param zeroCorrection Vector indicating which membership has a zero correction vector
 #'
 CheckZeroCV <-function(MST = NULL, cluMem = NULL,
-                       Membership_Correction_Data = NULL, corGene = NULL,
-                       Zero_Correction = NULL){
+                       memCorrData = NULL, corGene = NULL,
+                       zeroCorrection = NULL){
 
-  Is_Zero <- which(Zero_Correction == TRUE)
+  Is_Zero <- which(zeroCorrection == TRUE)
   Cluster_Dist <- as.matrix(dist(cluMem$centers,upper = TRUE))
 
   Node = 1
   while(length(Is_Zero) != 0){
 
     Related_Edges <- which(MST[Is_Zero[Node],] !=0)
-    Related_Edges_No_Zero <- Related_Edges[which(Zero_Correction[Related_Edges] == FALSE)]
+    Related_Edges_No_Zero <- Related_Edges[which(zeroCorrection[Related_Edges] == FALSE)]
     if(length(Related_Edges_No_Zero) != 0){
       #if there are various, we select the one with the minimum distance
       if(length(Related_Edges_No_Zero) != 1){
         Related_Edges_No_Zero <- which(Cluster_Dist[Is_Zero[Node],] == min(Cluster_Dist[Is_Zero[Node],Related_Edges_No_Zero]))
       }
       #Assign correction vector
-      Membership_Correction_Data[[Is_Zero[Node]]] <- Membership_Correction_Data[[Related_Edges_No_Zero]]
-      corGene[,Is_Zero[Node]] <- Membership_Correction_Data[[Related_Edges_No_Zero]]$`Correction Vector`
-      Zero_Correction[Is_Zero[Node]] <- FALSE
+      memCorrData[[Is_Zero[Node]]] <- memCorrData[[Related_Edges_No_Zero]]
+      corGene[,Is_Zero[Node]] <- memCorrData[[Related_Edges_No_Zero]]$`Correction Vector`
+      zeroCorrection[Is_Zero[Node]] <- FALSE
 
       Node = 1
-      Is_Zero <- which(Zero_Correction == TRUE)
+      Is_Zero <- which(zeroCorrection == TRUE)
 
     }else{ #If we don't find any related node with no zero correction vector, we analize the next node
       Node = Node + 1
     }
   }
 
-  return(list("Membership_Correction_Data" = Membership_Correction_Data,
+  return(list("memCorrData" = memCorrData,
               "Correction_Matrix" = corGene))
 }
 

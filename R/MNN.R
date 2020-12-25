@@ -1,9 +1,9 @@
-##Find_MNN_Pairs##
+##FindMnnPairs##
 #Find MNN pairs given two matrices containing nearest neighbors
 # INPUT :
 #
 # OUTPUT :
-Find_MNN_Pairs <- function(B1_B2_NN = NULL, B2_B1_NN = NULL, B2_NCells = NULL ){
+FindMnnPairs <- function(B1_B2_NN = NULL, B2_B1_NN = NULL, B2_NCells = NULL ){
   # INIT
   m_Pairs <- NULL
 
@@ -16,7 +16,7 @@ Find_MNN_Pairs <- function(B1_B2_NN = NULL, B2_B1_NN = NULL, B2_NCells = NULL ){
   }
 
   if ( is.null(B2_NCells) ){
-    stop('B2_NCells, Number of B2 cells needs to be defined.')
+    stop('B2_NCells, Number of queBatch cells needs to be defined.')
   }
 
   #CHECK PAIRS
@@ -46,7 +46,7 @@ Find_MNN_Pairs <- function(B1_B2_NN = NULL, B2_B1_NN = NULL, B2_NCells = NULL ){
     }
   }
 
-  colnames(m_Pairs) <- c('B2-Cells-Index', 'B1-Cells-Index' )
+  colnames(m_Pairs) <- c('queBatch-Cells-Index', 'refBatch-Cells-Index' )
 
   return(list("Pairs" = m_Pairs))
 }
@@ -56,35 +56,35 @@ Find_MNN_Pairs <- function(B1_B2_NN = NULL, B2_B1_NN = NULL, B2_NCells = NULL ){
 # INPUT :
 #
 # OUTPUT :
-Get_MNN_Pairs <- function(B1 = NULL, B2 = NULL, k_Neighbors = 25){
+GetMnnPairs <- function(refBatch = NULL, queBatch = NULL, kNN = 25){
 
-  if ( is.null(B1) ){
-    stop('B1, Batch needs to be defined')
+  if ( is.null(refBatch) ){
+    stop('refBatch, Batch needs to be defined')
   }
-  if ( is.null(B2) ){
-    stop('B2, Batch needs to be defined')
+  if ( is.null(queBatch) ){
+    stop('queBatch, Batch needs to be defined')
   }
 
-  B1_NCells <- ncol(B1)
-  B2_NCells <- ncol(B2)
-  Dim_B1 <- k_Neighbors*B1_NCells
-  Dim_B2 <- k_Neighbors*B2_NCells
+  B1_NCells <- ncol(refBatch)
+  B2_NCells <- ncol(queBatch)
+  Dim_B1 <- kNN*B1_NCells
+  Dim_B2 <- kNN*B2_NCells
   B1_B2_NN <- matrix(0, nrow = Dim_B1, ncol = 2)
   B2_B1_NN <- matrix(0, nrow = Dim_B2, ncol = 2)
   colnames(B1_B2_NN) <- c("Batch-1", "Batch-2")
   colnames(B2_B1_NN) <- c("Batch-2", "Batch-1")
 
-  NN <- get.knnx(data = t(B2), query = t(B1), k = k_Neighbors)
+  NN <- get.knnx(data = t(queBatch), query = t(refBatch), k = kNN)
   NN_Index <- NN$nn.index
-  B1_B2_NN[,1] <- rep(c(1:B1_NCells), each = k_Neighbors)
+  B1_B2_NN[,1] <- rep(c(1:B1_NCells), each = kNN)
   B1_B2_NN[,2] <- t(NN_Index)[1:Dim_B1]
 
-  NN <- get.knnx(data = t(B1), query = t(B2), k = k_Neighbors)
+  NN <- get.knnx(data = t(refBatch), query = t(queBatch), k = kNN)
   NN_Index <- NN$nn.index
-  B2_B1_NN[,1] <- rep(c(1:B2_NCells), each = k_Neighbors)
+  B2_B1_NN[,1] <- rep(c(1:B2_NCells), each = kNN)
   B2_B1_NN[,2] <- t(NN_Index)[1:Dim_B2]
 
-  Pairs <- Find_MNN_Pairs(B1_B2_NN = B1_B2_NN, B2_B1_NN = B2_B1_NN, B2_NCells = B2_NCells )
+  Pairs <- FindMnnPairs(B1_B2_NN = B1_B2_NN, B2_B1_NN = B2_B1_NN, B2_NCells = B2_NCells )
 
   return(Pairs)
 
