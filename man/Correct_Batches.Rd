@@ -64,14 +64,11 @@ Correct_Batches is non-linear/linear hybrid method for single-cell batch-effect 
 }
 \examples{
 Batches <- SimBatches$batches
-Corrected <- Correct_Batches(Batches)
-#' z <- Correct_Batches(Batches)
-#Corrected <- z$`Batches Integrated`
+z <- Correct_Batches(Batches)
 
 Uncorrected_PCA <- prcomp(t(cbind(Batches[[1]], Batches[[2]])))
 plot(Uncorrected_PCA$x[,1:2])
-Corrected_PCA <- prcomp(t(Corrected))
-# Corrected_PCA <- prcomp(t(z$`Batches Integrated`))
+Corrected_PCA <- prcomp(t(z))
 plot(Corrected_PCA$x[,1:2])
 
 }
