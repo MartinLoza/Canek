@@ -1,7 +1,7 @@
 x <- matrix(c(1,3,1,1,2,3), ncol = 2, byrow = TRUE)
 y <- matrix(c(2,1,10,9,20,18,19,15), ncol = 2, byrow = TRUE)
 
-mnn <- Canek:::Get_MNN_Pairs(t(x), t(y), k_Neighbors = 1)
+mnn <- Canek:::Get_MNN_Pairs(t(x), t(y), kNN = 1)
 
 test_that("Get_MNN_Pairs works", {
   expect_true(!is.null(mnn))
@@ -11,7 +11,7 @@ test_that("Get_MNN_Pairs works", {
   expect_equal(unname(mnn$Pairs[1, ]), c(1, 2))
 })
 
-mnn <- Canek:::Get_MNN_Pairs(t(x), t(y), k_Neighbors = 2)
+mnn <- Canek:::Get_MNN_Pairs(t(x), t(y), kNN = 2)
 
 test_that("Get_MNN_Pairs works", {
   expect_true(!is.null(mnn))
