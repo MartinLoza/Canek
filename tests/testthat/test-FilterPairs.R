@@ -1,12 +1,12 @@
-context("test-Filter_Pairs")
+context("test-FilterPairs")
 
 set.seed(0)
 
 Batches <- SimBatches$batches
-z <- Correct_Batch(Batches$B1, Batches$B2, queNumCelltypes = 2, pairsFilter = TRUE)
+z <- CorrectBatch(Batches$B1, Batches$B2, queNumCelltypes = 2, pairsFilter = TRUE)
 pairs <- z$`Correction Data`$`MNN Pairs`
 
-test_that("Filter_Pairs works", {
+test_that("FilterPairs works", {
   expect_false(is.null(pairs))
   expect_true((nrow(pairs) == 5918) & (ncol(pairs) == 2))
   expect_true(length(which(is.na(pairs))) == 0)

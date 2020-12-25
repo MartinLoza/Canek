@@ -1,12 +1,12 @@
-context("test-Correct_Batch")
+context("test-CorrectBatch")
 
 set.seed(0)
 
 x <- SimBatches$batches[[1]]
 y <- SimBatches$batches[[2]]
-z <- Canek:::Correct_Batch(x,y)
+z <- Canek:::CorrectBatch(x,y)
 
-test_that("Correct_Batch works", {
+test_that("CorrectBatch works", {
   expect_false(is.null(z))
   expect_equal(length(which(is.na(z$`Corrected Query Batch`))), 0)
   expect_equal(length(z), 4)

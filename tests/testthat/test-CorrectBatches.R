@@ -1,11 +1,11 @@
-context("test-Correct_Batches")
+context("test-CorrectBatches")
 
 set.seed(0)
 
 Batches <- SimBatches$batches
-z <- Correct_Batches(Batches)
+z <- CorrectBatches(Batches)
 
-test_that("Correct_Batches works", {
+test_that("CorrectBatches works", {
   expect_false(is.null(z))
   expect_equal(length(which(is.na(z))),0)
   expect_equal(dim(z), dim(cbind(Batches$B1,Batches$B2)))

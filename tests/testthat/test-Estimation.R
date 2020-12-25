@@ -4,8 +4,8 @@ set.seed(0)
 
 Batches <- SimBatches$batches
 Pairs <- SimBatches$pairs
-x <- Canek:::EKF_BE(B1 = Batches[[1]], B2 = Batches[[2]], pairs = Pairs, sampling = TRUE)
-y <- Canek:::Average_BE(B1 = Batches[[1]], B2 = Batches[[2]], pairs = Pairs)
+x <- Canek:::EkfBE(refBatch = Batches[[1]], queBatch = Batches[[2]], pairs = Pairs, sampling = TRUE)
+y <- Canek:::MedianBE(refBatch = Batches[[1]], queBatch = Batches[[2]], pairs = Pairs)
 
 test_that("EKF Method", {
   expect_false(is.null(x))
