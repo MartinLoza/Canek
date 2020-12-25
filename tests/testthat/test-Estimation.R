@@ -4,18 +4,31 @@ set.seed(0)
 
 Batches <- SimBatches$batches
 Pairs <- SimBatches$pairs
-z <- Canek:::EKF_BE(B1 = Batches[[1]], B2 = Batches[[2]], Pairs = Pairs, Sampling = TRUE)
+x <- Canek:::EKF_BE(B1 = Batches[[1]], B2 = Batches[[2]], pairs = Pairs, sampling = TRUE)
+y <- Canek:::Average_BE(B1 = Batches[[1]], B2 = Batches[[2]], pairs = Pairs)
 
-test_that("Estimation works", {
-  expect_false(is.null(z))
-  expect_equal( names(z), c("Sampled Pairs", "Correction Vector"))
+test_that("EKF Method", {
+  expect_false(is.null(x))
+  expect_equal( names(x), c("Correction Vector", "Sampled Pairs"))
 
-  expect_false(is.null(z$`Correction Vector`))
-  expect_true(length(z$`Correction Vector`) == nrow(Batches$B1))
-  expect_equal( length( which( is.finite(z$`Correction Vector`))), length(z$`Correction Vector`))
-  expect_equal(z$`Correction Vector`[1], -0.01188622, tolerance = 1e-4 )
+  expect_false(is.null(x$`Correction Vector`))
+  expect_true(length(x$`Correction Vector`) == nrow(Batches$B1))
+  expect_equal(length(which(is.finite(x$`Correction Vector`))), length(x$`Correction Vector`))
+  expect_equal(x$`Correction Vector`[1], -0.01188622, tolerance = 1e-4 )
 
-  expect_equal(ncol(z$`Sampled Pairs`), 2)
-  expect_equal(nrow(z$`Sampled Pairs`), 819)
-  expect_equal(nrow(z$`Sampled Pairs`)/(nrow(Pairs)*0.2), 1.0, tolerance = 1e-3)
+  expect_equal(ncol(x$`Sampled Pairs`), 2)
+  expect_equal(nrow(x$`Sampled Pairs`), 819)
+  expect_equal(nrow(x$`Sampled Pairs`)/(nrow(Pairs)*0.2), 1.0, tolerance = 1e-3)
+})
+
+test_that("Median Method", {
+  expect_false(is.null(y))
+  expect_equal(names(y), c("Correction Vector", "Sampled Pairs"))
+
+  expect_false(is.null(y$`Correction Vector`))
+  expect_true(length(y$`Correction Vector`) == nrow(Batches$B1))
+  expect_equal(length(which(is.finite(y$`Correction Vector`))),length(y$`Correction Vector`))
+  expect_equal(y$`Correction Vector`[1],0.00523153, tolerance = 1e-4 )
+
+  expect_equal(y$`Sampled Pairs`, NULL)
 })
