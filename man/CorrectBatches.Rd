@@ -17,6 +17,7 @@ CorrectBatches(
   perCellMNN = 0.08,
   fuzzy = TRUE,
   estMethod = "Median",
+  debug = FALSE,
   verbose = FALSE,
   ...
 )
@@ -49,6 +50,8 @@ CorrectBatches(
 \item{verbose}{Print output}
 
 \item{...}{pass down methods from RunCanek().}
+
+\item{debuf}{TODO}
 }
 \value{
 A list containing the integrated datasets as matrix and the correction data .

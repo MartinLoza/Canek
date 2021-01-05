@@ -16,6 +16,7 @@
 #' @param estMethod TODO
 #' @param pairsFilter whether to perform pair filtering (default: FALSE)
 #' @param perCellMNN TODO
+#' @param debuf TODO
 #' @param ... pass down methods from RunCanek().
 #'
 #' @details CorrectBatches is non-linear/linear hybrid method for single-cell batch-effect correction that couples identification of similar cells
@@ -41,7 +42,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            kNN = 30, pcaDim = 50,
                            pairsFilter = FALSE, perCellMNN = 0.08,
                            fuzzy = TRUE, estMethod = "Median",
-                           verbose = FALSE, ... ){
+                           debug = FALSE, verbose = FALSE, ... ){
 
   if(verbose)
     tic("\nTotal correction time ")
@@ -49,6 +50,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   #Init
   namesInBatches <- names(lsBatches)
   numBatches <- length(lsBatches)
+  lsCorrection <- list()
 
   #Check input batches as matrices
   lsBatches <- lapply(lsBatches, as.matrix)
@@ -104,15 +106,23 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                pairsFilter = pairsFilter, perCellMNN = perCellMNN,
                                sampling = sampling, numSamples = numSamples,
                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
-                               verbose = verbose)[["Corrected Query Batch"]]
+                               verbose = verbose)
 
     # new ref at the beggining
     lsBatches <- lsBatches[-Query]
     cnBatches <- cnBatches[-Query]
-    lsBatches[[1]] <- cbind(lsBatches[[1]], Correction)
+    lsBatches[[1]] <- cbind(lsBatches[[1]], Correction[["Corrected Query Batch"]])
     # new cb at the beggining
     cnBatches[[1]] <- batchelor::cosineNorm(lsBatches[[1]])
     names(lsBatches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
+
+    if(debug == TRUE){
+      lsCorrection[[names(lsBatches)[1]]] <- Correction
+    }
+  }
+
+  if(debug == TRUE){
+    lsCorrection[["Batches Integrated"]] <- lsBatches[[1]]
   }
 
   #order output dataset
@@ -126,7 +136,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   if(verbose)
     toc()
 
-  return(lsBatches[[1]])
+  return(if(debug == FALSE) lsBatches[[1]] else lsCorrection)
 }
 
 #' CorrectBatch
