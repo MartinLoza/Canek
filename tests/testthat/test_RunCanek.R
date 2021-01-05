@@ -12,7 +12,7 @@ y <- Seurat::as.SingleCellExperiment(x)
 # RunCanek.
 x <- RunCanek(x, "orig.ident")
 y <- RunCanek(y, "orig.ident")
-z <- RunCanek(SimBatches$batches)
+z <- RunCanek(SimBatches$batches, debug = TRUE)
 
 test_that("RunCanek works on Seurat objects", {
   expect_false(is.null(x))
@@ -30,7 +30,7 @@ test_that("RunCanek works on SingleCellExperiment objects", {
 
 test_that("RunCanek works on lists", {
   expect_false(is.null(z))
-  #expect_is(z, "list")
-  #expect_length(z, 2)
-  #expect_equal(names(z), c("B1/B2", "Batches Integrated"))
+  expect_is(z, "list")
+  expect_length(z, 2)
+  expect_equal(names(z), c("B2/B1", "Batches Integrated"))
 })
