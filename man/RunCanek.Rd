@@ -17,10 +17,11 @@ RunCanek(x, ...)
   features = NULL,
   selection.method = "vst",
   fvf.nfeatures = 2000,
+  debug = FALSE,
   ...
 )
 
-\method{RunCanek}{SingleCellExperiment}(x, batches = NULL, assay = "counts", ...)
+\method{RunCanek}{SingleCellExperiment}(x, batches = NULL, assay = "counts", debug = FALSE, ...)
 
 \method{RunCanek}{list}(x, ...)
 }
@@ -40,6 +41,8 @@ RunCanek(x, ...)
 \item{selection.method}{method used for FindVariableFeatures on Seurat objects when features is NULL.}
 
 \item{fvf.nfeatures}{function used to collapse variable features from different batches. Default is intersect.}
+
+\item{debug}{whether to store information about correction vector.}
 }
 \value{
 An object of the appropriate type.
