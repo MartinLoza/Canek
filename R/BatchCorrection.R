@@ -16,7 +16,7 @@
 #' @param estMethod TODO
 #' @param pairsFilter whether to perform pair filtering (default: FALSE)
 #' @param perCellMNN TODO
-#' @param debuf TODO
+#' @param debug TODO
 #' @param ... pass down methods from RunCanek().
 #'
 #' @details CorrectBatches is non-linear/linear hybrid method for single-cell batch-effect correction that couples identification of similar cells

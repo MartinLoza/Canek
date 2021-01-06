@@ -47,11 +47,11 @@ CorrectBatches(
 
 \item{estMethod}{TODO}
 
+\item{debug}{TODO}
+
 \item{verbose}{Print output}
 
 \item{...}{pass down methods from RunCanek().}
-
-\item{debuf}{TODO}
 }
 \value{
 A list containing the integrated datasets as matrix and the correction data .
