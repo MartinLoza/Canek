@@ -62,11 +62,13 @@ RunCanekSeurat <- function(x, slot = "data", assay = "RNA", features = NULL, sel
   })
 
   counts <- Canek::CorrectBatches(counts, debug = debug, ...)
+
   if (debug) {
     info <- counts
     info[["Batches Integrated"]] <- NULL
     counts <- counts[["Batches Integrated"]]
   }
+
   integrated <- Seurat::CreateAssayObject(counts = counts)
   x <- Reduce(merge, x)
 
