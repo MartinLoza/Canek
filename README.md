@@ -5,8 +5,7 @@
 
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg)](https://github.com/MartinLoza/Canek)
+[![R-CMD-check](https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg)](https://github.com/MartinLoza/Canek/actions)
 <!-- badges: end -->
 
 The goal of Canek is to …
