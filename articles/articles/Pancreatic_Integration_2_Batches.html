@@ -164,20 +164,20 @@
 <span class="co">#&gt; Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric</span>
 <span class="co">#&gt; To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'</span>
 <span class="co">#&gt; This message will be shown once per session</span>
-<span class="co">#&gt; 08:29:01 UMAP embedding parameters a = 0.9922 b = 1.112</span>
-<span class="co">#&gt; 08:29:01 Read 3289 rows and found 30 numeric columns</span>
-<span class="co">#&gt; 08:29:01 Using Annoy for neighbor search, n_neighbors = 30</span>
-<span class="co">#&gt; 08:29:01 Building Annoy index with metric = cosine, n_trees = 50</span>
+<span class="co">#&gt; 09:32:47 UMAP embedding parameters a = 0.9922 b = 1.112</span>
+<span class="co">#&gt; 09:32:47 Read 3289 rows and found 30 numeric columns</span>
+<span class="co">#&gt; 09:32:47 Using Annoy for neighbor search, n_neighbors = 30</span>
+<span class="co">#&gt; 09:32:47 Building Annoy index with metric = cosine, n_trees = 50</span>
 <span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span>
 <span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span>
 <span class="co">#&gt; **************************************************|</span>
-<span class="co">#&gt; 08:29:01 Writing NN index file to temp file /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpaQDDCX/file8b23aca970c</span>
-<span class="co">#&gt; 08:29:01 Searching Annoy index using 1 thread, search_k = 3000</span>
-<span class="co">#&gt; 08:29:02 Annoy recall = 100%</span>
-<span class="co">#&gt; 08:29:02 Commencing smooth kNN distance calibration using 1 thread</span>
-<span class="co">#&gt; 08:29:03 Initializing from normalized Laplacian + noise</span>
-<span class="co">#&gt; 08:29:04 Commencing optimization for 500 epochs, with 134188 positive edges</span>
-<span class="co">#&gt; 08:29:09 Optimization finished</span></code></pre></div>
+<span class="co">#&gt; 09:32:47 Writing NN index file to temp file /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpOVbu0I/filebff501654a3</span>
+<span class="co">#&gt; 09:32:47 Searching Annoy index using 1 thread, search_k = 3000</span>
+<span class="co">#&gt; 09:32:48 Annoy recall = 100%</span>
+<span class="co">#&gt; 09:32:48 Commencing smooth kNN distance calibration using 1 thread</span>
+<span class="co">#&gt; 09:32:50 Initializing from normalized Laplacian + noise</span>
+<span class="co">#&gt; 09:32:50 Commencing optimization for 500 epochs, with 134188 positive edges</span>
+<span class="co">#&gt; 09:32:55 Optimization finished</span></code></pre></div>
 </div>
 <div id="umap-plot-before-correction" class="section level1">
 <h1 class="hasAnchor">
@@ -246,20 +246,20 @@
 <span class="co">#&gt;     MYCT1, EXOC3L2, ABI3, NOTCH4, EMCN, ERG, CALCRL, ECSCR, S1PR1, PTPRB </span>
 <span class="co">#&gt;     GIMAP4, RGCC, TIE1, RHOJ, COL13A1, GIMAP8, MMRN2, CLEC14A, PODXL, CDH5</span>
 <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">x</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span>
-<span class="co">#&gt; 08:29:26 UMAP embedding parameters a = 0.9922 b = 1.112</span>
-<span class="co">#&gt; 08:29:26 Read 3289 rows and found 30 numeric columns</span>
-<span class="co">#&gt; 08:29:26 Using Annoy for neighbor search, n_neighbors = 30</span>
-<span class="co">#&gt; 08:29:26 Building Annoy index with metric = cosine, n_trees = 50</span>
+<span class="co">#&gt; 09:33:11 UMAP embedding parameters a = 0.9922 b = 1.112</span>
+<span class="co">#&gt; 09:33:11 Read 3289 rows and found 30 numeric columns</span>
+<span class="co">#&gt; 09:33:11 Using Annoy for neighbor search, n_neighbors = 30</span>
+<span class="co">#&gt; 09:33:11 Building Annoy index with metric = cosine, n_trees = 50</span>
 <span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span>
 <span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span>
 <span class="co">#&gt; **************************************************|</span>
-<span class="co">#&gt; 08:29:27 Writing NN index file to temp file /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpaQDDCX/file8b25a0db066</span>
-<span class="co">#&gt; 08:29:27 Searching Annoy index using 1 thread, search_k = 3000</span>
-<span class="co">#&gt; 08:29:27 Annoy recall = 100%</span>
-<span class="co">#&gt; 08:29:28 Commencing smooth kNN distance calibration using 1 thread</span>
-<span class="co">#&gt; 08:29:29 Initializing from normalized Laplacian + noise</span>
-<span class="co">#&gt; 08:29:29 Commencing optimization for 500 epochs, with 136788 positive edges</span>
-<span class="co">#&gt; 08:29:34 Optimization finished</span></code></pre></div>
+<span class="co">#&gt; 09:33:12 Writing NN index file to temp file /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpOVbu0I/filebff76e019ca</span>
+<span class="co">#&gt; 09:33:12 Searching Annoy index using 1 thread, search_k = 3000</span>
+<span class="co">#&gt; 09:33:12 Annoy recall = 100%</span>
+<span class="co">#&gt; 09:33:13 Commencing smooth kNN distance calibration using 1 thread</span>
+<span class="co">#&gt; 09:33:14 Initializing from normalized Laplacian + noise</span>
+<span class="co">#&gt; 09:33:14 Commencing optimization for 500 epochs, with 136788 positive edges</span>
+<span class="co">#&gt; 09:33:19 Optimization finished</span></code></pre></div>
 </div>
 <div id="umap-plot-after-correction" class="section level1">
 <h1 class="hasAnchor">
