@@ -43,6 +43,8 @@ This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
 library(Canek)
-## basic example code
+
+res <- RunCanek(SimBatches$batches)
+res[1:5, 1:5]
 ```
 
