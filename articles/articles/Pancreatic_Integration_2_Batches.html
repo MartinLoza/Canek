@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Batch Effect Correction on Pancreatic Cells • Canek</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../../bootstrap-toc.css">
 <script src="../../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -16,7 +16,13 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-52309538-4"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-52309538-4');
+</script>
 </head>
 <body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
@@ -164,20 +170,20 @@
 <span class="co">#&gt; Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric</span>
 <span class="co">#&gt; To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'</span>
 <span class="co">#&gt; This message will be shown once per session</span>
-<span class="co">#&gt; 09:32:47 UMAP embedding parameters a = 0.9922 b = 1.112</span>
-<span class="co">#&gt; 09:32:47 Read 3289 rows and found 30 numeric columns</span>
-<span class="co">#&gt; 09:32:47 Using Annoy for neighbor search, n_neighbors = 30</span>
-<span class="co">#&gt; 09:32:47 Building Annoy index with metric = cosine, n_trees = 50</span>
+<span class="co">#&gt; 04:22:50 UMAP embedding parameters a = 0.9922 b = 1.112</span>
+<span class="co">#&gt; 04:22:50 Read 3289 rows and found 30 numeric columns</span>
+<span class="co">#&gt; 04:22:50 Using Annoy for neighbor search, n_neighbors = 30</span>
+<span class="co">#&gt; 04:22:50 Building Annoy index with metric = cosine, n_trees = 50</span>
 <span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span>
 <span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span>
 <span class="co">#&gt; **************************************************|</span>
-<span class="co">#&gt; 09:32:47 Writing NN index file to temp file /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpOVbu0I/filebff501654a3</span>
-<span class="co">#&gt; 09:32:47 Searching Annoy index using 1 thread, search_k = 3000</span>
-<span class="co">#&gt; 09:32:48 Annoy recall = 100%</span>
-<span class="co">#&gt; 09:32:48 Commencing smooth kNN distance calibration using 1 thread</span>
-<span class="co">#&gt; 09:32:50 Initializing from normalized Laplacian + noise</span>
-<span class="co">#&gt; 09:32:50 Commencing optimization for 500 epochs, with 134188 positive edges</span>
-<span class="co">#&gt; 09:32:55 Optimization finished</span></code></pre></div>
+<span class="co">#&gt; 04:22:50 Writing NN index file to temp file /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpB8mhqr/file8ae41493ee9</span>
+<span class="co">#&gt; 04:22:50 Searching Annoy index using 1 thread, search_k = 3000</span>
+<span class="co">#&gt; 04:22:51 Annoy recall = 100%</span>
+<span class="co">#&gt; 04:22:51 Commencing smooth kNN distance calibration using 1 thread</span>
+<span class="co">#&gt; 04:22:52 Initializing from normalized Laplacian + noise</span>
+<span class="co">#&gt; 04:22:53 Commencing optimization for 500 epochs, with 134188 positive edges</span>
+<span class="co">#&gt; 04:22:58 Optimization finished</span></code></pre></div>
 </div>
 <div id="umap-plot-before-correction" class="section level1">
 <h1 class="hasAnchor">
@@ -246,20 +252,20 @@
 <span class="co">#&gt;     MYCT1, EXOC3L2, ABI3, NOTCH4, EMCN, ERG, CALCRL, ECSCR, S1PR1, PTPRB </span>
 <span class="co">#&gt;     GIMAP4, RGCC, TIE1, RHOJ, COL13A1, GIMAP8, MMRN2, CLEC14A, PODXL, CDH5</span>
 <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">x</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span>
-<span class="co">#&gt; 09:33:11 UMAP embedding parameters a = 0.9922 b = 1.112</span>
-<span class="co">#&gt; 09:33:11 Read 3289 rows and found 30 numeric columns</span>
-<span class="co">#&gt; 09:33:11 Using Annoy for neighbor search, n_neighbors = 30</span>
-<span class="co">#&gt; 09:33:11 Building Annoy index with metric = cosine, n_trees = 50</span>
+<span class="co">#&gt; 04:23:15 UMAP embedding parameters a = 0.9922 b = 1.112</span>
+<span class="co">#&gt; 04:23:15 Read 3289 rows and found 30 numeric columns</span>
+<span class="co">#&gt; 04:23:15 Using Annoy for neighbor search, n_neighbors = 30</span>
+<span class="co">#&gt; 04:23:15 Building Annoy index with metric = cosine, n_trees = 50</span>
 <span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span>
 <span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span>
 <span class="co">#&gt; **************************************************|</span>
-<span class="co">#&gt; 09:33:12 Writing NN index file to temp file /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpOVbu0I/filebff76e019ca</span>
-<span class="co">#&gt; 09:33:12 Searching Annoy index using 1 thread, search_k = 3000</span>
-<span class="co">#&gt; 09:33:12 Annoy recall = 100%</span>
-<span class="co">#&gt; 09:33:13 Commencing smooth kNN distance calibration using 1 thread</span>
-<span class="co">#&gt; 09:33:14 Initializing from normalized Laplacian + noise</span>
-<span class="co">#&gt; 09:33:14 Commencing optimization for 500 epochs, with 136788 positive edges</span>
-<span class="co">#&gt; 09:33:19 Optimization finished</span></code></pre></div>
+<span class="co">#&gt; 04:23:15 Writing NN index file to temp file /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpB8mhqr/file8ae648d14d0</span>
+<span class="co">#&gt; 04:23:15 Searching Annoy index using 1 thread, search_k = 3000</span>
+<span class="co">#&gt; 04:23:16 Annoy recall = 100%</span>
+<span class="co">#&gt; 04:23:17 Commencing smooth kNN distance calibration using 1 thread</span>
+<span class="co">#&gt; 04:23:18 Initializing from normalized Laplacian + noise</span>
+<span class="co">#&gt; 04:23:18 Commencing optimization for 500 epochs, with 136788 positive edges</span>
+<span class="co">#&gt; 04:23:23 Optimization finished</span></code></pre></div>
 </div>
 <div id="umap-plot-after-correction" class="section level1">
 <h1 class="hasAnchor">
