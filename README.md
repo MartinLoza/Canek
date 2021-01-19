@@ -8,7 +8,8 @@
 [![R-CMD-check](https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg)](https://github.com/MartinLoza/Canek/actions)
 <!-- badges: end -->
 
-The goal of Canek is to …
+The goal of Canek is to correct batch effect from single cell
+transcriptomics.
 
 ## Installation
 
@@ -30,7 +31,7 @@ remotes::install_github("MartinLoza/Canek")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example:
 
 ``` r
 library(Canek)
@@ -47,8 +48,3 @@ res[1:5, 1:5]
 #> Gene4 6.641050 5.922194 5.971686 6.360457 6.731420
 #> Gene5 4.503925 3.358179 1.160355 2.163020 3.391893
 ```
-
-## Citing Canek
-If you use Canek, please cit our paper..... 
-
-

@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg)](https://github.com/MartinLoza/Canek/actions)
 <!-- badges: end -->
 
-The goal of Canek is to ...
+The goal of Canek is to correct batch effect from single cell transcriptomics. 
 
 ## Installation
 
@@ -39,7 +39,7 @@ remotes::install_github("MartinLoza/Canek")
 ```
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example:
 
 ```{r example}
 library(Canek)
