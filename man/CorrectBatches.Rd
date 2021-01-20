@@ -25,9 +25,11 @@ CorrectBatches(
 \arguments{
 \item{lsBatches}{List of batches to integrate. Batches should contain the same number of genes as rows.}
 
-\item{hierarchical}{Use hierarchical integration scheme when correcting more than two batches. If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.}
+\item{hierarchical}{Use hierarchical integration scheme when correcting more than two batches.
+If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.}
 
-\item{queNumCelltypes}{Number of cell types in the query batch. By default Canek searches the number of cell types using an heuristic algorithm. Change this parameter if you know the number of cell types in advanced.}
+\item{queNumCelltypes}{Number of cell types in the query batch. By default Canek searches the number of
+cell types using an heuristic algorithm. Change this parameter if you know the number of cell types in advanced.}
 
 \item{maxMem}{Maximum number of memberships from the query batch. This parameter is used on the heuristic algorithm to find the number of cell types.}
 
@@ -51,13 +53,13 @@ not calculated for this membership.}
 
 \item{estMethod}{Method to use when estimating the correction vectors:
 \itemize{
-  \item{MedianBE. Use the cells median distance}
-  \item{EkfBE. Use an extended Kalman filter}
+  \item{Median. Use the cells median distance}
+  \item{EKF. Use an extended Kalman filter}
 }}
 
 \item{debug}{Return correction's information}
 
-\item{verbose}{Print output}
+\item{verbose}{Print output.}
 
 \item{...}{Pass down methods from RunCanek().}
 }
@@ -68,13 +70,13 @@ A list containing the integrated datasets as matrix and the correction data .
 Batch-effect correction over a list of single cell batches
 }
 \details{
-CorrectBatches is a method to correct batch-effect from two or more single-cell batches
+CorrectBatches is a method to correct batch-effect from two or more single-cell batches.
 Batch-effects observations are defined using mutual nearest neighbors (MNNs) pairs and cell
 groups from the query batch are distinguished using clustering. We estimate a correction vector
 for each cluster using its MNNs pairs and use these vectors to remove the batch effect from the query batch in two ways:
 \itemize{
    \item{A linear correction is performed by equally correcting the cells from the same cluster.}
-   \item{A non-linear correction is performed by differently correcting each cell using.}
+   \item{A non-linear correction is performed by differently correcting each cell using fuzzy logic.}
 }
 }
 \examples{

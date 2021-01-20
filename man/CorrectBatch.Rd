@@ -26,53 +26,69 @@ CorrectBatch(
 )
 }
 \arguments{
-\item{refBatch}{Batch to use as reference for the integration.}
+\item{refBatch}{Reference batch.}
 
-\item{queBatch}{Batch to correct.}
+\item{queBatch}{Query batch (batch to correct).}
 
-\item{cnRef}{TODO}
+\item{cnRef}{Cosine normalization of the reference batch.}
 
-\item{cnQue}{TODO}
+\item{cnQue}{Cosine normalization of the query batch.}
 
-\item{queNumCelltypes}{A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.}
+\item{queNumCelltypes}{Number of cell types in the query batch. By default Canek searches the number of cell
+types using an heuristic algorithm. Change this parameter if you know the number of cell types in advanced.}
 
-\item{maxMem}{Maximum number of memberships used when memberships are automatically defined.}
+\item{maxMem}{Maximum number of memberships from the query batch. This parameter is used on the
+heuristic algorithm to find the number of cell types.}
 
-\item{pairs}{A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.}
+\item{pairs}{A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cell indexes.}
 
-\item{kNN}{Number of k-nearest-neighbors used to find MNNs pairs.}
+\item{kNN}{Number of k-nearest-neighbors used to define the MNNs pairs.}
 
-\item{sampling}{Whether or not samples MNNs pairs' samples are used on the estimation process.}
+\item{sampling}{Use MNNs pairs sampling when using a Kalman filter to estimate the correction vector.}
 
-\item{numSamples}{Number of MNNs pairs' samples used on the estimation process.}
+\item{numSamples}{If sampling. Number of MNNs pairs samples to use on the estimation process.}
 
-\item{idxQuery}{Index of cells from the query-batch used as observations of the batch-effect.}
+\item{idxQuery}{Numerical vector indicating the index of the cells from the query batch to use
+on the correction vector estimation.}
 
-\item{idxRef}{Index of cells from the reference-batch used as observations of the batch-effect.}
+\item{idxRef}{Numerical vector indicating the index of the cells from the reference batch to use
+on the correction vector estimation.}
 
-\item{pcaDim}{PCA dimensions used to find MNNs pairs.}
+\item{pcaDim}{Number of PCA dimensions to use.}
 
-\item{perCellMNN}{TODO}
+\item{perCellMNN}{Threshold value to decide if a membership's correction value is calculated.
+As a rough interpretation, this values can be thought as the proportion of cells from a membership
+with an associated MNN pair. If the proportion is low, an specific correction vectors is
+not calculated for this membership.}
 
-\item{fuzzy}{Whether or not a fuzzy logic join is used on the local correction vectors.}
+\item{fuzzy}{Use fuzzy logic to join the local correction vectors.}
 
-\item{estMethod}{TODO}
+\item{estMethod}{Method to use when estimating the correction vectors:
+\itemize{
+  \item{Median. Use the cells median distance.}
+  \item{EKF. Use an extended Kalman filter.}
+}}
 
-\item{pairsFilter}{whether to perform pair filtering (default: FALSE)}
+\item{pairsFilter}{Filter MNNs pairs before estimating the correction vectors. If TRUE,
+the pairs are filtered from outliers using an interquartile range method.}
 
-\item{verbose}{Print output}
+\item{verbose}{Print output.}
 }
 \value{
-A list containing the corrected batch as a matrix and correction data
+A list containing the input batches, the corrected query batch, and the correction data
 }
 \description{
-Function to correct batch effect over two batches
+Batch effect correction on two single-cell batches
 }
 \details{
-Canek, a new non-linear/linear hybrid method for batch-effect correction that couples identification of similar cells
- between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
-
- A non-linear correction is performed by using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
+CorrectBatch is a method to correct batch-effect from two single-cell batches.
+Batch-effects observations are defined using mutual nearest neighbors (MNNs) pairs and cell
+groups from the query batch are distinguished using clustering. We estimate a correction vector
+for each cluster using its MNNs pairs and use these vectors to remove the batch effect from the query batch in two ways:
+\itemize{
+   \item{A linear correction is performed by equally correcting the cells from the same cluster.}
+   \item{A non-linear correction is performed by differently correcting each cell using fuzzy logic.}
+}
 }
 \examples{
 x <- SimBatches$batches[[1]]
