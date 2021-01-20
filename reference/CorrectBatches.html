@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="CorrectBatches — CorrectBatches" />
-<meta property="og:description" content="Batch-Effect correction over a list of single cell batches" />
+<meta property="og:description" content="Batch-effect correction over a list of single cell batches" />
 
 
 
@@ -137,7 +137,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Batch-Effect correction over a list of single cell batches</p>
+    <p>Batch-effect correction over a list of single cell batches</p>
     </div>
 
     <pre class="usage"><span class='fu'>CorrectBatches</span><span class='op'>(</span>
@@ -167,59 +167,68 @@
     </tr>
     <tr>
       <th>hierarchical</th>
-      <td><p>Whether or not a hiearchical integration scheme is used when correcting more than two batches.</p></td>
+      <td><p>Use hierarchical integration scheme when correcting more than two batches.
+If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.</p></td>
     </tr>
     <tr>
       <th>queNumCelltypes</th>
-      <td><p>A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.</p></td>
+      <td><p>Number of cell types in the query batch. By default Canek searches the number of
+cell types using an heuristic algorithm. Change this parameter if you know the number of cell types in advanced.</p></td>
     </tr>
     <tr>
       <th>maxMem</th>
-      <td><p>Maximum number of memberships used when memberships are automatically defined.</p></td>
+      <td><p>Maximum number of memberships from the query batch. This parameter is used on the heuristic algorithm to find the number of cell types.</p></td>
     </tr>
     <tr>
       <th>sampling</th>
-      <td><p>Whether or not sampling of MNNs pairs is used on the estimation process.</p></td>
+      <td><p>Use MNNs pairs sampling when using a Kalman filter to estimate the correction vector.</p></td>
     </tr>
     <tr>
       <th>numSamples</th>
-      <td><p>Number of MNNs pairs samples used on the estimation process.</p></td>
+      <td><p>If sampling. Number of MNNs pairs samples to use on the estimation process.</p></td>
     </tr>
     <tr>
       <th>kNN</th>
-      <td><p>Number of k-nearest-neighbors used to find MNNs pairs.</p></td>
+      <td><p>Number of k-nearest-neighbors used to define the MNNs pairs.</p></td>
     </tr>
     <tr>
       <th>pcaDim</th>
-      <td><p>PCA dimensions used to find MNNs pairs.</p></td>
+      <td><p>Number of PCA dimensions to use.</p></td>
     </tr>
     <tr>
       <th>pairsFilter</th>
-      <td><p>whether to perform pair filtering (default: FALSE)</p></td>
+      <td><p>Filter MNNs pairs before estimating the correction vectors. If TRUE,
+the pairs are filtered from outliers using an interquartile range method.</p></td>
     </tr>
     <tr>
       <th>perCellMNN</th>
-      <td><p>TODO</p></td>
+      <td><p>Threshold value to decide if a membership's correction value is calculated.
+As a rough interpretation, this values can be thought as the proportion of cells from a membership
+with an associated MNN pair. If the proportion is low, an specific correction vectors is
+not calculated for this membership.</p></td>
     </tr>
     <tr>
       <th>fuzzy</th>
-      <td><p>Whether or not a fuzzy logic join is used on the local correction vectors.</p></td>
+      <td><p>Use fuzzy logic to join the local correction vectors.</p></td>
     </tr>
     <tr>
       <th>estMethod</th>
-      <td><p>TODO</p></td>
+      <td><p>Method to use when estimating the correction vectors:</p><ul>
+<li><p>Median. Use the cells median distance</p></li>
+<li><p>EKF. Use an extended Kalman filter</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>debug</th>
-      <td><p>TODO</p></td>
+      <td><p>Return correction's information</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>Print output</p></td>
+      <td><p>Print output.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>pass down methods from RunCanek().</p></td>
+      <td><p>Pass down methods from RunCanek().</p></td>
     </tr>
     </table>
 
@@ -228,9 +237,14 @@
     <p>A list containing the integrated datasets as matrix and the correction data .</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>CorrectBatches is non-linear/linear hybrid method for single-cell batch-effect correction that couples identification of similar cells
- between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).</p>
-<p>A non-linear correction is performed using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.</p>
+    <p>CorrectBatches is a method to correct batch-effect from two or more single-cell batches.
+Batch-effects observations are defined using mutual nearest neighbors (MNNs) pairs and cell
+groups from the query batch are distinguished using clustering. We estimate a correction vector
+for each cluster using its MNNs pairs and use these vectors to remove the batch effect from the query batch in two ways:</p><ul>
+<li><p>A linear correction is performed by equally correcting the cells from the same cluster.</p></li>
+<li><p>A non-linear correction is performed by differently correcting each cell using fuzzy logic.</p></li>
+</ul>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>Batches</span> <span class='op'>&lt;-</span> <span class='va'>SimBatches</span><span class='op'>$</span><span class='va'>batches</span>
