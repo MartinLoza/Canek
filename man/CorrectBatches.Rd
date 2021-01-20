@@ -25,45 +25,57 @@ CorrectBatches(
 \arguments{
 \item{lsBatches}{List of batches to integrate. Batches should contain the same number of genes as rows.}
 
-\item{hierarchical}{Whether or not a hiearchical integration scheme is used when correcting more than two batches.}
+\item{hierarchical}{Use hierarchical integration scheme when correcting more than two batches. If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.}
 
-\item{queNumCelltypes}{A number indicating the expected number of cells types on the batches to integrate. The default value is set as a string "Surprise-me" on which an estimation of the cell types is defined.}
+\item{queNumCelltypes}{Number of cell types in the query batch. By default Canek searches the number of cell types using an heuristic algorithm. Change this parameter if you know the number of cell types in advanced.}
 
-\item{maxMem}{Maximum number of memberships used when memberships are automatically defined.}
+\item{maxMem}{Maximum number of memberships from the query batch. This parameter is used on the heuristic algorithm to find the number of cell types.}
 
-\item{sampling}{Whether or not sampling of MNNs pairs is used on the estimation process.}
+\item{sampling}{Use MNNs pairs sampling when using a Kalman filter to estimate the correction vector.}
 
-\item{numSamples}{Number of MNNs pairs samples used on the estimation process.}
+\item{numSamples}{If sampling. Number of MNNs pairs samples to use on the estimation process.}
 
-\item{kNN}{Number of k-nearest-neighbors used to find MNNs pairs.}
+\item{kNN}{Number of k-nearest-neighbors used to define the MNNs pairs.}
 
-\item{pcaDim}{PCA dimensions used to find MNNs pairs.}
+\item{pcaDim}{Number of PCA dimensions to use.}
 
-\item{pairsFilter}{whether to perform pair filtering (default: FALSE)}
+\item{pairsFilter}{Filter MNNs pairs before estimating the correction vectors. If TRUE,
+the pairs are filtered from outliers using an interquartile range method.}
 
-\item{perCellMNN}{TODO}
+\item{perCellMNN}{Threshold value to decide if a membership's correction value is calculated.
+As a rough interpretation, this values can be thought as the proportion of cells from a membership
+with an associated MNN pair. If the proportion is low, an specific correction vectors is
+not calculated for this membership.}
 
-\item{fuzzy}{Whether or not a fuzzy logic join is used on the local correction vectors.}
+\item{fuzzy}{Use fuzzy logic to join the local correction vectors.}
 
-\item{estMethod}{TODO}
+\item{estMethod}{Method to use when estimating the correction vectors:
+\itemize{
+  \item{MedianBE. Use the cells median distance}
+  \item{EkfBE. Use an extended Kalman filter}
+}}
 
-\item{debug}{TODO}
+\item{debug}{Return correction's information}
 
 \item{verbose}{Print output}
 
-\item{...}{pass down methods from RunCanek().}
+\item{...}{Pass down methods from RunCanek().}
 }
 \value{
 A list containing the integrated datasets as matrix and the correction data .
 }
 \description{
-Batch-Effect correction over a list of single cell batches
+Batch-effect correction over a list of single cell batches
 }
 \details{
-CorrectBatches is non-linear/linear hybrid method for single-cell batch-effect correction that couples identification of similar cells
- between datasets using Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
-
- A non-linear correction is performed using fuzzy logic to join a set of linear correction vectors which are cell-type locally estimated.
+CorrectBatches is a method to correct batch-effect from two or more single-cell batches
+Batch-effects observations are defined using mutual nearest neighbors (MNNs) pairs and cell
+groups from the query batch are distinguished using clustering. We estimate a correction vector
+for each cluster using its MNNs pairs and use these vectors to remove the batch effect from the query batch in two ways:
+\itemize{
+   \item{A linear correction is performed by equally correcting the cells from the same cluster.}
+   \item{A non-linear correction is performed by differently correcting each cell using.}
+}
 }
 \examples{
 Batches <- SimBatches$batches
