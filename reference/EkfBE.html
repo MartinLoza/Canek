@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Title EkfBE — EkfBE • Canek</title>
+<title>Correction vector estimation — EkfBE • Canek</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Title EkfBE — EkfBE" />
-<meta property="og:description" content="Estimation of batch-effect by Extended Kalman Filter" />
+<meta property="og:title" content="Correction vector estimation — EkfBE" />
+<meta property="og:description" content="Batch effect estimation using an extended Kalman filter" />
 
 
 
@@ -131,13 +131,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Title EkfBE</h1>
+    <h1>Correction vector estimation</h1>
     
     <div class="hidden name"><code>EkfBE.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Estimation of batch-effect by Extended Kalman Filter</p>
+    <p>Batch effect estimation using an extended Kalman filter</p>
     </div>
 
     <pre class="usage"><span class='fu'>EkfBE</span><span class='op'>(</span>
@@ -154,23 +154,23 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>refBatch</th>
-      <td><p>Reference batch single-cell data.</p></td>
+      <td><p>Reference batch.</p></td>
     </tr>
     <tr>
       <th>queBatch</th>
-      <td><p>Query's batch single-cell data.</p></td>
+      <td><p>Query batch.</p></td>
     </tr>
     <tr>
       <th>pairs</th>
-      <td><p>A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.</p></td>
+      <td><p>A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cells.</p></td>
     </tr>
     <tr>
       <th>sampling</th>
-      <td><p>Whether or not sampling of MNNs pairs is used on the estimation process.</p></td>
+      <td><p>Sample MNNs pairs.</p></td>
     </tr>
     <tr>
       <th>numSamples</th>
-      <td><p>Number of MNNs pairs samples used on the estimation process.</p></td>
+      <td><p>If sampling, number of MNNs pairs samples to use on the estimation process.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -180,12 +180,13 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list containing the estimated correction vector and MNNs pair samples used on the estimation process.
+    <p>A list containing the estimated correction vector and the estimation data.
 The length of the correction vector is equal to the number of genes.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>refBatch is used as the reference batch and queBatch is used as the query batch.
-Input batches need to have the same number of genes.</p>
+    <p>The input batches must have the same number of genes. The model used on the estimation has the form of g_ref = g_que + be, where
+the batch effect is represented as a value added to the reference gene expression, causing a linear deviation between the reference and
+the query batches.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

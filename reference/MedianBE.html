@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • Canek</title>
+<title>Correction vector estimation — MedianBE • Canek</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Correction vector estimation — MedianBE" />
+<meta property="og:description" content="Batch effect estimation using the MNNs pairs." />
 
 
 
@@ -68,7 +69,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -128,90 +129,47 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Correction vector estimation</h1>
+    
+    <div class="hidden name"><code>MedianBE.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Batch effect estimation using the MNNs pairs.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>MedianBE</span><span class='op'>(</span><span class='va'>refBatch</span>, <span class='va'>queBatch</span>, <span class='va'>pairs</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="CheckZeroCV.html">CheckZeroCV()</a></code> </p>
-        </td>
-        <td><p>CheckZeroCV</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="CorrectBatch.html">CorrectBatch()</a></code> </p>
-        </td>
-        <td><p>CorrectBatch</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="CorrectBatches.html">CorrectBatches()</a></code> </p>
-        </td>
-        <td><p>CorrectBatches</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="EkfBE.html">EkfBE()</a></code> </p>
-        </td>
-        <td><p>Correction vector estimation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Fuzzy.html">Fuzzy()</a></code> </p>
-        </td>
-        <td><p>Title Fuzzy</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="MedianBE.html">MedianBE()</a></code> </p>
-        </td>
-        <td><p>Correction vector estimation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="PairsFiltering.html">PairsFiltering()</a></code> </p>
-        </td>
-        <td><p>Title PairsFiltering</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="RunCanek.html">RunCanek()</a></code> </p>
-        </td>
-        <td><p>RunCanek</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="SimBatches.html">SimBatches</a></code> </p>
-        </td>
-        <td><p>Prices of 50,000 round cut diamonds.</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>refBatch</th>
+      <td><p>Reference batch.</p></td>
+    </tr>
+    <tr>
+      <th>queBatch</th>
+      <td><p>Query batch.</p></td>
+    </tr>
+    <tr>
+      <th>pairs</th>
+      <td><p>A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cells.</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list containing the estimated correction vector and the estimation data.
+The length of the correction vector is equal to the number of genes.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The input batches must have the same number of genes. The model used on the estimation has the form of g_ref = g_que + be, where
+the batch effect is represented as a value added to the reference gene expression. The batch effect is estimated as
+the median of the gene expression difference among the reference and the query batch, e.g. Median(g_ref - g_que).</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
