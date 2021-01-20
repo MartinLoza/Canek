@@ -2,7 +2,7 @@
 % Please edit documentation in R/Estimation.R
 \name{EkfBE}
 \alias{EkfBE}
-\title{Title EkfBE}
+\title{Correction vector estimation}
 \usage{
 EkfBE(
   refBatch,
@@ -14,26 +14,27 @@ EkfBE(
 )
 }
 \arguments{
-\item{refBatch}{Reference batch single-cell data.}
+\item{refBatch}{Reference batch.}
 
-\item{queBatch}{Query's batch single-cell data.}
+\item{queBatch}{Query batch.}
 
-\item{pairs}{A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.}
+\item{pairs}{A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cells.}
 
-\item{sampling}{Whether or not sampling of MNNs pairs is used on the estimation process.}
+\item{sampling}{Sample MNNs pairs.}
 
-\item{numSamples}{Number of MNNs pairs samples used on the estimation process.}
+\item{numSamples}{If sampling, number of MNNs pairs samples to use on the estimation process.}
 
 \item{verbose}{Print output.}
 }
 \value{
-A list containing the estimated correction vector and MNNs pair samples used on the estimation process.
+A list containing the estimated correction vector and the estimation data.
 The length of the correction vector is equal to the number of genes.
 }
 \description{
-Estimation of batch-effect by Extended Kalman Filter
+Batch effect estimation using an extended Kalman filter
 }
 \details{
-refBatch is used as the reference batch and queBatch is used as the query batch.
-Input batches need to have the same number of genes.
+The input batches must have the same number of genes. The model used on the estimation has the form of g_ref = g_que + be, where
+the batch effect is represented as a value added to the reference gene expression, causing a linear deviation between the reference and
+the query batches.
 }

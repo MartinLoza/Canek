@@ -1,21 +1,23 @@
 
 
-#' Title EkfBE
+#' Correction vector estimation
 #'
-#' Estimation of batch-effect by Extended Kalman Filter
+#' @description Batch effect estimation using an extended Kalman filter
 #'
-#' @param refBatch Reference batch single-cell data.
-#' @param queBatch Query's batch single-cell data.
-#' @param pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
-#' @param sampling Whether or not sampling of MNNs pairs is used on the estimation process.
-#' @param numSamples Number of MNNs pairs samples used on the estimation process.
+#' @param refBatch Reference batch.
+#' @param queBatch Query batch.
+#' @param pairs A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cells.
+#' @param sampling Sample MNNs pairs.
+#' @param numSamples If sampling, number of MNNs pairs samples to use on the estimation process.
 #' @param verbose Print output.
 #'
-#' @return A list containing the estimated correction vector and MNNs pair samples used on the estimation process.
+#' @return A list containing the estimated correction vector and the estimation data.
 #' The length of the correction vector is equal to the number of genes.
 #'
-#' @details refBatch is used as the reference batch and queBatch is used as the query batch.
-#' Input batches need to have the same number of genes.
+#' @details The input batches must have the same number of genes. The model used on the estimation has the form of g_ref = g_que + be, where
+#' the batch effect is represented as a value added to the reference gene expression, causing a linear deviation between the reference and
+#' the query batches.
+#'
 #'
 
 EkfBE <- function(refBatch, queBatch, pairs, sampling=NULL, numSamples= NULL, verbose = FALSE){
