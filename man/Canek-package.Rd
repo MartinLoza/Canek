@@ -11,11 +11,11 @@ Non-linear/linear hybrid method for batch-effect correction
     Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
 }
 \author{
-\strong{Maintainer}: Martin Loza \email{martin.loza.lopez@gmail.com}
+\strong{Maintainer}: Martin Loza \email{martin.loza.lopez@gmail.com} (\href{https://orcid.org/0000-0002-3342-2643}{ORCID})
 
 Authors:
 \itemize{
-  \item Diego Diez \email{diego10ruiz@gmail.com}
+  \item Diego Diez \email{diego10ruiz@gmail.com} (\href{https://orcid.org/0000-0002-2325-4893}{ORCID})
 }
 
 }
