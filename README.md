@@ -1,6 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!--![Canek_logo](images/logo.png){width="100"}<!-- -->
+
+<p align="center">
+
+<img src="man/figures/README-logo.png" width="50%"  />
+
+</p>
+
 # Canek
 
 <!-- badges: start -->
