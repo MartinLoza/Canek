@@ -2,10 +2,8 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  articles/Pancreatic_Integration_2_Batches: Pancreatic_Integration_2_Batches.html
-  articles/Pancreatic_Integration_3_Batches: Pancreatic_Integration_3_Batches.html
   seurat: seurat.html
-last_built: 2021-01-20T13:11Z
+last_built: 2021-02-18T05:22Z
 urls:
   reference: https://MartinLoza.github.io/Canek//reference
   article: https://MartinLoza.github.io/Canek//articles
