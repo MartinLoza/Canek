@@ -229,8 +229,7 @@ CorrectBatch <- function(refBatch, queBatch,
                          fuzzy = TRUE, estMethod = "Median",
                          pairsFilter = FALSE, verbose = FALSE){
 
-  if(verbose)
-    tic("\n Correction time")
+  tBatch <- Sys.time()
 
   memPairs <- NULL
   memCorrData <- list()
@@ -420,11 +419,14 @@ CorrectBatch <- function(refBatch, queBatch,
  correctionData <- list("Correction Matrix" = corGene, "MNN Pairs" = pairs,
                         "Membership Data" = memData, "Fuzzy Data" = fuzzyData)
 
+ tBatch <- round(Sys.time() - tBatch, digits = 3)
  if(verbose)
-   toc()
+   cat(paste0('\nBatch correction time: ', tBatch, " seconds"))
+
 
  return(list("Reference Batch (B1)" = refBatch, "Query Batch (B2)" = queBatch,
-             "Corrected Query Batch"= queCorrected, "Correction Data" = correctionData))
+             "Corrected Query Batch"= queCorrected, "Correction Data" = correctionData,
+             "Correction_Time" = tBatch))
 }
 
 
