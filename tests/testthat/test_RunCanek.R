@@ -31,6 +31,6 @@ test_that("RunCanek works on SingleCellExperiment objects", {
 test_that("RunCanek works on lists", {
   expect_false(is.null(z))
   expect_is(z, "list")
-  expect_length(z, 2)
-  expect_equal(names(z), c("B2/B1", "Batches Integrated"))
+  expect_length(z, 3)
+  expect_equal(names(z), c("B2/B1", "Batches Integrated", "Total_Correction_Time"))
 })
