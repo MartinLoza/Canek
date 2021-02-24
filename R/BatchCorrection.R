@@ -58,8 +58,9 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            fuzzy = TRUE, estMethod = "Median",
                            debug = FALSE, verbose = FALSE, ... ){
 
-  if(verbose)
-    tic("\nTotal correction time ")
+  if(debug | verbose){
+    tTotal <- Sys.time()
+  }
 
   #Init
   namesInBatches <- names(lsBatches)
@@ -147,8 +148,15 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
   lsBatches[[1]] <- lsBatches[[1]][,outOrder]
 
-  if(verbose)
-    toc()
+  if(debug | verbose){
+    tTotal <- round(Sys.time() - tTotal, digits = 3)
+
+    if(verbose)
+      cat(paste0('\nTotal correction time: ', tTotal, " seconds"))
+
+    if(debug)
+      lsCorrection[["Total_Correction_Time"]] <- tTotal
+  }
 
   return(if(debug == FALSE) lsBatches[[1]] else lsCorrection)
 }
