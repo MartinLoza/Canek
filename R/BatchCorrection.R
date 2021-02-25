@@ -102,7 +102,9 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
       # Select query batch (max number of pairs)
       nPairs <- as.data.frame(nPairs)
-      Query <- (1+which(nPairs == max(nPairs, na.rm = TRUE)))
+
+      #We select the first element, in case there are two datasets with the same number of pairs
+      Query <- (1+(which(nPairs == max(nPairs, na.rm = TRUE))[1]))
 
     }else{  #If the integration is not hierarchical
       Query <- 2
