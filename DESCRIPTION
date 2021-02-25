@@ -16,7 +16,6 @@ Depends:
 Imports:
     FNN,
     irlba,
-    tictoc,
     numbers,
     fpc,
     ape,
