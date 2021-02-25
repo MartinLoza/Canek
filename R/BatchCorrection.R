@@ -151,7 +151,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   lsBatches[[1]] <- lsBatches[[1]][,outOrder]
 
   if(debug | verbose){
-    tTotal <- round(Sys.time() - tTotal, digits = 3)
+    tTotal <- difftime(Sys.time(), tTotal, units = "min")
 
     if(verbose)
       cat(paste0('\nTotal correction time: ', tTotal, " seconds"))
@@ -421,7 +421,7 @@ CorrectBatch <- function(refBatch, queBatch,
  correctionData <- list("Correction Matrix" = corGene, "MNN Pairs" = pairs,
                         "Membership Data" = memData, "Fuzzy Data" = fuzzyData)
 
- tBatch <- round(Sys.time() - tBatch, digits = 3)
+ tBatch <- difftime(Sys.time(), tBatch, units = "min")
  if(verbose)
    cat(paste0('\nBatch correction time: ', tBatch, " seconds"))
 
