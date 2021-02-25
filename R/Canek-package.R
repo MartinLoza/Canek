@@ -5,7 +5,7 @@
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
 ## usethis namespace: end
-#' @import  tictoc numbers
+#' @import numbers
 #' @importFrom stats dist kmeans sd quantile
 #' @importFrom irlba prcomp_irlba
 #' @importFrom fpc pamk
