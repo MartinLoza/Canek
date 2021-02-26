@@ -359,8 +359,8 @@ CorrectBatch <- function(refBatch, queBatch,
 
      corGene[,mem] <- corVector
 
-    }else{
-      warning('\nWarning: Not enough pairs found for this Membership. No correction is performed', call. = TRUE)
+    } else {
+      warning("\nWarning: Not enough pairs found for membership ", mem, ": no correction is performed", call. = TRUE)
       corVector <- corGene[,mem]
       zeroCorrection[mem] <- TRUE
     }
