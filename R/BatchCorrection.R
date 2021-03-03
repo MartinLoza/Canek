@@ -309,12 +309,7 @@ CorrectBatch <- function(refBatch, queBatch,
    #########################
    ###Pairs by membership###
    #########################
-   memPairs <- integer()
-   for (j in 1:length(idxCells)) {
-     memPairs <- c(memPairs,which(pairs[,1] == idxCells[j]))
-   }
-   #Subset of pairs corresponding to the membership
-   memPairs <- pairs[memPairs,]
+   memPairs <- pairs[pairs[, 1] %in% idxCells, ]
 
    #########################
    ###Pairs by clustering###
