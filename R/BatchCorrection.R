@@ -71,8 +71,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   lsBatches <- lapply(lsBatches, as.matrix)
 
   # First batch is the one with highest number of cells
-  nCells <- as.data.frame(lapply(lsBatches, ncol))
-  lsBatches <- lsBatches[sort(t(nCells), decreasing = TRUE, index.return = TRUE)$ix]
+  nCells <- sapply(lsBatches, ncol)
+  lsBatches <- lsBatches[order(nCells, decreasing = TRUE)]
 
   # Cosine normalize the input batches
   cnBatches <- lapply(lsBatches, batchelor::cosineNorm)
