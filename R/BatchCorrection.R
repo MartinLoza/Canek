@@ -378,7 +378,7 @@ CorrectBatch <- function(refBatch, queBatch,
  }
 
  #fuzzy process and Correction
- if(fuzzy == TRUE & nMem > 1){
+ if(fuzzy && nMem > 1){
 
    if(verbose)
     cat('\n\nFUZZY ')
