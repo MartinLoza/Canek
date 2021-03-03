@@ -249,9 +249,10 @@ CorrectBatch <- function(refBatch, queBatch,
 
   if(is.null(pairs)){
 
-    pcaBatches <- prcomp_irlba(t(cbind(if(!is.null(cnRef)) cnRef else batchelor::cosineNorm(refBatch),
-                                       if(!is.null(cnQue)) cnQue else batchelor::cosineNorm(queBatch))),
-                               n = pcaDim)
+    if (is.null(cnRef)) cnRef <- batchelor::cosineNorm(refBatch)
+    if (is.null(cnQue)) cnQue <- batchelor::cosineNorm(queBatch)
+
+    pcaBatches <- prcomp_irlba(t(cbind(cnRef, cnQue)), n = pcaDim)
 
     pcaRef <- pcaBatches$x[1:nCellsRef,]
     pcaQue <- pcaBatches$x[(nCellsRef+1):nCells,]
