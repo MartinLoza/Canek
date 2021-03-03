@@ -84,7 +84,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     namesBatches <- names(lsBatches)
 
     # hierarchical selection
-    if(hierarchical == TRUE & length(lsBatches) > 2){
+    if (hierarchical & length(lsBatches) > 2) {
 
       # pca with all the other batches
       nCellsRef <- ncol(lsBatches[[1]])
@@ -101,12 +101,10 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       rm(pcaBatches)
 
       # Select query batch (max number of pairs)
-      nPairs <- as.data.frame(nPairs)
+      # We select the first element, in case there are two datasets with the same number of pairs
+      Query <- which.max(nPairs) + 1
 
-      #We select the first element, in case there are two datasets with the same number of pairs
-      Query <- (1+(which(nPairs == max(nPairs, na.rm = TRUE))[1]))
-
-    }else{  #If the integration is not hierarchical
+    } else {  #If the integration is not hierarchical
       Query <- 2
     }
 
