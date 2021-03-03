@@ -58,7 +58,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            fuzzy = TRUE, estMethod = "Median",
                            debug = FALSE, verbose = FALSE, ... ){
 
-  if(debug | verbose){
+  if(debug || verbose){
     tTotal <- Sys.time()
   }
 
@@ -84,7 +84,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     namesBatches <- names(lsBatches)
 
     # hierarchical selection
-    if (hierarchical & length(lsBatches) > 2) {
+    if (hierarchical && length(lsBatches) > 2) {
 
       # pca with all the other batches
       nCellsRef <- ncol(lsBatches[[1]])
@@ -148,7 +148,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   #
   # lsBatches[[1]] <- lsBatches[[1]][,outOrder]
 
-  if(debug | verbose){
+  if(debug || verbose){
     tTotal <- difftime(Sys.time(), tTotal, units = "min")
 
     if(verbose)
