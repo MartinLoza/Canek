@@ -77,7 +77,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   # Cosine normalize the input batches
   cnBatches <- lapply(lsBatches, batchelor::cosineNorm)
 
-  order <- rep(namesInBatches[1], ncol(lsBatches[[1]]))
+  #order <- rep(namesInBatches[1], ncol(lsBatches[[1]]))
 
   for(i in 2:numBatches){
 
@@ -110,7 +110,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       Query <- 2
     }
 
-    order <- c(order, rep(namesBatches[Query], ncol(lsBatches[[Query]])))
+    #order <- c(order, rep(namesBatches[Query], ncol(lsBatches[[Query]])))
 
     # Correction
     if(verbose)
@@ -143,12 +143,12 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   }
 
   #order output dataset
-  outOrder <- integer()
-  for(i in namesInBatches){
-    outOrder <- c(outOrder, which(order == i))
-  }
-
-  lsBatches[[1]] <- lsBatches[[1]][,outOrder]
+  # outOrder <- integer()
+  # for(i in namesInBatches){
+  #   outOrder <- c(outOrder, which(order == i))
+  # }
+  #
+  # lsBatches[[1]] <- lsBatches[[1]][,outOrder]
 
   if(debug | verbose){
     tTotal <- difftime(Sys.time(), tTotal, units = "min")
