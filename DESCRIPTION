@@ -21,6 +21,8 @@ Imports:
     ape,
     spdep,
     batchelor,
+    bluster,
+    igraph,
     matrixStats
 Suggests:
     testthat (>= 2.1.0),

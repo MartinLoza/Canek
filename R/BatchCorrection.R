@@ -26,6 +26,7 @@
 #' As a rough interpretation, this values can be thought as the proportion of cells from a membership
 #' with an associated MNN pair. If the proportion is low, an specific correction vectors is
 #' not calculated for this membership.
+#' @param clusterMethod Method used to identify memberships.
 #' @param debug Return correction's information
 #' @param ... Pass down methods from RunCanek().
 #'
@@ -56,6 +57,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            kNN = 30, pcaDim = 50,
                            pairsFilter = FALSE, perCellMNN = 0.08,
                            fuzzy = TRUE, estMethod = "Median",
+                           clusterMethod = "kmeans",
                            debug = FALSE, verbose = FALSE, ... ){
 
   if(debug || verbose){
@@ -121,6 +123,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                pairsFilter = pairsFilter, perCellMNN = perCellMNN,
                                sampling = sampling, numSamples = numSamples,
                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
+                               clusterMethod = clusterMethod,
                                verbose = verbose)
 
     # new ref at the beggining
@@ -161,6 +164,52 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   return(if(debug == FALSE) lsBatches[[1]] else lsCorrection)
 }
 
+
+ClusterKMeans <- function(x, maxMem = 10, nMem = NULL, verbose = TRUE, usepam = FALSE) {
+  if(is.null(nMem)){
+    if(verbose)
+      cat("\n\nFinding number of memberships")
+
+    nMem <- pamk(x,
+                 krange = seq_len(maxMem),
+                 usepam = usepam)$nc
+
+    if (verbose)
+      cat(paste('\n\tNumber of memberships found:', nMem))
+  }
+
+  list(result = kmeans(x, nMem), nMem = nMem)
+}
+
+ClusterLouvain <- function(x, k = 10, verbose = TRUE) {
+  if (verbose)
+    cat("\n\nFinding number of memberships")
+
+  g <- bluster::makeSNNGraph(x, k = k)
+  res <- igraph::cluster_louvain(g)
+
+  memberships <- igraph::membership(res)
+  nMem <- length(unique(memberships))
+
+  if (verbose)
+    cat(paste('\n\tNumber of memberships found:', nMem))
+
+  centers <- ComputeCenters(x, memberships)
+
+  cluster <- list(cluster = memberships, centers = centers)
+  list(result = cluster, nMem = nMem)
+}
+
+ComputeCenters <- function(x, memberships) {
+  nMem <- length(unique(memberships))
+
+  centers <- sapply(seq_len(nMem), function(membership) {
+    colMeans(x[memberships == membership, ])
+  })
+  colnames(centers) <- seq_len(nMem)
+  t(centers)
+}
+
 #' CorrectBatch
 #'
 #' Batch effect correction on two single-cell batches
@@ -195,6 +244,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 #' not calculated for this membership.
 #' @param cnRef Cosine normalization of the reference batch.
 #' @param cnQue Cosine normalization of the query batch.
+#' @param clusterMethod Method used to identify memberships.
 #'
 #' @details CorrectBatch is a method to correct batch-effect from two single-cell batches.
 #' Batch-effects observations are defined using mutual nearest neighbors (MNNs) pairs and cell
@@ -227,7 +277,8 @@ CorrectBatch <- function(refBatch, queBatch,
                          idxQuery = NULL, idxRef = NULL,
                          pcaDim = 50, perCellMNN = 0.08,
                          fuzzy = TRUE, estMethod = "Median",
-                         pairsFilter = FALSE, verbose = FALSE){
+                         pairsFilter = FALSE, clusterMethod = "kmeans",
+                         verbose = FALSE) {
 
   tBatch <- Sys.time()
 
@@ -247,6 +298,7 @@ CorrectBatch <- function(refBatch, queBatch,
   nCellsQue <- ncol(queBatch)
   nCells <-nCellsRef + nCellsQue
 
+  # Find MNN pairs.
   if(is.null(pairs)){
 
     if (is.null(cnRef)) cnRef <- batchelor::cosineNorm(refBatch)
@@ -278,21 +330,17 @@ CorrectBatch <- function(refBatch, queBatch,
  if(verbose)
   cat(paste('\n\tNumber of MNN pairs:', nrow(pairs)))
 
- if(is.null(nMem)){
+  # Find memberships
+  if (clusterMethod == "kmeans") {
+   cluster <- ClusterKMeans(pcaQue[, 1:10], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
+  }
 
-   if(verbose)
-    cat("\n\nFinding number of memberships")
+  if (clusterMethod == "louvain") {
+    cluster <- ClusterLouvain(pcaQue[, 1:10], k = kNN, verbose = verbose)
+  }
 
-   nMem <- pamk(pcaQue[,1:10],
-                krange = 1:maxMem,
-                usepam = (if(nCellsQue < 2000) TRUE else FALSE))$nc
-
-   if(verbose)
-    cat(paste('\n\tNumber of memberships found:', nMem) )
- }
-
- #Cluster in memberships
- cluMem <- kmeans(pcaQue[,1:10],nMem)
+  cluMem <- cluster$result
+  nMem <- cluster$nMem
 
  #INIT Correction Matrix
  corGene <- matrix(0, nrow = nrow(refBatch), ncol = nMem)
@@ -307,7 +355,7 @@ CorrectBatch <- function(refBatch, queBatch,
    #Membership cell index
    idxCells <- which(cluMem$cluster == mem)
 
-   debugData[["membership"]][[mem]] <- data.frame(cells = colnames(queBatch)[idxCells], membership = mem)
+   debugData[["membership"]][[as.character(mem)]] <- data.frame(cells = colnames(queBatch)[idxCells], membership = mem)
 
    #Membership cells number
    numCellMem <- ncol(queBatch[,idxCells])

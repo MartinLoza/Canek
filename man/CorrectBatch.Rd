@@ -22,6 +22,7 @@ CorrectBatch(
   fuzzy = TRUE,
   estMethod = "Median",
   pairsFilter = FALSE,
+  clusterMethod = "kmeans",
   verbose = FALSE
 )
 }
@@ -71,6 +72,8 @@ not calculated for this membership.}
 
 \item{pairsFilter}{Filter MNNs pairs before estimating the correction vectors. If TRUE,
 the pairs are filtered from outliers using an interquartile range method.}
+
+\item{clusterMethod}{Method used to identify memberships.}
 
 \item{verbose}{Print output.}
 }

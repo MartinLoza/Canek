@@ -17,6 +17,7 @@ CorrectBatches(
   perCellMNN = 0.08,
   fuzzy = TRUE,
   estMethod = "Median",
+  clusterMethod = "kmeans",
   debug = FALSE,
   verbose = FALSE,
   ...
@@ -56,6 +57,8 @@ not calculated for this membership.}
   \item{Median. Use the cells median distance}
   \item{EKF. Use an extended Kalman filter}
 }}
+
+\item{clusterMethod}{Method used to identify memberships.}
 
 \item{debug}{Return correction's information}
 

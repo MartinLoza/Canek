@@ -7,6 +7,8 @@
 ## usethis namespace: end
 #' @import numbers
 #' @importFrom stats dist kmeans sd quantile
+#' @importFrom igraph cluster_louvain membership
+#' @importFrom bluster makeSNNGraph
 #' @importFrom irlba prcomp_irlba
 #' @importFrom fpc pamk
 #' @importFrom ape mst
