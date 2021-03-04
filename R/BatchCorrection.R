@@ -231,6 +231,8 @@ CorrectBatch <- function(refBatch, queBatch,
 
   tBatch <- Sys.time()
 
+  debugData <- list(info = list(), membership = list())
+
   memPairs <- NULL
   memCorrData <- list()
   corGene <- NULL
@@ -271,6 +273,8 @@ CorrectBatch <- function(refBatch, queBatch,
     pcaQue <- pcaQue$x
   }
 
+  debugData$pairs <- data.frame(ref = colnames(refBatch)[pairs[, 1]], query = colnames(queBatch)[pairs[, 2]])
+
  if(verbose)
   cat(paste('\n\tNumber of MNN pairs:', nrow(pairs)))
 
@@ -302,6 +306,9 @@ CorrectBatch <- function(refBatch, queBatch,
 
    #Membership cell index
    idxCells <- which(cluMem$cluster == mem)
+
+   debugData[["membership"]][[mem]] <- data.frame(cells = colnames(queBatch)[idxCells], membership = mem)
+
    #Membership cells number
    numCellMem <- ncol(queBatch[,idxCells])
 
@@ -416,13 +423,16 @@ CorrectBatch <- function(refBatch, queBatch,
                         "Membership Data" = memData, "Fuzzy Data" = fuzzyData)
 
  tBatch <- difftime(Sys.time(), tBatch, units = "min")
+
+ debugData$info$cputime <- tBatch
+
  if(verbose)
    cat(paste0('\nBatch correction time: ', tBatch, " seconds"))
 
 
  return(list("Reference Batch (B1)" = refBatch, "Query Batch (B2)" = queBatch,
              "Corrected Query Batch"= queCorrected, "Correction Data" = correctionData,
-             "Correction_Time" = tBatch))
+             "Correction_Time" = tBatch, debug = debugData))
 }
 
 
