@@ -72,7 +72,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   lsCorrection <- list()
 
   #Check input batches as matrices
-  lsBatches <- lapply(lsBatches, as.matrix)
+  #lsBatches <- lapply(lsBatches, as.matrix)
 
   # First batch is the one with highest number of cells
   nCells <- sapply(lsBatches, ncol)

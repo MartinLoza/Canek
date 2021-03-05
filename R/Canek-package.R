@@ -5,7 +5,7 @@
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
 ## usethis namespace: end
-#' @import numbers
+#' @import numbers Matrix
 #' @importFrom stats dist kmeans sd quantile
 #' @importFrom igraph cluster_louvain membership
 #' @importFrom bluster makeSNNGraph
@@ -15,5 +15,5 @@
 #' @importFrom spdep Rotation
 #' @importFrom FNN get.knnx
 #' @importFrom batchelor cosineNorm
-#' @importFrom matrixStats rowMedians
+#' @importFrom sparseMatrixStats rowMedians
 NULL
