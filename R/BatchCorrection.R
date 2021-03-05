@@ -309,7 +309,7 @@ CorrectBatch <- function(refBatch, queBatch,
   nCellsQue <- ncol(queBatch)
   nCells <-nCellsRef + nCellsQue
 
-  # Find MNN pairs.
+  # FIND MNN pairs ----
   if(is.null(pairs)){
     if (doCosNorm) {
       if (is.null(cnRef)) cnRef <- batchelor::cosineNorm(refBatch)
@@ -345,7 +345,7 @@ CorrectBatch <- function(refBatch, queBatch,
  if(verbose)
   cat(paste('\n\tNumber of MNN pairs:', nrow(pairs)))
 
-  # Find memberships
+  # FIND memberships ----
   if (clusterMethod == "kmeans") {
    cluster <- ClusterKMeans(pcaQue[, 1:10], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
   }
@@ -357,7 +357,7 @@ CorrectBatch <- function(refBatch, queBatch,
   cluMem <- cluster$result
   nMem <- cluster$nMem
 
- #INIT Correction Matrix
+ # INIT correction matrix ----
  corGene <- matrix(0, nrow = nrow(refBatch), ncol = nMem)
 
  zeroCorrection <- rep(FALSE, nMem)
@@ -365,24 +365,20 @@ CorrectBatch <- function(refBatch, queBatch,
  for(mem in 1:nMem){
 
    if(verbose)
-    cat(paste('\n\nAnalyzing Membership ', mem) )
+    cat(paste('\n\nAnalyzing Membership ', mem))
 
-   #Membership cell index
+   ## FIND pairs by membership ----
+   # Membership cell index
    idxCells <- which(cluMem$cluster == mem)
 
    debugData[["membership"]][[as.character(mem)]] <- data.frame(cells = colnames(queBatch)[idxCells], membership = mem)
 
-   #Membership cells number
+   # Membership cells number
    numCellMem <- ncol(queBatch[,idxCells])
 
-   #########################
-   ###Pairs by membership###
-   #########################
    memPairs <- pairs[pairs[, 1] %in% idxCells, ]
 
-   #########################
-   ###Pairs by clustering###
-   #########################
+   # FILTER pairs ----
    if(pairsFilter){
 
      if (nrow(memPairs) > 10){
@@ -396,14 +392,10 @@ CorrectBatch <- function(refBatch, queBatch,
       }
    }
 
+   # ESTIMATE correction ----
    norNumPairs <- (ceiling(nrow(memPairs)/kNN))/(numCellMem)
 
    if (norNumPairs > perCellMNN){
-
-      ####################################
-      ###Estimation of the batch effect###
-      ####################################
-
      if(estMethod == "EKF"){
        if(verbose)
          cat("\n\n\tEXTENDED KALMAN FILTER")
@@ -432,11 +424,9 @@ CorrectBatch <- function(refBatch, queBatch,
    memCorrData[[paste("Membership", mem)]] <- list("Cells Index" = idxCells, "Correction Vector" = corVector)
  }
 
- #################
- ###   FUZZY   ###
- #################
 
- ####INIT####
+ # FUZZY correction ----
+ # Init
  corCell <- matrix(0, nrow = nCellsQue, ncol = nMem )
 
  # Set column names according to number of memberships
@@ -447,7 +437,7 @@ CorrectBatch <- function(refBatch, queBatch,
    corCell[which(cluMem$cluster == Mem), Mem] <- 1
  }
 
- #fuzzy process and Correction
+ # Fuzzy process and Correction
  if(fuzzy && nMem > 1){
 
    if(verbose)
@@ -463,7 +453,7 @@ CorrectBatch <- function(refBatch, queBatch,
    MST <- mst(dist(cluMem$centers[,1:2]))
  }
 
- #No Zero Correction Vectors
+ # CHECK No Zero Correction Vectors ----
  isZero <- which(zeroCorrection == TRUE)
  if(length(isZero) == nMem){
    warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
@@ -479,7 +469,7 @@ CorrectBatch <- function(refBatch, queBatch,
 
  queCorrected <-  queBatch + (corGene  %*% t(corCell/rowSums(corCell)) )
 
- ### Set data lists to return
+ # SET data lists to return ----
  memData <- list("Cluster Membership" = nMem, "Membership Correction Data" = memCorrData)
 
  correctionData <- list("Correction Matrix" = corGene, "MNN Pairs" = pairs,
