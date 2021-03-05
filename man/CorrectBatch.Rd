@@ -23,6 +23,7 @@ CorrectBatch(
   estMethod = "Median",
   pairsFilter = FALSE,
   clusterMethod = "kmeans",
+  doCosNorm = TRUE,
   verbose = FALSE
 )
 }
@@ -74,6 +75,8 @@ not calculated for this membership.}
 the pairs are filtered from outliers using an interquartile range method.}
 
 \item{clusterMethod}{Method used to identify memberships.}
+
+\item{doCosNorm}{Whether to do cosine normalization.}
 
 \item{verbose}{Print output.}
 }

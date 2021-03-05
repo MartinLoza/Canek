@@ -18,6 +18,7 @@ CorrectBatches(
   fuzzy = TRUE,
   estMethod = "Median",
   clusterMethod = "kmeans",
+  doCosNorm = TRUE,
   debug = FALSE,
   verbose = FALSE,
   ...
@@ -59,6 +60,8 @@ not calculated for this membership.}
 }}
 
 \item{clusterMethod}{Method used to identify memberships.}
+
+\item{doCosNorm}{Whether to do cosine normalization.}
 
 \item{debug}{Return correction's information}
 

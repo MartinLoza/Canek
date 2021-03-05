@@ -26,6 +26,7 @@
 #' As a rough interpretation, this values can be thought as the proportion of cells from a membership
 #' with an associated MNN pair. If the proportion is low, an specific correction vectors is
 #' not calculated for this membership.
+#' @param doCosNorm Whether to do cosine normalization.
 #' @param clusterMethod Method used to identify memberships.
 #' @param debug Return correction's information
 #' @param ... Pass down methods from RunCanek().
@@ -58,6 +59,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            pairsFilter = FALSE, perCellMNN = 0.08,
                            fuzzy = TRUE, estMethod = "Median",
                            clusterMethod = "kmeans",
+                           doCosNorm = TRUE,
                            debug = FALSE, verbose = FALSE, ... ){
 
   if(debug || verbose){
@@ -77,7 +79,10 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   lsBatches <- lsBatches[order(nCells, decreasing = TRUE)]
 
   # Cosine normalize the input batches
-  cnBatches <- lapply(lsBatches, batchelor::cosineNorm)
+  if (doCosNorm)
+    cnBatches <- lapply(lsBatches, batchelor::cosineNorm)
+  else
+    cnBatches <- lsBatches
 
   #order <- rep(namesInBatches[1], ncol(lsBatches[[1]]))
 
@@ -126,12 +131,15 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                clusterMethod = clusterMethod,
                                verbose = verbose)
 
-    # new ref at the beggining
+    # new ref at the beginning
     lsBatches <- lsBatches[-Query]
     cnBatches <- cnBatches[-Query]
     lsBatches[[1]] <- cbind(lsBatches[[1]], Correction[["Corrected Query Batch"]])
-    # new cb at the beggining
-    cnBatches[[1]] <- batchelor::cosineNorm(lsBatches[[1]])
+    # new cb at the beginning
+    if (doCosNorm)
+      cnBatches[[1]] <- batchelor::cosineNorm(lsBatches[[1]])
+    else
+      cnBatches[[1]] <- lsBatches[[1]]
     names(lsBatches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
 
     if(debug == TRUE){
@@ -242,9 +250,11 @@ ComputeCenters <- function(x, memberships) {
 #' As a rough interpretation, this values can be thought as the proportion of cells from a membership
 #' with an associated MNN pair. If the proportion is low, an specific correction vectors is
 #' not calculated for this membership.
+#' @param doCosNorm Whether to do cosine normalization.
 #' @param cnRef Cosine normalization of the reference batch.
 #' @param cnQue Cosine normalization of the query batch.
 #' @param clusterMethod Method used to identify memberships.
+#'
 #'
 #' @details CorrectBatch is a method to correct batch-effect from two single-cell batches.
 #' Batch-effects observations are defined using mutual nearest neighbors (MNNs) pairs and cell
@@ -278,6 +288,7 @@ CorrectBatch <- function(refBatch, queBatch,
                          pcaDim = 50, perCellMNN = 0.08,
                          fuzzy = TRUE, estMethod = "Median",
                          pairsFilter = FALSE, clusterMethod = "kmeans",
+                         doCosNorm = TRUE,
                          verbose = FALSE) {
 
   tBatch <- Sys.time()
@@ -300,9 +311,13 @@ CorrectBatch <- function(refBatch, queBatch,
 
   # Find MNN pairs.
   if(is.null(pairs)){
-
-    if (is.null(cnRef)) cnRef <- batchelor::cosineNorm(refBatch)
-    if (is.null(cnQue)) cnQue <- batchelor::cosineNorm(queBatch)
+    if (doCosNorm) {
+      if (is.null(cnRef)) cnRef <- batchelor::cosineNorm(refBatch)
+      if (is.null(cnQue)) cnQue <- batchelor::cosineNorm(queBatch)
+    } else {
+      cnRef <- refBatch
+      cnQue <- queBatch
+    }
 
     pcaBatches <- prcomp_irlba(t(cbind(cnRef, cnQue)), n = pcaDim)
 
@@ -325,7 +340,7 @@ CorrectBatch <- function(refBatch, queBatch,
     pcaQue <- pcaQue$x
   }
 
-  debugData$pairs <- data.frame(ref = colnames(refBatch)[pairs[, 1]], query = colnames(queBatch)[pairs[, 2]])
+  debugData$pairs <- data.frame(ref = colnames(refBatch)[pairs[, 2]], query = colnames(queBatch)[pairs[, 1]])
 
  if(verbose)
   cat(paste('\n\tNumber of MNN pairs:', nrow(pairs)))
