@@ -162,3 +162,32 @@ MedianBE <- function(refBatch, queBatch, pairs) {
 
   return(list("Correction Vector" = rowMedians(be), "Sampled Pairs" = NULL))
 }
+
+#' MeanBE
+#'
+#' @description Batch effect estimation using the MNNs pairs.
+#'
+#' @param refBatch Reference batch.
+#' @param queBatch Query batch.
+#' @param pairs A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cells.
+#'
+#' @return A list containing the estimated correction vector and the estimation data.
+#' The length of the correction vector is equal to the number of genes.
+#'
+#' @details The input batches must have the same number of genes. The model used on the estimation has the form of g_ref = g_que + be, where
+#' the batch effect is represented as a value added to the reference gene expression. The batch effect is estimated as
+#' the median of the gene expression difference among the reference and the query batch, e.g. Median(g_ref - g_que).
+#'
+MeanBE <- function(refBatch, queBatch, pairs) {
+  # Get pairs.
+  pQue <- pairs[, 1]
+  pRef <- pairs[, 2]
+
+  # Get cells.
+  pRef <- refBatch[, pRef]
+  pQue <- queBatch[, pQue]
+
+  be <- pRef - pQue
+
+  return(list("Correction Vector" = rowMeans(be), "Sampled Pairs" = NULL))
+}

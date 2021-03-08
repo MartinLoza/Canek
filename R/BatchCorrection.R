@@ -413,6 +413,14 @@ CorrectBatch <- function(refBatch, queBatch,
                              pairs = memPairs)[["Correction Vector"]]
      }
 
+     if(estMethod == "Mean") {
+       if(verbose)
+         cat("\n\n\tMean Method")
+
+       corVector <- MeanBE(refBatch = refBatch, queBatch = queBatch,
+                             pairs = memPairs)[["Correction Vector"]]
+     }
+
      corGene[,mem] <- corVector
 
     } else {
