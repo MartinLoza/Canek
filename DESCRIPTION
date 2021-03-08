@@ -18,7 +18,6 @@ Imports:
     irlba,
     numbers,
     fpc,
-    ape,
     spdep,
     batchelor,
     bluster,

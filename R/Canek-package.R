@@ -7,11 +7,10 @@
 ## usethis namespace: end
 #' @import numbers
 #' @importFrom stats dist kmeans sd quantile
-#' @importFrom igraph cluster_louvain membership
+#' @importFrom igraph cluster_louvain membership mst graph_from_adjacency_matrix as_adjacency_matrix
 #' @importFrom bluster makeSNNGraph
 #' @importFrom irlba prcomp_irlba
 #' @importFrom fpc pamk
-#' @importFrom ape mst
 #' @importFrom spdep Rotation
 #' @importFrom FNN get.knnx
 #' @importFrom batchelor cosineNorm

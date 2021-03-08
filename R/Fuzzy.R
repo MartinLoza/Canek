@@ -28,7 +28,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
   if(verbose)
     cat( '\n\tObtaining Minimum Spanning Tree' )
 
-  Mst <- mst(dist( cluMem$centers[,1:PCA_Max] ) )  #TODO: If possible change to higher dimensions
+  Mst <- CalculateMST(cluMem$centers[, 1:PCA_Max])
 
   #Get edges from MST
   Edges <- GetEdges(Mst)

@@ -450,7 +450,7 @@ CorrectBatch <- function(refBatch, queBatch,
    MST <- fuzzyData$MST
 
  }else{
-   MST <- mst(dist(cluMem$centers[,1:2]))
+   MST <- CalculateMST(cluMem$centers[, 1:2])
  }
 
  # CHECK No Zero Correction Vectors ----
