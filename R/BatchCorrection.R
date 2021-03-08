@@ -202,13 +202,13 @@ ClusterLouvain <- function(x, k = 10, verbose = TRUE) {
   if (verbose)
     cat(paste('\n\tNumber of memberships found:', nMem))
 
-  centers <- ComputeCenters(x, memberships)
+  centers <- CalculateCenters(x, memberships)
 
   cluster <- list(cluster = memberships, centers = centers)
   list(result = cluster, nMem = nMem)
 }
 
-ComputeCenters <- function(x, memberships) {
+CalculateCenters <- function(x, memberships) {
   nMem <- length(unique(memberships))
 
   centers <- sapply(seq_len(nMem), function(membership) {
