@@ -13,7 +13,7 @@ CorrectBatch(
   maxMem = 5,
   pairs = NULL,
   kNN = 30,
-  sampling = NULL,
+  sampling = FALSE,
   numSamples = NULL,
   idxQuery = NULL,
   idxRef = NULL,

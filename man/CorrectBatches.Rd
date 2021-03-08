@@ -9,7 +9,7 @@ CorrectBatches(
   hierarchical = TRUE,
   queNumCelltypes = NULL,
   maxMem = 5,
-  sampling = NULL,
+  sampling = FALSE,
   numSamples = NULL,
   kNN = 30,
   pcaDim = 50,

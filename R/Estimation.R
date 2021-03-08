@@ -20,7 +20,7 @@
 #'
 #'
 
-EkfBE <- function(refBatch, queBatch, pairs, sampling=NULL, numSamples= NULL, verbose = FALSE){
+EkfBE <- function(refBatch, queBatch, pairs, sampling = FALSE, numSamples = NULL, verbose = FALSE){
 
   #INIT
   Epochs <- 1
@@ -41,7 +41,7 @@ EkfBE <- function(refBatch, queBatch, pairs, sampling=NULL, numSamples= NULL, ve
 
   #Set number of samples
   if( is.null(numSamples) ){
-    if(sampling == TRUE){
+    if(sampling){
       if(Num_Pairs > Min_Samples){
         numSamples <- round(Num_Pairs*0.2)
       }else{

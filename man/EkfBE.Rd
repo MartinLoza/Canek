@@ -8,7 +8,7 @@ EkfBE(
   refBatch,
   queBatch,
   pairs,
-  sampling = NULL,
+  sampling = FALSE,
   numSamples = NULL,
   verbose = FALSE
 )
