@@ -371,7 +371,7 @@ CorrectBatch <- function(refBatch, queBatch,
    # Membership cell index
    idxCells <- which(cluMem$cluster == mem)
 
-   debugData[["membership"]][[as.character(mem)]] <- data.frame(cells = colnames(queBatch)[idxCells], membership = mem)
+   debugData[["membership"]][[as.character(mem)]] <- data.frame(cells = colnames(queBatch)[idxCells], membership = mem, corrected = TRUE)
 
    # Membership cells number
    numCellMem <- ncol(queBatch[,idxCells])
@@ -419,6 +419,7 @@ CorrectBatch <- function(refBatch, queBatch,
       warning("\nWarning: Not enough pairs found for membership ", mem, ": no correction is performed", call. = TRUE)
       corVector <- corGene[,mem]
       zeroCorrection[mem] <- TRUE
+      debugData[["membership"]][[as.character(mem)]]$corrected[debugData[["membership"]][[as.character(mem)]]$cells %in% colnames(queBatch)[idxCells]] <- FALSE
     }
 
    memCorrData[[paste("Membership", mem)]] <- list("Cells Index" = idxCells, "Correction Vector" = corVector)
