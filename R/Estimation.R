@@ -18,8 +18,6 @@
 #' the batch effect is represented as a value added to the reference gene expression, causing a linear deviation between the reference and
 #' the query batches.
 #'
-#'
-
 EkfBE <- function(refBatch, queBatch, pairs, sampling = FALSE, numSamples = NULL, verbose = FALSE){
 
   #INIT
@@ -147,7 +145,7 @@ EkfBE <- function(refBatch, queBatch, pairs, sampling = FALSE, numSamples = NULL
 #' the batch effect is represented as a value added to the reference gene expression. The batch effect is estimated as
 #' the median of the gene expression difference among the reference and the query batch, e.g. Median(g_ref - g_que).
 #'
-MedianBE <- function(refBatch, queBatch, pairs ){
+MedianBE <- function(refBatch, queBatch, pairs) {
 
   # Model -> g_ref = g_que + be
   # be -> g_ref - g_que
