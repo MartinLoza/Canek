@@ -388,7 +388,8 @@ CorrectBatch <- function(refBatch, queBatch,
         if(verbose)
           cat( paste('\n\tNumber of selected pairs:', nrow(memPairs) ) )
       }else {
-        warning('\nWarning: Cannot perform pairs filtering due to a low number of pairs from this Membership', call. = TRUE)
+        if (verbose)
+          cat("\n\n\tNot enough pairs found for membership ", mem, ": no filtering done.")
       }
    }
 
@@ -424,7 +425,8 @@ CorrectBatch <- function(refBatch, queBatch,
      corGene[,mem] <- corVector
 
     } else {
-      warning("\nWarning: Not enough pairs found for membership ", mem, ": no correction is performed", call. = TRUE)
+      if (verbose)
+        cat("\n\n\tNot enough pairs found for membership ", mem, ": no correction vector is computed.")
       corVector <- corGene[,mem]
       zeroCorrection[mem] <- TRUE
       debugData[["membership"]][[as.character(mem)]]$corrected[debugData[["membership"]][[as.character(mem)]]$cells %in% colnames(queBatch)[idxCells]] <- FALSE
