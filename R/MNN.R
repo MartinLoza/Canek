@@ -69,8 +69,8 @@ GetMnnPairs <- function(refBatch = NULL, queBatch = NULL, kNN = 25){
   B2_NCells <- ncol(queBatch)
   Dim_B1 <- kNN*B1_NCells
   Dim_B2 <- kNN*B2_NCells
-  B1_B2_NN <- matrix(0, nrow = Dim_B1, ncol = 2)
-  B2_B1_NN <- matrix(0, nrow = Dim_B2, ncol = 2)
+  B1_B2_NN <- matrix(0L, nrow = Dim_B1, ncol = 2)
+  B2_B1_NN <- matrix(0L, nrow = Dim_B2, ncol = 2)
   colnames(B1_B2_NN) <- c("Batch-1", "Batch-2")
   colnames(B2_B1_NN) <- c("Batch-2", "Batch-1")
 
