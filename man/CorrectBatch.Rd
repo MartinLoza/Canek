@@ -99,7 +99,7 @@ for each cluster using its MNNs pairs and use these vectors to remove the batch 
 \examples{
 x <- SimBatches$batches[[1]]
 y <- SimBatches$batches[[2]]
-z <- Canek:::CorrectBatch(x,y)
+z <- CorrectBatch(x,y)
 Corrected <- z$`Corrected Query Batch`
 
 Uncorrected_PCA <- prcomp(t(cbind(x,y)))
