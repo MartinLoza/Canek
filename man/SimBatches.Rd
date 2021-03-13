@@ -3,23 +3,20 @@
 \docType{data}
 \name{SimBatches}
 \alias{SimBatches}
-\title{Prices of 50,000 round cut diamonds.}
+\title{Dataset with simulated single cell RNA-seq from 2 batches.}
 \format{
-A data frame with 53940 rows and 10 variables:
+A list with the following elements:
 \describe{
-  \item{price}{price, in US dollars}
-  \item{carat}{weight of the diamond, in carats}
+  \item{batches}{a list with two matrices representing the two batches}
+  \item{pairs}{matrix of pairs between the two batches.}
+  \item{cell_types}{a factor with the cell clusters.}
   ...
 }
-}
-\source{
-\url{http://www.diamondse.info/}
 }
 \usage{
 SimBatches
 }
 \description{
-A dataset containing the prices and other attributes of almost 54,000
-diamonds.
+Dataset with simulated single cell RNA-seq from 2 batches.
 }
 \keyword{datasets}

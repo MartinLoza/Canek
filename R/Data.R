@@ -1,14 +1,12 @@
-#' Prices of 50,000 round cut diamonds.
+#' Dataset with simulated single cell RNA-seq from 2 batches.
 #'
-#' A dataset containing the prices and other attributes of almost 54,000
-#' diamonds.
 #'
-#' @format A data frame with 53940 rows and 10 variables:
+#' @format A list with the following elements:
 #' \describe{
-#'   \item{price}{price, in US dollars}
-#'   \item{carat}{weight of the diamond, in carats}
+#'   \item{batches}{a list with two matrices representing the two batches}
+#'   \item{pairs}{matrix of pairs between the two batches.}
+#'   \item{cell_types}{a factor with the cell clusters.}
 #'   ...
 #' }
-#' @source \url{http://www.diamondse.info/}
 "SimBatches"
 
