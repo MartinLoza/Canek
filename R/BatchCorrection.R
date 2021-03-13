@@ -96,11 +96,13 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       # pca with all the other batches
       nCellsRef <- ncol(lsBatches[[1]])
 
-      pcaBatches <- lapply(cnBatches[-1], function(x){prcomp_irlba(t(cbind(cnBatches[[1]],x)))})
+      pcaBatches <- lapply(cnBatches[-1], function(x) {
+        prcomp_irlba(t(cbind(cnBatches[[1]], x)))
+      })
 
       nPairs <- lapply(pcaBatches, function(x){
-        pairs <- GetMnnPairs(refBatch = t(x$x[1:nCellsRef,]),
-                             queBatch = t(x$x[(nCellsRef+1):nrow(x$x),]),
+        pairs <- GetMnnPairs(refBatch = t(x$x[1:nCellsRef, ]),
+                             queBatch = t(x$x[(nCellsRef+1):nrow(x$x), ]),
                              kNN = 30)$Pairs
         return(nrow(pairs))
       })
@@ -261,7 +263,7 @@ CorrectBatch <- function(refBatch, queBatch,
 
   nCellsRef <- ncol(refBatch)
   nCellsQue <- ncol(queBatch)
-  nCells <-nCellsRef + nCellsQue
+  nCells <- nCellsRef + nCellsQue
 
   # FIND MNN pairs ----
   if(is.null(pairs)){
