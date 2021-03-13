@@ -11,6 +11,7 @@ ClusterKMeans <- function(x, maxMem = 10, nMem = NULL, verbose = TRUE, usepam = 
       cat(paste('\n\tNumber of memberships found:', nMem))
   }
   res <- kmeans(x, nMem)
+  res <- list(cluster = res$cluster, centers = res$centers)
 
   list(result = res, nMem = nMem)
 }
