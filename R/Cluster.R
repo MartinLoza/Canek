@@ -10,8 +10,9 @@ ClusterKMeans <- function(x, maxMem = 10, nMem = NULL, verbose = TRUE, usepam = 
     if (verbose)
       cat(paste('\n\tNumber of memberships found:', nMem))
   }
+  res <- kmeans(x, nMem)
 
-  list(result = kmeans(x, nMem), nMem = nMem)
+  list(result = res, nMem = nMem)
 }
 
 ClusterLouvain <- function(x, k = 10, verbose = TRUE) {
@@ -29,8 +30,8 @@ ClusterLouvain <- function(x, k = 10, verbose = TRUE) {
 
   centers <- CalculateCenters(x, memberships)
 
-  cluster <- list(cluster = memberships, centers = centers)
-  list(result = cluster, nMem = nMem)
+  res <- list(cluster = memberships, centers = centers)
+  list(result = res, nMem = nMem)
 }
 
 CalculateCenters <- function(x, memberships) {
