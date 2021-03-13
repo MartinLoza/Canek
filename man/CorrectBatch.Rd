@@ -22,8 +22,8 @@ CorrectBatch(
   fuzzy = TRUE,
   estMethod = "Median",
   pairsFilter = FALSE,
-  clusterMethod = "kmeans",
-  doCosNorm = TRUE,
+  clusterMethod = "louvain",
+  doCosNorm = FALSE,
   verbose = FALSE
 )
 }

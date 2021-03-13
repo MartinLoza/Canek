@@ -17,8 +17,8 @@ CorrectBatches(
   perCellMNN = 0.08,
   fuzzy = TRUE,
   estMethod = "Median",
-  clusterMethod = "kmeans",
-  doCosNorm = TRUE,
+  clusterMethod = "louvain",
+  doCosNorm = FALSE,
   debug = FALSE,
   verbose = FALSE,
   ...

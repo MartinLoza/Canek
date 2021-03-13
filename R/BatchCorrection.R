@@ -58,8 +58,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            kNN = 30, pcaDim = 50,
                            pairsFilter = FALSE, perCellMNN = 0.08,
                            fuzzy = TRUE, estMethod = "Median",
-                           clusterMethod = "kmeans",
-                           doCosNorm = TRUE,
+                           clusterMethod = "louvain",
+                           doCosNorm = FALSE,
                            debug = FALSE, verbose = FALSE, ... ){
 
   if(debug || verbose){
@@ -244,8 +244,8 @@ CorrectBatch <- function(refBatch, queBatch,
                          idxQuery = NULL, idxRef = NULL,
                          pcaDim = 50, perCellMNN = 0.08,
                          fuzzy = TRUE, estMethod = "Median",
-                         pairsFilter = FALSE, clusterMethod = "kmeans",
-                         doCosNorm = TRUE,
+                         pairsFilter = FALSE, clusterMethod = "louvain",
+                         doCosNorm = FALSE,
                          verbose = FALSE) {
 
   tBatch <- Sys.time()
@@ -303,13 +303,15 @@ CorrectBatch <- function(refBatch, queBatch,
   cat(paste('\n\tNumber of MNN pairs:', nrow(pairs)))
 
   # FIND memberships ----
-  if (clusterMethod == "kmeans") {
-   cluster <- ClusterKMeans(pcaQue[, 1:10], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
-  }
-
-  if (clusterMethod == "louvain") {
-    cluster <- ClusterLouvain(pcaQue[, 1:10], k = kNN, verbose = verbose)
-  }
+  switch(clusterMethod,
+    "kmeans" = {
+      cluster <- ClusterKMeans(pcaQue[, 1:10], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
+    },
+    "louvain" = {
+      cluster <- ClusterLouvain(pcaQue[, 1:10], k = kNN, verbose = verbose)
+    },
+    stop("cluster method unknown.")
+  )
 
   cluMem <- cluster$result
   nMem <- cluster$nMem
