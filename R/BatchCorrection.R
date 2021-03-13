@@ -448,6 +448,11 @@ CorrectBatch <- function(refBatch, queBatch,
  tBatch <- difftime(Sys.time(), tBatch, units = "min")
 
  debugData$info$cputime <- tBatch
+ debugData$info$clusterMethod <- clusterMethod
+ debugData$info$doCosNorm <- doCosNorm
+ debugData$info$fuzzy <- fuzzy
+ debugData$info$pairsFilter <- pairsFilter
+
 
  if(verbose)
    cat(paste0('\nBatch correction time: ', tBatch, " seconds"))
