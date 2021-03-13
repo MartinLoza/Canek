@@ -1,5 +1,3 @@
-context("test-CorrectBatch")
-
 set.seed(0)
 
 x <- SimBatches$batches[[1]]

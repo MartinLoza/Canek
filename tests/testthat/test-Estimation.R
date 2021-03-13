@@ -1,5 +1,3 @@
-context("test-Estimation")
-
 set.seed(0)
 
 Batches <- SimBatches$batches

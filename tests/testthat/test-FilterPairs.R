@@ -1,5 +1,3 @@
-context("test-FilterPairs")
-
 set.seed(0)
 
 Batches <- SimBatches$batches

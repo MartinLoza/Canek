@@ -1,5 +1,3 @@
-context("test-Fuzzy")
-
 set.seed(0)
 
 Batches <- SimBatches$batches

@@ -1,5 +1,3 @@
-context("test-RunCanek")
-
 # Create Seurat object.
 x <- lapply(names(SimBatches$batches), function(batch) {
   Seurat::CreateSeuratObject(SimBatches$batches[[batch]], project = batch)
