@@ -3,7 +3,7 @@ context("test-CorrectBatches")
 set.seed(0)
 
 Batches <- SimBatches$batches
-z <- CorrectBatches(Batches)
+z <- CorrectBatches(Batches, doCosNorm = TRUE, clusterMethod = "kmeans")
 
 test_that("CorrectBatches works", {
   expect_false(is.null(z))

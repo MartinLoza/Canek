@@ -3,7 +3,7 @@ context("test-FilterPairs")
 set.seed(0)
 
 Batches <- SimBatches$batches
-z <- CorrectBatches(Batches, queNumCelltypes = 2, pairsFilter = TRUE, debug = TRUE)
+z <- CorrectBatches(Batches, queNumCelltypes = 2, pairsFilter = TRUE, doCosNorm = TRUE, clusterMethod = "kmeans", debug = TRUE)
 pairs <- z$`B2/B1`$`Correction Data`$`MNN Pairs`
 
 test_that("FilterPairs works", {

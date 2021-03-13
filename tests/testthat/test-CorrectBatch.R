@@ -4,7 +4,7 @@ set.seed(0)
 
 x <- SimBatches$batches[[1]]
 y <- SimBatches$batches[[2]]
-z <- Canek:::CorrectBatch(x,y)
+z <- Canek:::CorrectBatch(x, y, doCosNorm = TRUE, clusterMethod = "kmeans")
 
 test_that("CorrectBatch works", {
   expect_false(is.null(z))
