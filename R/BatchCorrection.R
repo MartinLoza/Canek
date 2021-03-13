@@ -130,6 +130,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                pairsFilter = pairsFilter, perCellMNN = perCellMNN,
                                sampling = sampling, numSamples = numSamples,
                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
+                               doCosNorm = doCosNorm,
                                clusterMethod = clusterMethod,
                                verbose = verbose)
 
