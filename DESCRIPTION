@@ -1,6 +1,6 @@
 Package: Canek
 Type: Package
-Title: Batch Correction of Single-Cell Data Using Extended Kalman Filter
+Title: Batch Correction of Single Cell Transcriptome Data
 Version: 0.1.6
 Authors@R: c(
     person("Martin", "Loza", email = "martin.loza.lopez@gmail.com", role = c("aut", "cre"), 
@@ -9,8 +9,8 @@ Authors@R: c(
         comment = c(ORCID = "0000-0002-2325-4893"))
     )
 Description: Non-linear/linear hybrid method for batch-effect correction
-    that couples identification of similar cells between datasets using 
-    Mutual Nearest Neighbors (MNNs) with an Extended Kalman Filter (EKF).
+    that uses Mutual Nearest Neighbors (MNNs) to identify similar cells between 
+    datasets.
 Depends:
     R (>= 2.10)
 Imports:
