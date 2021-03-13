@@ -225,7 +225,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 #' @examples
 #' x <- SimBatches$batches[[1]]
 #' y <- SimBatches$batches[[2]]
-#' z <- CorrectBatch(x,y)
+#' z <- CorrectBatch(x, y)
 #' Corrected <- z$`Corrected Query Batch`
 #'
 #' Uncorrected_PCA <- prcomp(t(cbind(x,y)))
