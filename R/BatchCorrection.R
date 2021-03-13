@@ -335,7 +335,7 @@ CorrectBatch <- function(refBatch, queBatch,
    # Membership cells number
    numCellMem <- ncol(queBatch[,idxCells])
 
-   memPairs <- pairs[pairs[, 1] %in% idxCells, ]
+   memPairs <- pairs[pairs[, 1] %in% idxCells, , drop = FALSE]
 
    # FILTER pairs ----
    if(pairsFilter){
