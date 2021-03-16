@@ -19,6 +19,7 @@ CorrectBatches(
   estMethod = "Median",
   clusterMethod = "louvain",
   doCosNorm = FALSE,
+  fracSampling = NULL,
   debug = FALSE,
   verbose = FALSE,
   ...
@@ -62,6 +63,8 @@ not calculated for this membership.}
 \item{clusterMethod}{Method used to identify memberships.}
 
 \item{doCosNorm}{Whether to do cosine normalization.}
+
+\item{fracSampling}{Fraction of cells to sample in the hierarchical selection (default is NULL, no sampling).}
 
 \item{debug}{Return correction's information}
 
