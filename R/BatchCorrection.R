@@ -59,7 +59,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            pairsFilter = FALSE, perCellMNN = 0.08,
                            fuzzy = TRUE, estMethod = "Median",
                            clusterMethod = "louvain",
-                           doCosNorm = FALSE,
+                           doCosNorm = FALSE, fracSampling = NULL,
                            debug = FALSE, verbose = FALSE, ... ){
 
   if(debug || verbose){
@@ -93,11 +93,39 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     # hierarchical selection
     if (hierarchical && length(lsBatches) > 2) {
 
-      # pca with all the other batches
-      nCellsRef <- ncol(lsBatches[[1]])
+      if(is.numeric(fracSampling)){
 
-      pcaBatches <- lapply(cnBatches[-1], function(x) {
-        prcomp_irlba(t(cbind(cnBatches[[1]], x)))
+        if(verbose)
+          cat(paste("\nHierarchical mode with sampling"))
+
+        sampIdx <- lapply(namesBatches, function(n){
+          sample(1:ncol(lsBatches[[n]]),
+                 size = floor(ncol(lsBatches[[n]])*fracSampling),
+                 replace = FALSE)
+        })
+        names(sampIdx) <- namesBatches
+
+        nCellsRef <- length(sampIdx[[1]])
+      }else{
+        nCellsRef <- ncol(lsBatches[[1]])
+      }
+
+      # pca with all the other batches
+      #nCellsRef <- ncol(lsBatches[[1]])
+
+      # pcaBatches <- lapply(cnBatches[-1], function(x) {
+      #   prcomp_irlba(t(cbind(cnBatches[[1]], x)))
+      # })
+
+      # Test. Sampling in hierarchical mode
+      pcaBatches <- lapply(names(cnBatches)[-1], function(n){
+        prcomp_irlba(
+          if(exists("sampIdx")){
+          t(cbind(cnBatches[[1]][,sampIdx[[1]]],
+                  cnBatches[[n]][,sampIdx[[n]]]))
+          }else{
+          t(cbind(cnBatches[[1]],cnBatches[[n]]))
+          })
       })
 
       nPairs <- lapply(pcaBatches, function(x){
