@@ -27,6 +27,7 @@
 #' with an associated MNN pair. If the proportion is low, an specific correction vectors is
 #' not calculated for this membership.
 #' @param doCosNorm Whether to do cosine normalization.
+#' @param fracSampling Fraction of cells to sample in the hierarchical selection (default is NULL, no sampling).
 #' @param clusterMethod Method used to identify memberships.
 #' @param debug Return correction's information
 #' @param ... Pass down methods from RunCanek().
