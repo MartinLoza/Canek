@@ -94,7 +94,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     # hierarchical selection
     if (hierarchical && length(lsBatches) > 2) {
 
-      if(is.numeric(fracSampling)){
+      if(!is.null(fracSampling) && is.numeric(fracSampling)) {
 
         if(verbose)
           cat(paste("\nHierarchical mode with sampling"))
