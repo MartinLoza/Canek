@@ -120,13 +120,13 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
       # Test. Sampling in hierarchical mode
       pcaBatches <- lapply(names(cnBatches)[-1], function(n){
-        prcomp_irlba(
-          if(exists("sampIdx")){
-          t(cbind(cnBatches[[1]][,sampIdx[[1]]],
-                  cnBatches[[n]][,sampIdx[[n]]]))
-          }else{
-          t(cbind(cnBatches[[1]],cnBatches[[n]]))
-          })
+        if (exists("sampIdx")) {
+          m <- t(cbind(cnBatches[[1]][, sampIdx[[1]]],
+                  cnBatches[[n]][, sampIdx[[n]]]))
+        } else {
+          m <- t(cbind(cnBatches[[1]], cnBatches[[n]]))
+        }
+        prcomp_irlba(m)
       })
 
       nPairs <- lapply(pcaBatches, function(x){
