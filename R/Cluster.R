@@ -36,11 +36,14 @@ ClusterLouvain <- function(x, k = 10, verbose = TRUE) {
 }
 
 CalculateCenters <- function(x, memberships) {
-  nMem <- length(unique(memberships))
+  lMem <- unique(memberships)
+  nMem <- length(lMem)
 
-  centers <- sapply(seq_len(nMem), function(membership) {
+
+  centers <- sapply(seq_len(nMem), function(n) {
+    membership <- lMem[n]
     colMeans(x[memberships == membership, ])
   })
-  colnames(centers) <- seq_len(nMem)
+  colnames(centers) <- lMem
   t(centers)
 }
