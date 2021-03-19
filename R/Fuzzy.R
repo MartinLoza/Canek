@@ -31,7 +31,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
   Mst <- CalculateMST(cluMem$centers[, 1:PCA_Max])
 
   #Get edges from MST
-  Edges <- GetEdges(Mst)
+  Edges <- igraph::as_edgelist(Mst, names = FALSE)
 
   #Fuzzy process
   if(verbose)
