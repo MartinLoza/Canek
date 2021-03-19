@@ -92,8 +92,17 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
 
     for(Cell in 1:nrow(Cells_Filtered)){
 
-      IN_Fuzzification <- 1 + (Slope*Cells_Filtered[Cell,1])
-      OUT_Fuzzification <- ( 1 - IN_Fuzzification )
+      if(Cells_Filtered[Cell,1] < 0){
+        IN_Fuzzification <- 1
+        OUT_Fuzzification <- 0
+      }else if(Cells_Filtered[Cell,1] > OUT_Node_PCA_Transformed[1]){
+        IN_Fuzzification <- 0
+        OUT_Fuzzification <- 1
+      }else{
+        IN_Fuzzification <- 1 + (Slope*Cells_Filtered[Cell,1])
+        OUT_Fuzzification <- ( 1 - IN_Fuzzification )
+      }
+
       Fuzzification <- rbind( Fuzzification, c(IN_Fuzzification, OUT_Fuzzification) )
 
       #If this cells has not been fuzzified before set fuzzification values
