@@ -466,12 +466,13 @@ CorrectBatch <- function(refBatch, queBatch,
    corGene <- noZeroCV[["Correction_Matrix"]]
  }
 
- queCorrected <-  queBatch + (corGene  %*% t(corCell/rowSums(corCell)) )
+ corMatrix <- (corGene  %*% t(corCell/rowSums(corCell)) )
+ queCorrected <-  queBatch + corMatrix
 
- # SET data lists to return ----
+  # SET data lists to return ----
  memData <- list("Cluster Membership" = nMem, "Membership Correction Data" = memCorrData)
 
- correctionData <- list("Correction Matrix" = corGene, "MNN Pairs" = pairs,
+ correctionData <- list("Correction Matrix" = corMatrix, "MNN Pairs" = pairs,
                         "Membership Data" = memData, "Fuzzy Data" = fuzzyData)
 
  tBatch <- difftime(Sys.time(), tBatch, units = "min")
