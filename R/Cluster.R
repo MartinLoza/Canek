@@ -44,6 +44,6 @@ CalculateCenters <- function(x, memberships) {
     membership <- lMem[n]
     colMeans(x[memberships == membership, ])
   })
-  colnames(centers) <- lMem
+  colnames(centers) <- seq_len(nMem)
   t(centers)
 }
