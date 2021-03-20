@@ -93,8 +93,8 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
     for(Cell in 1:nrow(Cells_Filtered)){
 
       if(Cells_Filtered[Cell,1] < 0){
-        IN_Fuzzification <- 1
-        OUT_Fuzzification <- 0
+        IN_Fuzzification <- 0
+        OUT_Fuzzification <- 1
       }else if(Cells_Filtered[Cell,1] > OUT_Node_PCA_Transformed[1]){
         IN_Fuzzification <- 0
         OUT_Fuzzification <- 1
