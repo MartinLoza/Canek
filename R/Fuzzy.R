@@ -191,7 +191,7 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
         Related_Edges_No_Zero <- which(Cluster_Dist[Is_Zero[Node],] == min(Cluster_Dist[Is_Zero[Node],Related_Edges_No_Zero]))
       }
       #Assign correction vector
-      memCorrData[[Is_Zero[Node]]] <- memCorrData[[Related_Edges_No_Zero]]
+      memCorrData[[Is_Zero[Node]]]$`Correction Vector` <- memCorrData[[Related_Edges_No_Zero]]$`Correction Vector`
       corGene[,Is_Zero[Node]] <- memCorrData[[Related_Edges_No_Zero]]$`Correction Vector`
       zeroCorrection[Is_Zero[Node]] <- FALSE
 
