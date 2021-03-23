@@ -43,10 +43,10 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
     #Init nodes
     IN_Membership <- list()
     OUT_Membership <- list()
-    IN_Node <- as.integer(Edges[Edge,1])
-    OUT_Node <- as.integer(Edges[Edge,2])
-    IN_Node_PCA <- cluMem$centers[ IN_Node, 1:PCA_Max ]
-    OUT_Node_PCA <- cluMem$centers[ OUT_Node, 1:PCA_Max ]
+    IN_Node <- Edges[Edge,1]
+    OUT_Node <- Edges[Edge,2]
+    IN_Node_PCA <- cluMem$centers[IN_Node,1:PCA_Max]
+    OUT_Node_PCA <- cluMem$centers[OUT_Node,1:PCA_Max]
 
     #Translate OUT node according to IN node PCA coordinates
     OUT_Node_PCA_Transformed <- OUT_Node_PCA - IN_Node_PCA
