@@ -36,7 +36,8 @@ ClusterLouvain <- function(x, k = 10, verbose = TRUE) {
 }
 
 CalculateCenters <- function(x, memberships) {
-  lMem <- unique(memberships)
+  if (is.factor(memberships)) lMem <- levels(memberships)
+  else lMem <- unique(memberships)
   nMem <- length(lMem)
 
 
