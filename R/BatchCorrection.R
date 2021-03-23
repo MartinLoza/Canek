@@ -471,6 +471,12 @@ CorrectBatch <- function(refBatch, queBatch,
  corMatrix <- (corGene  %*% t(corCell/rowSums(corCell)) )
  queCorrected <-  queBatch + corMatrix
 
+ debugData$matrix$corMatrix <- corMatrix
+ debugData$matrix$corCell <- corCell
+ debugData$matrix$corGene <- corGene
+ debugData$matrix$cells <- colnames(queCorrected)
+ debugData$matrix$features <- rownames(queCorrected)
+
   # SET data lists to return ----
  memData <- list("Cluster Membership" = nMem, "Membership Correction Data" = memCorrData)
 
@@ -479,6 +485,7 @@ CorrectBatch <- function(refBatch, queBatch,
                         "Clusters" = cluMem)
 
  tBatch <- difftime(Sys.time(), tBatch, units = "min")
+
 
  debugData$info$cputime <- tBatch
  debugData$info$clusterMethod <- clusterMethod
