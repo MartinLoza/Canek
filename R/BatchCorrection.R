@@ -450,6 +450,8 @@ CorrectBatch <- function(refBatch, queBatch,
 
  }else{
    MST <- CalculateMST(cluMem$centers[, 1:2])
+   fuzzyData[["MST"]] <- MST
+   fuzzyData[["Fuzzy Memberships"]] <- corCell
  }
 
  # CHECK No Zero Correction Vectors ----
@@ -473,7 +475,8 @@ CorrectBatch <- function(refBatch, queBatch,
  memData <- list("Cluster Membership" = nMem, "Membership Correction Data" = memCorrData)
 
  correctionData <- list("Correction Matrix" = corMatrix, "MNN Pairs" = pairs,
-                        "Membership Data" = memData, "Fuzzy Data" = fuzzyData)
+                        "Membership Data" = memData, "Fuzzy Data" = fuzzyData,
+                        "Clusters" = cluMem)
 
  tBatch <- difftime(Sys.time(), tBatch, units = "min")
 
