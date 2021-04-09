@@ -183,17 +183,19 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
   idx = 1
   while(length(isZero) != 0){
 
-    Related_Edges <- which(MST[isZero[idx],] !=0)
+    Node <- isZero[idx]
+
+    Related_Edges <- which(MST[Node,] !=0)
     Related_Edges_No_Zero <- Related_Edges[which(zeroCorrection[Related_Edges] == FALSE)]
     if(length(Related_Edges_No_Zero) != 0){
       #if there are various, we select the one with the minimum distance
       if(length(Related_Edges_No_Zero) != 1){
-        Related_Edges_No_Zero <- which(Cluster_Dist[isZero[idx],] == min(Cluster_Dist[isZero[idx],Related_Edges_No_Zero]))
+        Related_Edges_No_Zero <- which(Cluster_Dist[Node,] == min(Cluster_Dist[Node,Related_Edges_No_Zero]))
       }
       #Assign correction vector
-      memCorrData[[isZero[idx]]]$`Correction Vector` <- memCorrData[[Related_Edges_No_Zero]]$`Correction Vector`
-      corGene[,isZero[idx]] <- memCorrData[[Related_Edges_No_Zero]]$`Correction Vector`
-      zeroCorrection[isZero[idx]] <- FALSE
+      memCorrData[[Node]]$`Correction Vector` <- memCorrData[[Related_Edges_No_Zero]]$`Correction Vector`
+      corGene[,Node] <- memCorrData[[Related_Edges_No_Zero]]$`Correction Vector`
+      zeroCorrection[Node] <- FALSE
 
       idx = 1
       isZero <- which(zeroCorrection == TRUE)
