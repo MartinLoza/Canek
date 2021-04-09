@@ -189,11 +189,11 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
 
     Node <- as.character(isZero[idx])
 
-    Related_Edges <- which(adjMST[Node,] !=0)
+    Related_Edges <- which(adjMST[Node,] != 0)
     Related_Edges_No_Zero <- Related_Edges[which(zeroCorrection[Related_Edges] == FALSE)]
     if(length(Related_Edges_No_Zero) != 0){
       #if there are various, we select the one with the minimum distance
-      if(length(Related_Edges_No_Zero) != 1){
+      if(length(Related_Edges_No_Zero) > 1){
         Related_Edges_No_Zero <- which(Cluster_Dist[Node,] == min(Cluster_Dist[Node,Related_Edges_No_Zero]))
       }
       #Assign correction vector
