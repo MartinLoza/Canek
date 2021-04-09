@@ -177,6 +177,9 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
                        memCorrData = NULL, corGene = NULL,
                        zeroCorrection = NULL){
 
+  names(zeroCorrection) <- 1:ncol(corGene)
+  colnames(corGene) <- 1:ncol(corGene)
+
   isZero <- which(zeroCorrection == TRUE)
   Cluster_Dist <- as.matrix(dist(cluMem$centers,upper = TRUE))
   adjMST <- igraph::as_adjacency_matrix(MST)
@@ -184,7 +187,7 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
   idx = 1
   while(length(isZero) != 0){
 
-    Node <- isZero[idx]
+    Node <- as.character(isZero[idx])
 
     Related_Edges <- which(adjMST[Node,] !=0)
     Related_Edges_No_Zero <- Related_Edges[which(zeroCorrection[Related_Edges] == FALSE)]
@@ -194,8 +197,8 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
         Related_Edges_No_Zero <- which(Cluster_Dist[Node,] == min(Cluster_Dist[Node,Related_Edges_No_Zero]))
       }
       #Assign correction vector
-      memCorrData[[Node]]$`Correction Vector` <- memCorrData[[Related_Edges_No_Zero]]$`Correction Vector`
-      corGene[,Node] <- memCorrData[[Related_Edges_No_Zero]]$`Correction Vector`
+      memCorrData[[as.integer(Node)]]$`Correction Vector` <- memCorrData[[as.integer(Related_Edges_No_Zero)]]$`Correction Vector`
+      corGene[,Node] <- memCorrData[[as.integer(Related_Edges_No_Zero)]]$`Correction Vector`
       zeroCorrection[Node] <- FALSE
 
       idx = 1
