@@ -189,7 +189,7 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
 
     Node <- as.character(isZero[idx])
 
-    Related_Edges <- which(adjMST[Node,] != 0)
+    Related_Edges <- names(which(adjMST[Node,] != 0))
     Related_Edges_No_Zero <- Related_Edges[which(zeroCorrection[Related_Edges] == FALSE)]
     if(length(Related_Edges_No_Zero) != 0){
       #if there are various, we select the one with the minimum distance
