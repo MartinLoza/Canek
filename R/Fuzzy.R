@@ -143,6 +143,108 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
   return(Fuzzy_Data)
 }
 
+FuzzyNew <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, PCA_Max = 2, verbose = FALSE){
+
+  #INIT
+  nCells <- nrow(pcaQue)
+  nMem <- nrow(cluMem$centers)
+  #PCA_Max <- 2 # for tests
+  Fuzzied <- rep(FALSE, nCells)
+  Edges_Data <- list()
+  corCell <- as.data.frame(corCell)
+  corCell[["Fuzzified"]] <- FALSE
+
+  # Create Minimum spanning tree (MST) by using centers of Memberships as nodes
+  if(verbose)
+    cat( '\n\tObtaining Minimum Spanning Tree' )
+
+  mst <- CalculateMST(cluMem$centers[,1:PCA_Max])
+
+  #Get edges from MST
+  edges <- igraph::as_edgelist(mst, names = FALSE)
+
+  # now we analize one edge
+  #edge = 1
+  for(edge in seq_len(nrow(edges))){
+
+    #Get the memberships of the selected edge
+    inNode <- edges[edge,1]
+    outNode <- edges[edge,2]
+
+    #Get the cells related with the memberships
+    idxCells <- which( cluMem$cluster == inNode | cluMem$cluster == outNode )
+    edgeCells <- pcaQue[idxCells, 1:PCA_Max, drop = FALSE]
+
+    #Get the centers of the memberships
+    inMemCenter <- cluMem$centers[inNode, 1:PCA_Max, drop = FALSE]
+    outMemCenter <- cluMem$centers[outNode, 1:PCA_Max, drop = FALSE]
+
+    #Translate the cells and the centers
+    edgeCells <- sweep(edgeCells, 2, inMemCenter, "-")
+    outMemCenter <- outMemCenter - inMemCenter
+    inMemCenter <- inMemCenter - inMemCenter
+
+    #Obtain the norm2 and the unit vector of the edge
+    #On this case, because we already translate the vectors, the edge vector corresponds to the outMemCenter
+    normEV <- norm(outMemCenter, type = "2")
+    unitEV <- outMemCenter/normEV
+
+    # Obtain the components of the other vectors
+    edgeCellsComp <- edgeCells %*% t(unitEV)
+
+    # Compare with the edge's norm
+    edgeCellsComp <- edgeCellsComp/normEV
+
+    #Fuzzy comparison
+    for(cell in seq_len(length(edgeCellsComp))){
+
+      iCell <- idxCells[cell]
+
+      if(edgeCellsComp[cell] >= 0 & edgeCellsComp[cell] <= 1){ #if the cell's projections is withing the edge, we assign a fuzzy score
+        if(corCell$Fuzzified[iCell] == FALSE){
+          corCell[iCell,outNode] <- edgeCellsComp[cell]
+          corCell[iCell,inNode] <- 1 - edgeCellsComp[cell]
+        }else{
+          corCell[iCell,outNode] <-mean(corCell[iCell,outNode], edgeCellsComp[cell])
+          corCell[iCell,inNode] <- mean(corCell[iCell,inNode], 1 - edgeCellsComp[cell])
+        }
+      }else{ #for now we just assign the cell's membership score, a possible improvement to check would be to change teh score to the other membership
+        if(corCell$Fuzzified[iCell] == TRUE){
+          if(outNode == cluMem$cluster[iCell]){
+            corCell[iCell,outNode] <-mean(corCell[iCell,outNode], 1)
+            corCell[iCell,inNode] <- mean(corCell[iCell,inNode], 0)
+          }else{
+            corCell[iCell,outNode] <-mean(corCell[iCell,outNode], 0)
+            corCell[iCell,inNode] <- mean(corCell[iCell,inNode], 1)
+          }
+        }
+      }
+
+      corCell$Fuzzified[iCell] <- TRUE
+    }
+
+    # prepare debug info
+    IN_Membership <- list("Cells" = NULL,
+                          "Transformed" = NULL,
+                          "Filtered" = NULL)
+    OUT_Membership <- list("Cells" = NULL, "Transformed" = NULL,
+                           "Filtered" = NULL)
+
+    Edges_Data[[paste("Edge-", edge, sep = "")]] <- list( "IN Node" = inNode, "OUT Node" = outNode,
+                                                          "Angle" = NULL, "IN-Mem-Cells Data" = IN_Membership,
+                                                          "OUT-Mem-Cells Data" = OUT_Membership, "Slope" = NULL,
+                                                          "Fuzzification" = NULL)
+  }
+
+  Fuzzied <- corCell[,ncol(corCell)]
+  corCell <- as.matrix(corCell[,-ncol(corCell)])
+
+  Fuzzy_Data <- list("Fuzzy Memberships" = corCell, "MST" = mst,
+                     "Fuzzied" = Fuzzied, "Edges Data" = Edges_Data)
+
+  return(Fuzzy_Data)
+}
+
 ##GetRotationAngle##
 #Get correction angle according to quadrant
 # INPUT : Node PCA coordinates
