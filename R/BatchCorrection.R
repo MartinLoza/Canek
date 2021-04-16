@@ -163,7 +163,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                doCosNorm = doCosNorm,
                                clusterMethod = clusterMethod,
                                verbose = verbose,
-                               fuzzyOld = TRUE, PCA_Max = PCA_Max)
+                               fuzzyOld = fuzzyOld, PCA_Max = PCA_Max)
 
     # new ref at the beginning
     lsBatches <- lsBatches[-Query]
@@ -450,7 +450,7 @@ CorrectBatch <- function(refBatch, queBatch,
                         corCell = corCell, verbose = verbose)
    }else{
      #if(verbose)
-       cat('\n\nOld FUZZY ')
+       cat('\n\nNew FUZZY ')
 
      fuzzyData <- FuzzyNew(cluMem = cluMem, pcaQue = pcaQue,
                            corCell = corCell, verbose = verbose, PCA_Max = PCA_Max)
