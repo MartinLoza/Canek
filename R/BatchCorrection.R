@@ -61,7 +61,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            fuzzy = TRUE, estMethod = "Median",
                            clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
-                           debug = FALSE, verbose = FALSE, ... ){
+                           debug = FALSE, verbose = FALSE,
+                           fuzzyOld = TRUE, PCA_Max = 2, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -161,7 +162,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
                                doCosNorm = doCosNorm,
                                clusterMethod = clusterMethod,
-                               verbose = verbose)
+                               verbose = verbose,
+                               fuzzyOld = TRUE, PCA_Max = PCA_Max)
 
     # new ref at the beginning
     lsBatches <- lsBatches[-Query]
@@ -275,7 +277,8 @@ CorrectBatch <- function(refBatch, queBatch,
                          fuzzy = TRUE, estMethod = "Median",
                          pairsFilter = FALSE, clusterMethod = "louvain",
                          doCosNorm = FALSE,
-                         verbose = FALSE) {
+                         verbose = FALSE,
+                         fuzzyOld = TRUE, PCA_Max = 2) {
 
   tBatch <- Sys.time()
 
@@ -439,11 +442,19 @@ CorrectBatch <- function(refBatch, queBatch,
  # Fuzzy process and Correction
  if(fuzzy && nMem > 1){
 
-   if(verbose)
-    cat('\n\nFUZZY ')
+   if(fuzzyOld){
+     #if(verbose)
+       cat('\n\nOld FUZZY ')
 
-   fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,
-                      corCell = corCell, verbose = verbose)
+     fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,
+                        corCell = corCell, verbose = verbose)
+   }else{
+     #if(verbose)
+       cat('\n\nOld FUZZY ')
+
+     fuzzyData <- FuzzyNew(cluMem = cluMem, pcaQue = pcaQue,
+                           corCell = corCell, verbose = verbose, PCA_Max = PCA_Max)
+   }
 
    corCell <- fuzzyData$`Fuzzy Memberships`
    MST <- fuzzyData$MST
@@ -492,6 +503,8 @@ CorrectBatch <- function(refBatch, queBatch,
  debugData$info$doCosNorm <- doCosNorm
  debugData$info$fuzzy <- fuzzy
  debugData$info$pairsFilter <- pairsFilter
+ debugData$info$pcaQue <- pcaQue
+ debugData$info$pcaRef <- pcaRef
 
 
  if(verbose)
