@@ -62,7 +62,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
                            debug = FALSE, verbose = FALSE,
-                           fuzzyOld = TRUE, PCA_Max = 2, ... ){
+                           fuzzyMethod = 1, PCA_Max = 2, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -163,7 +163,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                doCosNorm = doCosNorm,
                                clusterMethod = clusterMethod,
                                verbose = verbose,
-                               fuzzyOld = fuzzyOld, PCA_Max = PCA_Max)
+                               fuzzyMethod = fuzzyMethod, PCA_Max = PCA_Max)
 
     # new ref at the beginning
     lsBatches <- lsBatches[-Query]
@@ -278,7 +278,7 @@ CorrectBatch <- function(refBatch, queBatch,
                          pairsFilter = FALSE, clusterMethod = "louvain",
                          doCosNorm = FALSE,
                          verbose = FALSE,
-                         fuzzyOld = TRUE, PCA_Max = 2) {
+                         fuzzyMethod = 1, PCA_Max = 2) {
 
   tBatch <- Sys.time()
 
@@ -442,17 +442,23 @@ CorrectBatch <- function(refBatch, queBatch,
  # Fuzzy process and Correction
  if(fuzzy && nMem > 1){
 
-   if(fuzzyOld){
+   if(fuzzyMethod == 1){
      #if(verbose)
        cat('\n\nOld FUZZY ')
 
      fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,
                         corCell = corCell, verbose = verbose)
-   }else{
+   }else if(fuzzyMethod == 2){
      #if(verbose)
-       cat('\n\nNew FUZZY ')
+       cat('\n\nNew FUZZY 1 ')
 
      fuzzyData <- FuzzyNew(cluMem = cluMem, pcaQue = pcaQue,
+                           corCell = corCell, verbose = verbose, PCA_Max = PCA_Max)
+   }else{
+     #if(verbose)
+     cat('\n\nNew FUZZY 2 ')
+
+     fuzzyData <- FuzzyNew2(cluMem = cluMem, pcaQue = pcaQue,
                            corCell = corCell, verbose = verbose, PCA_Max = PCA_Max)
    }
 
