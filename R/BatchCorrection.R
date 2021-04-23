@@ -12,6 +12,7 @@
 #' @param pcaDim Number of PCA dimensions to use.
 #' @param maxMem Maximum number of memberships from the query batch. This parameter is used on the heuristic algorithm to find the number of cell types.
 #' @param fuzzy Use fuzzy logic to join the local correction vectors.
+#' @param fuzzyPCA Number of PCs to use in the fuzzy process.
 #' @param hierarchical Use hierarchical integration scheme when correcting more than two batches.
 #' If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.
 #' @param verbose Print output.
@@ -58,11 +59,11 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            sampling = FALSE, numSamples = NULL,
                            kNN = 30, pcaDim = 50,
                            pairsFilter = FALSE, perCellMNN = 0.08,
-                           fuzzy = TRUE, estMethod = "Median",
-                           clusterMethod = "louvain",
+                           fuzzy = TRUE, , fuzzyPCA = 10,
+                           estMethod = "Median", clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
                            debug = FALSE, verbose = FALSE,
-                           fuzzyMethod = 1, fuzzyPCA = 10, ... ){
+                           fuzzyMethod = 1, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -223,6 +224,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 #' on the correction vector estimation.
 #' @param kNN Number of k-nearest-neighbors used to define the MNNs pairs.
 #' @param pcaDim Number of PCA dimensions to use.
+#' @param fuzzyPCA Number of PCs to use in the fuzzy process.
 #' @param maxMem Maximum number of memberships from the query batch. This parameter is used on the
 #' heuristic algorithm to find the number of cell types.
 #' @param fuzzy Use fuzzy logic to join the local correction vectors.
@@ -274,11 +276,10 @@ CorrectBatch <- function(refBatch, queBatch,
                          sampling = FALSE, numSamples = NULL,
                          idxQuery = NULL, idxRef = NULL,
                          pcaDim = 50, perCellMNN = 0.08,
-                         fuzzy = TRUE, estMethod = "Median",
-                         pairsFilter = FALSE, clusterMethod = "louvain",
-                         doCosNorm = FALSE,
-                         verbose = FALSE,
-                         fuzzyMethod = 1, fuzzyPCA = 10) {
+                         fuzzy = TRUE, fuzzyPCA = 10,
+                         estMethod = "Median", clusterMethod = "louvain",
+                         pairsFilter = FALSE, doCosNorm = FALSE,
+                         verbose = FALSE, fuzzyMethod = 1) {
 
   tBatch <- Sys.time()
 
