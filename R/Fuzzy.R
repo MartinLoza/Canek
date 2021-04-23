@@ -65,13 +65,14 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, v
     # obtenemos el minimo
     minComp <- min(edgeCellsComp, na.rm = TRUE)
 
-    # trasladar los componentes respecto al minimo (para comparar con el minimo y maximo en vez de con los centros)
+    # Using the minimum and maximum to compare the components
+    ## Translate the components according with the minimum
     edgeCellsComp <- edgeCellsComp - minComp
 
-    # comparar con el maximo
+    ## Compare with the maximum
     edgeCellsComp <- edgeCellsComp/max(edgeCellsComp, na.rm = TRUE)
 
-    #TODO: ver si esto se puede hacer, el problema es que necestiamos ver si fue fuzzificada para hacer la media
+    #TODO: this could be a future improvement, but we have to find a different way to check the Fuzzified flag.
     # assign memberships
     # corCell[idxCells, outNode] <- edgeCellsComp
     # corCell[idxCells, inNode] <- 1 - edgeCellsComp
@@ -101,7 +102,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, v
     Edges_Data[[paste("Edge-", edge, sep = "")]] <- list( "IN Node" = inNode, "OUT Node" = outNode,
                                                           "Angle" = NULL, "IN-Mem-Cells Data" = IN_Membership,
                                                           "OUT-Mem-Cells Data" = OUT_Membership, "Slope" = NULL,
-                                                          "Fuzzification" = NULL)
+                                                          "Fuzzification" = NULL, "CellsComponents" = edgeCellsComp)
   }
 
   Fuzzied <- corCell[,ncol(corCell)]
