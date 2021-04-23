@@ -59,11 +59,10 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            sampling = FALSE, numSamples = NULL,
                            kNN = 30, pcaDim = 50,
                            pairsFilter = FALSE, perCellMNN = 0.08,
-                           fuzzy = TRUE, , fuzzyPCA = 10,
+                           fuzzy = TRUE, fuzzyPCA = 10,
                            estMethod = "Median", clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
-                           debug = FALSE, verbose = FALSE,
-                           fuzzyMethod = 1, ... ){
+                           debug = FALSE, verbose = FALSE, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -157,14 +156,12 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     Correction <- CorrectBatch(refBatch = lsBatches[[1]], queBatch = lsBatches[[Query]],
                                queNumCelltypes = queNumCelltypes, pcaDim = pcaDim,
                                maxMem = maxMem, kNN = kNN,
-                               fuzzy = fuzzy, estMethod = estMethod,
+                               fuzzy = fuzzy, fuzzyPCA = fuzzyPCA, estMethod = estMethod,
                                pairsFilter = pairsFilter, perCellMNN = perCellMNN,
                                sampling = sampling, numSamples = numSamples,
                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
-                               doCosNorm = doCosNorm,
-                               clusterMethod = clusterMethod,
-                               verbose = verbose,
-                               fuzzyMethod = fuzzyMethod, fuzzyPCA = fuzzyPCA)
+                               doCosNorm = doCosNorm, clusterMethod = clusterMethod,
+                               verbose = verbose)
 
     # new ref at the beginning
     lsBatches <- lsBatches[-Query]
@@ -279,7 +276,7 @@ CorrectBatch <- function(refBatch, queBatch,
                          fuzzy = TRUE, fuzzyPCA = 10,
                          estMethod = "Median", clusterMethod = "louvain",
                          pairsFilter = FALSE, doCosNorm = FALSE,
-                         verbose = FALSE, fuzzyMethod = 1) {
+                         verbose = FALSE) {
 
   tBatch <- Sys.time()
 
@@ -462,27 +459,11 @@ CorrectBatch <- function(refBatch, queBatch,
  # Fuzzy process and Correction
  if(fuzzy && nMem > 1){
 
-   if(fuzzyMethod == 1){
-     #if(verbose)
-       cat('\n\nOld FUZZY ')
-
-     fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,
-                        corCell = corCell, verbose = verbose)
-   }else if(fuzzyMethod == 2){
-     #if(verbose)
-       cat('\n\nNew FUZZY 1 ')
-
-     fuzzyData <- FuzzyNew(cluMem = cluMem, pcaQue = pcaQue,
-                           corCell = corCell, verbose = verbose, fuzzyPCA = fuzzyPCA)
-   }else{
-     #if(verbose)
-     cat('\n\nNew FUZZY 2 ')
-
-     fuzzyData <- FuzzyNew2(cluMem = cluMem, pcaQue = pcaQue,
-                           corCell = corCell, verbose = verbose, fuzzyPCA = fuzzyPCA)
-   }
-   fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,  Mst = MST,
-                      corCell = corCell, verbose = verbose)
+   if(verbose)
+     cat('\n\n Fuzzy process ')
+   fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,
+                      fuzzyPCA = fuzzyPCA, corCell = corCell,
+                      verbose = verbose)
 
    corCell <- fuzzyData$`Fuzzy Memberships`
    #MST <- fuzzyData$MST

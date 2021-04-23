@@ -250,7 +250,6 @@ FuzzyNew2 <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 2
   #INIT
   nCells <- nrow(pcaQue)
   nMem <- nrow(cluMem$centers)
-  #fuzzyPCA <- 2 # for tests
   Fuzzied <- rep(FALSE, nCells)
   Edges_Data <- list()
   corCell <- as.data.frame(corCell)
@@ -344,28 +343,6 @@ FuzzyNew2 <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 2
                      "Fuzzied" = Fuzzied, "Edges Data" = Edges_Data)
 
   return(Fuzzy_Data)
-}
-
-##GetRotationAngle##
-#Get correction angle according to quadrant
-# INPUT : Node PCA coordinates
-#
-# OUTPUT : Angle in radians
-GetRotationAngle <- function( PCA_Coordinates = NULL ){
-
-  Rotation_Angle <- atan(PCA_Coordinates['PC2']/PCA_Coordinates['PC1'])
-
-  #For second and third quadrant we add pi to rotation angle
-  if( (PCA_Coordinates['PC1'] < 0 & PCA_Coordinates['PC2'] >= 0) |
-      (PCA_Coordinates['PC1'] < 0 & PCA_Coordinates['PC2'] < 0) ){   #Second Quadrant
-    Rotation_Angle <- Rotation_Angle + pi
-  }
-
-  if( (PCA_Coordinates['PC1'] >= 0 & PCA_Coordinates['PC2'] < 0) )
-    Rotation_Angle <- Rotation_Angle + (2*pi)
-
-  return(Rotation_Angle)
-
 }
 
 #' CheckZeroCV
