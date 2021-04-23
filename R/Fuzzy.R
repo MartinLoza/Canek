@@ -18,7 +18,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
   #INIT
   Num_Cells <- nrow(pcaQue)
   Num_Memberships <- nrow(cluMem$centers)
-  PCA_Max <- 2
+  fuzzyPCA <- 2
   Fuzzied <- rep(FALSE, Num_Cells)
   Fuzzy_Memberships <- corCell
   Edges_Data <- list()
@@ -148,7 +148,7 @@ FuzzyNew <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 2,
   #INIT
   nCells <- nrow(pcaQue)
   nMem <- nrow(cluMem$centers)
-  #PCA_Max <- 2 # for tests
+  #fuzzyPCA <- 2 # for tests
   Fuzzied <- rep(FALSE, nCells)
   Edges_Data <- list()
   corCell <- as.data.frame(corCell)
