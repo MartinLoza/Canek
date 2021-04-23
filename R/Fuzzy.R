@@ -45,8 +45,8 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
     OUT_Membership <- list()
     IN_Node <- Edges[Edge,1]
     OUT_Node <- Edges[Edge,2]
-    IN_Node_PCA <- cluMem$centers[IN_Node,1:PCA_Max]
-    OUT_Node_PCA <- cluMem$centers[OUT_Node,1:PCA_Max]
+    IN_Node_PCA <- cluMem$centers[IN_Node,1:fuzzyPCA]
+    OUT_Node_PCA <- cluMem$centers[OUT_Node,1:fuzzyPCA]
 
     #Translate OUT node according to IN node PCA coordinates
     OUT_Node_PCA_Transformed <- OUT_Node_PCA - IN_Node_PCA
@@ -78,8 +78,8 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
     IN_Membership_Cells_Transformed_Selected_Index <- which(IN_Membership_Cells_Transformed[,1] >= 0)
     OUT_Membership_Cells_Transformed_Selected_Index <- which(OUT_Membership_Cells_Transformed[,1] < OUT_Node_PCA_Transformed[1])
 
-    IN_Membership_Cells_Filtered <- IN_Membership_Cells_Transformed[IN_Membership_Cells_Transformed_Selected_Index, 1:PCA_Max, drop = FALSE]
-    OUT_Membership_Cells_Filtered <- OUT_Membership_Cells_Transformed[OUT_Membership_Cells_Transformed_Selected_Index, 1:PCA_Max, drop = FALSE]
+    IN_Membership_Cells_Filtered <- IN_Membership_Cells_Transformed[IN_Membership_Cells_Transformed_Selected_Index, 1:fuzzyPCA, drop = FALSE]
+    OUT_Membership_Cells_Filtered <- OUT_Membership_Cells_Transformed[OUT_Membership_Cells_Transformed_Selected_Index, 1:fuzzyPCA, drop = FALSE]
 
     Cells_Filtered <- rbind( IN_Membership_Cells_Filtered,OUT_Membership_Cells_Filtered )
 
@@ -143,7 +143,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
   return(Fuzzy_Data)
 }
 
-FuzzyNew <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, PCA_Max = 2, verbose = FALSE){
+FuzzyNew <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 2, verbose = FALSE){
 
   #INIT
   nCells <- nrow(pcaQue)
@@ -158,7 +158,7 @@ FuzzyNew <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, PCA_Max = 2, 
   if(verbose)
     cat( '\n\tObtaining Minimum Spanning Tree' )
 
-  mst <- CalculateMST(cluMem$centers[,1:PCA_Max])
+  mst <- CalculateMST(cluMem$centers[,1:fuzzyPCA])
 
   #Get edges from MST
   edges <- igraph::as_edgelist(mst, names = FALSE)
@@ -173,11 +173,11 @@ FuzzyNew <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, PCA_Max = 2, 
 
     #Get the cells related with the memberships
     idxCells <- which( cluMem$cluster == inNode | cluMem$cluster == outNode )
-    edgeCells <- pcaQue[idxCells, 1:PCA_Max, drop = FALSE]
+    edgeCells <- pcaQue[idxCells, 1:fuzzyPCA, drop = FALSE]
 
     #Get the centers of the memberships
-    inMemCenter <- cluMem$centers[inNode, 1:PCA_Max, drop = FALSE]
-    outMemCenter <- cluMem$centers[outNode, 1:PCA_Max, drop = FALSE]
+    inMemCenter <- cluMem$centers[inNode, 1:fuzzyPCA, drop = FALSE]
+    outMemCenter <- cluMem$centers[outNode, 1:fuzzyPCA, drop = FALSE]
 
     #Translate the cells and the centers
     edgeCells <- sweep(edgeCells, 2, inMemCenter, "-")
@@ -245,12 +245,12 @@ FuzzyNew <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, PCA_Max = 2, 
   return(Fuzzy_Data)
 }
 
-FuzzyNew2 <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, PCA_Max = 2, verbose = FALSE){
+FuzzyNew2 <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 2, verbose = FALSE){
 
   #INIT
   nCells <- nrow(pcaQue)
   nMem <- nrow(cluMem$centers)
-  #PCA_Max <- 2 # for tests
+  #fuzzyPCA <- 2 # for tests
   Fuzzied <- rep(FALSE, nCells)
   Edges_Data <- list()
   corCell <- as.data.frame(corCell)
@@ -260,7 +260,7 @@ FuzzyNew2 <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, PCA_Max = 2,
   if(verbose)
     cat( '\n\tObtaining Minimum Spanning Tree' )
 
-  mst <- CalculateMST(cluMem$centers[,1:PCA_Max])
+  mst <- CalculateMST(cluMem$centers[,1:fuzzyPCA])
 
   #Get edges from MST
   edges <- igraph::as_edgelist(mst, names = FALSE)
@@ -275,11 +275,11 @@ FuzzyNew2 <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, PCA_Max = 2,
 
     #Get the cells related with the memberships
     idxCells <- which( cluMem$cluster == inNode | cluMem$cluster == outNode )
-    edgeCells <- pcaQue[idxCells, 1:PCA_Max, drop = FALSE]
+    edgeCells <- pcaQue[idxCells, 1:fuzzyPCA, drop = FALSE]
 
     #Get the centers of the memberships
-    inMemCenter <- cluMem$centers[inNode, 1:PCA_Max, drop = FALSE]
-    outMemCenter <- cluMem$centers[outNode, 1:PCA_Max, drop = FALSE]
+    inMemCenter <- cluMem$centers[inNode, 1:fuzzyPCA, drop = FALSE]
+    outMemCenter <- cluMem$centers[outNode, 1:fuzzyPCA, drop = FALSE]
 
     #Translate the cells and the centers
     edgeCells <- sweep(edgeCells, 2, inMemCenter, "-")

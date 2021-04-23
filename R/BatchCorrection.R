@@ -62,7 +62,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
                            debug = FALSE, verbose = FALSE,
-                           fuzzyMethod = 1, PCA_Max = 2, ... ){
+                           fuzzyMethod = 1, fuzzyPCA = 2, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -163,7 +163,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                doCosNorm = doCosNorm,
                                clusterMethod = clusterMethod,
                                verbose = verbose,
-                               fuzzyMethod = fuzzyMethod, PCA_Max = PCA_Max)
+                               fuzzyMethod = fuzzyMethod, fuzzyPCA = fuzzyPCA)
 
     # new ref at the beginning
     lsBatches <- lsBatches[-Query]
@@ -278,7 +278,7 @@ CorrectBatch <- function(refBatch, queBatch,
                          pairsFilter = FALSE, clusterMethod = "louvain",
                          doCosNorm = FALSE,
                          verbose = FALSE,
-                         fuzzyMethod = 1, PCA_Max = 2) {
+                         fuzzyMethod = 1, fuzzyPCA = 2) {
 
   tBatch <- Sys.time()
 
@@ -472,13 +472,13 @@ CorrectBatch <- function(refBatch, queBatch,
        cat('\n\nNew FUZZY 1 ')
 
      fuzzyData <- FuzzyNew(cluMem = cluMem, pcaQue = pcaQue,
-                           corCell = corCell, verbose = verbose, PCA_Max = PCA_Max)
+                           corCell = corCell, verbose = verbose, fuzzyPCA = fuzzyPCA)
    }else{
      #if(verbose)
      cat('\n\nNew FUZZY 2 ')
 
      fuzzyData <- FuzzyNew2(cluMem = cluMem, pcaQue = pcaQue,
-                           corCell = corCell, verbose = verbose, PCA_Max = PCA_Max)
+                           corCell = corCell, verbose = verbose, fuzzyPCA = fuzzyPCA)
    }
    fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,  Mst = MST,
                       corCell = corCell, verbose = verbose)
