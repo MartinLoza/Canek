@@ -62,7 +62,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
                            debug = FALSE, verbose = FALSE,
-                           fuzzyMethod = 1, fuzzyPCA = 10, ... ){
+                           fuzzyMethod = 1, fuzzyPCA = 2, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -278,7 +278,7 @@ CorrectBatch <- function(refBatch, queBatch,
                          pairsFilter = FALSE, clusterMethod = "louvain",
                          doCosNorm = FALSE,
                          verbose = FALSE,
-                         fuzzyMethod = 1, fuzzyPCA = 10) {
+                         fuzzyMethod = 1, fuzzyPCA = 2) {
 
   tBatch <- Sys.time()
 
