@@ -13,7 +13,7 @@
 #'  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
 #'   for each of the edges of the MST.#'
 #'
-Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE){
+Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verbose = FALSE){
 
   #INIT
   Num_Cells <- nrow(pcaQue)
@@ -28,7 +28,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
   if(verbose)
     cat( '\n\tObtaining Minimum Spanning Tree' )
 
-  Mst <- CalculateMST(cluMem$centers[, 1:PCA_Max])
+  #Mst <- CalculateMST(cluMem$centers[, 1:PCA_Max])
 
   #Get edges from MST
   Edges <- igraph::as_edgelist(Mst, names = FALSE)
@@ -173,9 +173,10 @@ GetRotationAngle <- function( PCA_Coordinates = NULL ){
 #' @param corGene Data to correct
 #' @param zeroCorrection Vector indicating which membership has a zero correction vector
 #'
-CheckZeroCV <-function(MST = NULL, cluMem = NULL,
-                       memCorrData = NULL, corGene = NULL,
-                       zeroCorrection = NULL){
+CheckZeroCV <-function(MST = NULL, cluMem = NULL, corGene = NULL,
+                       memCorrData = NULL, zeroCorrection = NULL){
+
+
 
   names(zeroCorrection) <- 1:ncol(corGene)
   colnames(corGene) <- 1:ncol(corGene)
@@ -197,21 +198,34 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
         # Select the closest related node's name
         Related_Edges_No_Zero <- names(which.min(Cluster_Dist[Node,Related_Edges_No_Zero]))
       }
-      #Assign correction vector
-      memCorrData[[as.integer(Node)]]$`Correction Vector` <- memCorrData[[as.integer(Related_Edges_No_Zero)]]$`Correction Vector`
-      corGene[,Node] <- corGene[,Related_Edges_No_Zero]
-      zeroCorrection[Node] <- FALSE
 
+      # Merge
+      ## Change clustering
+      cluMem$cluster[cluMem$cluster == as.integer(Node)] <- as.integer(Related_Edges_No_Zero)
+      ## Assign the center of the centers of the nodes and eliminate the unnecesary node
+      cluMem$centers[Related_Edges_No_Zero,] <- colMeans(rbind(cluMem$centers[Node,], cluMem$centers[Related_Edges_No_Zero,]))
+      ## Eliminate the node related data
+      cluMem$centers <- cluMem$centers[-which(rownames(cluMem$centers) == Node),]
+      zeroCorrection <- zeroCorrection[-which(names(zeroCorrection) == Node)]
+      corGene <- corGene[,-which(colnames(corGene) == Node)]
+
+      ##Re-calculate the MST
+      MST <- CalculateMST(cluMem$centers[, 1:10])
+
+      # Update the loop info
       idx = 1
       isZero <- which(zeroCorrection == TRUE)
+      Cluster_Dist <- as.matrix(dist(cluMem$centers,upper = TRUE))
+      adjMST <- igraph::as_adjacency_matrix(MST)
 
     }else{ #If we don't find any related node with no zero correction vector, we analize the next node
       idx = idx + 1
     }
   }
 
-  return(list("memCorrData" = memCorrData,
-              "Correction_Matrix" = corGene))
+  return(list("MST" = MST, "cluMem" = cluMem,
+              "memCorrData" = memCorrData,
+              "corGene" = corGene))
 }
 
 
