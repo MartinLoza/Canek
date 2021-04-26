@@ -450,7 +450,7 @@ CorrectBatch <- function(refBatch, queBatch,
    MST <- fuzzyData$MST
 
  }else{
-   MST <- CalculateMST(cluMem$centers[, 1:2])
+   MST <- CalculateMST(cluMem$centers[, 1:fuzzyPCA])
    fuzzyData[["MST"]] <- MST
    fuzzyData[["Fuzzy Memberships"]] <- corCell
  }
