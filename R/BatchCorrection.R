@@ -445,14 +445,14 @@ CorrectBatch <- function(refBatch, queBatch,
 
  # FUZZY correction ----
  # Init
- corCell <- matrix(0, nrow = nCellsQue, ncol = nMem )
+ corCell <- matrix(0, nrow = nCellsQue, ncol = ncol(corGene))
 
  # Set column names according to number of memberships
- colnames(corCell) <- paste0("Mem-", seq_len(nMem))
+ colnames(corCell) <- colnames(corGene)
 
  # Init membership's cells (1 to the cell's membership and 0 to the other memberships)
- for (Mem in seq_len(nMem)){
-   corCell[which(cluMem$cluster == Mem), Mem] <- 1
+ for (Mem in colnames(corGene)){
+   corCell[which(cluMem$cluster == as.integer(Mem)), Mem] <- 1
  }
 
  # Fuzzy process and Correction
