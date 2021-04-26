@@ -423,6 +423,17 @@ CorrectBatch <- function(refBatch, queBatch,
    memCorrData[[paste("Membership", mem)]] <- list("Cells Index" = idxCells, "Correction Vector" = corVector)
  }
 
+ MST <- CalculateMST(cluMem$centers[, 1:10])
+
+ # CHECK No Zero Correction Vectors ----
+ isZero <- which(zeroCorrection == TRUE)
+ if(length(isZero) == nMem){
+   warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
+ }else if(length(isZero) != 0){
+
+   noZeroCV <- CheckZeroCV(cluMem = cluMem, corGene = corGene,
+                           memCorrData = memCorrData,
+                           zeroCorrection = zeroCorrection)
 
  # FUZZY correction ----
  # Init
@@ -454,19 +465,19 @@ CorrectBatch <- function(refBatch, queBatch,
    fuzzyData[["Fuzzy Memberships"]] <- corCell
  }
 
- # CHECK No Zero Correction Vectors ----
- isZero <- which(zeroCorrection == TRUE)
- if(length(isZero) == nMem){
-   warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
- }else if(length(isZero) != 0){
-
-   noZeroCV <- CheckZeroCV(MST = MST, cluMem = cluMem,
-                           memCorrData = memCorrData, corGene = corGene,
-                           zeroCorrection = zeroCorrection)
-
-   memCorrData <- noZeroCV[["memCorrData"]]
-   corGene <- noZeroCV[["Correction_Matrix"]]
- }
+ # # CHECK No Zero Correction Vectors ----
+ # isZero <- which(zeroCorrection == TRUE)
+ # if(length(isZero) == nMem){
+ #   warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
+ # }else if(length(isZero) != 0){
+ #
+ #   noZeroCV <- CheckZeroCV(MST = MST, cluMem = cluMem,
+ #                           memCorrData = memCorrData, corGene = corGene,
+ #                           zeroCorrection = zeroCorrection)
+ #
+ #   memCorrData <- noZeroCV[["memCorrData"]]
+ #   corGene <- noZeroCV[["corGene"]]
+ # }
 
  corMatrix <- (corGene  %*% t(corCell/rowSums(corCell)) )
  queCorrected <-  queBatch + corMatrix
