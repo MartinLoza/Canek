@@ -143,11 +143,12 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL,
     if(length(Related_Edges_No_Zero) != 0){
       #if there are various, we select the one with the minimum distance
       if(length(Related_Edges_No_Zero) > 1){
-        Related_Edges_No_Zero <- which(Cluster_Dist[Node,] == min(Cluster_Dist[Node,Related_Edges_No_Zero]))
+        # Select the closest related node's name
+        Related_Edges_No_Zero <- names(which.min(Cluster_Dist[Node,Related_Edges_No_Zero]))
       }
       #Assign correction vector
       memCorrData[[as.integer(Node)]]$`Correction Vector` <- memCorrData[[as.integer(Related_Edges_No_Zero)]]$`Correction Vector`
-      corGene[,Node] <- memCorrData[[as.integer(Related_Edges_No_Zero)]]$`Correction Vector`
+      corGene[,Node] <- corGene[,Related_Edges_No_Zero]
       zeroCorrection[Node] <- FALSE
 
       idx = 1
