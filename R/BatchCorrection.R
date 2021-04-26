@@ -435,10 +435,11 @@ CorrectBatch <- function(refBatch, queBatch,
                            memCorrData = memCorrData,
                            zeroCorrection = zeroCorrection, MST = MST)
 
-   memCorrData <- noZeroCV[["memCorrData"]]
-   corGene <- noZeroCV[["corGene"]]
-   MST <- noZeroCV[["MST"]]
-   cluMem <- noZeroCV[["cluMem"]]
+   memCorrData <- noZeroCV$memCorrData
+   corGene <- noZeroCV$corGene
+   MST <- noZeroCV$MST
+   cluMem <- noZeroCV$cluMem
+   nMem <- ncol(corGene)
  }
 
 
