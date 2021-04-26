@@ -31,7 +31,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
   #Mst <- CalculateMST(cluMem$centers[, 1:PCA_Max])
 
   #Get edges from MST
-  Edges <- igraph::as_edgelist(Mst, names = FALSE)
+  Edges <- igraph::as_edgelist(Mst, names = TRUE)
 
   #Fuzzy process
   if(verbose)
@@ -56,12 +56,12 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
     names(Alpha)<-"Alpha"
 
     #Get cells from both IN and OUT memberships
-    IN_Membership_Cells_Index <- which(cluMem$cluster == IN_Node)
+    IN_Membership_Cells_Index <- which(cluMem$cluster == as.integer(IN_Node))
     IN_Membership_Cells <- pcaQue[IN_Membership_Cells_Index, 1:PCA_Max ]
     rownames(IN_Membership_Cells) <- IN_Membership_Cells_Index
 
-    OUT_Membership_Cells_Index <- which(cluMem$cluster == OUT_Node)
-    OUT_Membership_Cells <- pcaQue[which(cluMem$cluster == OUT_Node), 1:PCA_Max ]
+    OUT_Membership_Cells_Index <- which(cluMem$cluster == as.integer(OUT_Node))
+    OUT_Membership_Cells <- pcaQue[OUT_Membership_Cells_Index, 1:PCA_Max ]
     rownames(OUT_Membership_Cells) <- OUT_Membership_Cells_Index
 
     #Translate according cells from both memberships according to IN node PCA coordinates
@@ -131,7 +131,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
     OUT_Membership <- list("Cells" = OUT_Membership_Cells, "Transformed" = OUT_Membership_Cells_Transformed,
                            "Filtered" = OUT_Membership_Cells_Filtered)
 
-    Edges_Data[[paste("Edge-", Edge, sep = "")]] <- list( "IN Node" = IN_Node, "OUT Node" = OUT_Node,
+    Edges_Data[[paste("Edge-", Edge, sep = "")]] <- list( "IN Node" = as.integer(IN_Node), "OUT Node" = as.integer(OUT_Node),
                                                           "Angle" = Alpha, "IN-Mem-Cells Data" = IN_Membership,
                                                           "OUT-Mem-Cells Data" = OUT_Membership, "Slope" = Slope,
                                                           "Fuzzification" = Fuzzification)
