@@ -433,7 +433,14 @@ CorrectBatch <- function(refBatch, queBatch,
 
    noZeroCV <- CheckZeroCV(cluMem = cluMem, corGene = corGene,
                            memCorrData = memCorrData,
-                           zeroCorrection = zeroCorrection)
+                           zeroCorrection = zeroCorrection, MST = MST)
+
+   memCorrData <- noZeroCV[["memCorrData"]]
+   corGene <- noZeroCV[["corGene"]]
+   MST <- noZeroCV[["MST"]]
+   cluMem <- noZeroCV[["cluMem"]]
+ }
+
 
  # FUZZY correction ----
  # Init
@@ -453,14 +460,14 @@ CorrectBatch <- function(refBatch, queBatch,
    if(verbose)
     cat('\n\nFUZZY ')
 
-   fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,
+   fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,  Mst = MST,
                       corCell = corCell, verbose = verbose)
 
    corCell <- fuzzyData$`Fuzzy Memberships`
-   MST <- fuzzyData$MST
+   #MST <- fuzzyData$MST
 
  }else{
-   MST <- CalculateMST(cluMem$centers[, 1:2])
+   #MST <- CalculateMST(cluMem$centers[, 1:2])
    fuzzyData[["MST"]] <- MST
    fuzzyData[["Fuzzy Memberships"]] <- corCell
  }
