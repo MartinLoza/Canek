@@ -22,7 +22,9 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
   Fuzzied <- rep(FALSE, Num_Cells)
   Fuzzy_Memberships <- corCell
   Edges_Data <- list()
-
+  Edges_Data <- list()
+  corCell <- as.data.frame(corCell)
+  corCell[["Fuzzified"]] <- FALSE
 
   # Create Minimum spanning tree (MST) by using centers of Memberships as nodes
   if(verbose)
@@ -39,6 +41,9 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
 
   for(Edge in 1:nrow(Edges)){
 
+  # now we analize one edge
+  #edge = 1
+  for(edge in seq_len(nrow(edges))){
 
     #Init nodes
     IN_Membership <- list()
@@ -48,12 +53,13 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
     IN_Node_PCA <- cluMem$centers[IN_Node,1:fuzzyPCA]
     OUT_Node_PCA <- cluMem$centers[OUT_Node,1:fuzzyPCA]
 
-    #Translate OUT node according to IN node PCA coordinates
-    OUT_Node_PCA_Transformed <- OUT_Node_PCA - IN_Node_PCA
+    #Get the cells related with the memberships
+    idxCells <- which( cluMem$cluster == inNode | cluMem$cluster == outNode )
+    edgeCells <- pcaQue[idxCells, 1:fuzzyPCA, drop = FALSE]
 
-    #Find angle between the current nodes (we set it negative because we would correct this angle in further steps)
-    Alpha <- (-GetRotationAngle ( OUT_Node_PCA_Transformed ) )
-    names(Alpha)<-"Alpha"
+    #Get the centers of the memberships
+    inMemCenter <- cluMem$centers[inNode, 1:fuzzyPCA, drop = FALSE]
+    outMemCenter <- cluMem$centers[outNode, 1:fuzzyPCA, drop = FALSE]
 
     #Get cells from both IN and OUT memberships
     IN_Membership_Cells_Index <- which(cluMem$cluster == as.integer(IN_Node))
@@ -64,63 +70,38 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, Mst = NULL, verb
     OUT_Membership_Cells <- pcaQue[OUT_Membership_Cells_Index, 1:PCA_Max ]
     rownames(OUT_Membership_Cells) <- OUT_Membership_Cells_Index
 
-    #Translate according cells from both memberships according to IN node PCA coordinates
-    IN_Membership_Cells_Transformed <- sweep(IN_Membership_Cells,2,IN_Node_PCA,"-")
-    OUT_Membership_Cells_Transformed <- sweep(OUT_Membership_Cells,2,IN_Node_PCA,"-")
+    # Obtain the components of the other vectors
+    edgeCellsComp <- edgeCells %*% t(unitEV)
 
-    #Paso 6 Rotate the cells and OUT Node
-    IN_Membership_Cells_Transformed <- Rotation(IN_Membership_Cells_Transformed, angle = Alpha)
-    OUT_Membership_Cells_Transformed <- Rotation(OUT_Membership_Cells_Transformed, angle = Alpha)
-    OUT_Node_PCA_Transformed <- c( (OUT_Node_PCA_Transformed['PC1']*cos(Alpha) - OUT_Node_PCA_Transformed['PC2']*sin(Alpha) ),
-                                   (OUT_Node_PCA_Transformed['PC1']*sin(Alpha) + OUT_Node_PCA_Transformed['PC2']*cos(Alpha) ) )
+    # new test
+    # obtenemos el minimo
+    minComp <- min(edgeCellsComp, na.rm = TRUE)
 
-    #Filter cells. Only cells that are located between the two nodes PCA coordinates are transformed.
-    IN_Membership_Cells_Transformed_Selected_Index <- which(IN_Membership_Cells_Transformed[,1] >= 0)
-    OUT_Membership_Cells_Transformed_Selected_Index <- which(OUT_Membership_Cells_Transformed[,1] < OUT_Node_PCA_Transformed[1])
+    # Using the minimum and maximum to compare the components
+    ## Translate the components according with the minimum
+    edgeCellsComp <- edgeCellsComp - minComp
 
     IN_Membership_Cells_Filtered <- IN_Membership_Cells_Transformed[IN_Membership_Cells_Transformed_Selected_Index, 1:fuzzyPCA, drop = FALSE]
     OUT_Membership_Cells_Filtered <- OUT_Membership_Cells_Transformed[OUT_Membership_Cells_Transformed_Selected_Index, 1:fuzzyPCA, drop = FALSE]
 
-    Cells_Filtered <- rbind( IN_Membership_Cells_Filtered,OUT_Membership_Cells_Filtered )
+    #TODO: this could be a future improvement, but we have to find a different way to check the Fuzzified flag.
+    # assign memberships
+    # corCell[idxCells, outNode] <- edgeCellsComp
+    # corCell[idxCells, inNode] <- 1 - edgeCellsComp
 
-    #Get slope for fuzzification
-    Slope <- (-1/OUT_Node_PCA_Transformed[1])
-    Fuzzification <- NULL
+    #Fuzzy comparison
+    for(cell in seq_len(length(edgeCellsComp))){
 
-    #Fuzzification
-    Cells_Filtered_RowNames <- as.numeric(rownames(Cells_Filtered))
+      iCell <- idxCells[cell]
 
-    for(Cell in 1:nrow(Cells_Filtered)){
-
-      if(Cells_Filtered[Cell,1] < 0){
-        IN_Fuzzification <- 0
-        OUT_Fuzzification <- 1
-      }else if(Cells_Filtered[Cell,1] > OUT_Node_PCA_Transformed[1]){
-        IN_Fuzzification <- 0
-        OUT_Fuzzification <- 1
+      if(corCell$Fuzzified[iCell] == FALSE){
+        corCell[iCell,outNode] <- edgeCellsComp[cell]
+        corCell[iCell,inNode] <- 1 - edgeCellsComp[cell]
       }else{
-        IN_Fuzzification <- 1 + (Slope*Cells_Filtered[Cell,1])
-        OUT_Fuzzification <- ( 1 - IN_Fuzzification )
+        corCell[iCell,outNode] <-mean(corCell[iCell,outNode], edgeCellsComp[cell])
+        corCell[iCell,inNode] <- mean(corCell[iCell,inNode], 1 - edgeCellsComp[cell])
       }
-
-      Fuzzification <- rbind( Fuzzification, c(IN_Fuzzification, OUT_Fuzzification) )
-
-      #If this cells has not been fuzzified before set fuzzification values
-      if(Fuzzied[Cells_Filtered_RowNames[Cell]] == FALSE){
-
-        Fuzzy_Memberships[Cells_Filtered_RowNames[Cell], IN_Node] <- IN_Fuzzification
-        Fuzzy_Memberships[Cells_Filtered_RowNames[Cell], OUT_Node] <- OUT_Fuzzification
-        Fuzzied[Cells_Filtered_RowNames[Cell]] = TRUE
-
-      }else{    ##If this cells was already fuzzified, set the fuzzy value as the average of fuzzy values
-
-        Fuzzy_Memberships[Cells_Filtered_RowNames[Cell], IN_Node] <-
-          mean( c(Fuzzy_Memberships[Cells_Filtered_RowNames[Cell], IN_Node], IN_Fuzzification) )
-        Fuzzy_Memberships[Cells_Filtered_RowNames[Cell], OUT_Node] <-
-          mean( c(Fuzzy_Memberships[Cells_Filtered_RowNames[Cell], OUT_Node],OUT_Fuzzification) )
-
-      }
-
+      corCell$Fuzzified[iCell] <- TRUE
     }
 
     rownames(Fuzzification) <- Cells_Filtered_RowNames
