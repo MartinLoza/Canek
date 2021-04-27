@@ -424,7 +424,8 @@ CorrectBatch <- function(refBatch, queBatch,
    memCorrData[[paste("Membership", mem)]] <- list("Cells Index" = idxCells, "Correction Vector" = corVector)
  }
 
- MST <- CalculateMST(cluMem$centers[, 1:2])
+ # CALCULATE minimum spanning tree ----
+ MST <- CalculateMST(cluMem$centers[,1:fuzzyPCA])
 
  # CHECK No Zero Correction Vectors ----
  isZero <- which(zeroCorrection == TRUE)
@@ -466,27 +467,11 @@ CorrectBatch <- function(refBatch, queBatch,
                       verbose = verbose)
 
    corCell <- fuzzyData$`Fuzzy Memberships`
-   #MST <- fuzzyData$MST
 
  }else{
-   #MST <- CalculateMST(cluMem$centers[, 1:2])
    fuzzyData[["MST"]] <- MST
    fuzzyData[["Fuzzy Memberships"]] <- corCell
  }
-
- # # CHECK No Zero Correction Vectors ----
- # isZero <- which(zeroCorrection == TRUE)
- # if(length(isZero) == nMem){
- #   warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
- # }else if(length(isZero) != 0){
- #
- #   noZeroCV <- CheckZeroCV(MST = MST, cluMem = cluMem,
- #                           memCorrData = memCorrData, corGene = corGene,
- #                           zeroCorrection = zeroCorrection)
- #
- #   memCorrData <- noZeroCV[["memCorrData"]]
- #   corGene <- noZeroCV[["corGene"]]
- # }
 
  corMatrix <- (corGene  %*% t(corCell/rowSums(corCell)) )
  queCorrected <-  queBatch + corMatrix
