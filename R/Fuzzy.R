@@ -188,7 +188,7 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL, corGene = NULL,
   idx = 1
   while(length(isZero) != 0){
 
-    Node <- as.character(isZero[idx])
+    Node <- names(isZero[idx])
 
     Related_Edges <- names(which(adjMST[Node,] != 0))
     Related_Edges_No_Zero <- Related_Edges[which(zeroCorrection[Related_Edges] == FALSE)]
