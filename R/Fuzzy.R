@@ -27,7 +27,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, v
   if(verbose)
     cat( '\n\tObtaining Minimum Spanning Tree' )
 
-  mst <- CalculateMST(cluMem$centers[,1:fuzzyPCA])
+  MST <- CalculateMST(cluMem$centers[,1:fuzzyPCA])
 
   #Get edges from MST
   edges <- igraph::as_edgelist(MST, names = TRUE)
@@ -108,7 +108,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, v
   Fuzzied <- corCell[,ncol(corCell)]
   corCell <- as.matrix(corCell[,-ncol(corCell)])
 
-  Fuzzy_Data <- list("Fuzzy Memberships" = corCell, "MST" = mst,
+  Fuzzy_Data <- list("Fuzzy Memberships" = corCell, "MST" = MST,
                      "Fuzzied" = Fuzzied, "Edges Data" = Edges_Data)
 
   return(Fuzzy_Data)
