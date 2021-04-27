@@ -210,7 +210,7 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL, corGene = NULL,
       corGene <- corGene[,-which(colnames(corGene) == Node)]
 
       ##Re-calculate the MST
-      MST <- CalculateMST(cluMem$centers[, 1:10])
+      MST <- CalculateMST(cluMem$centers[, 1:2])
 
       # Update the loop info
       idx = 1

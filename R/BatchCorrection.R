@@ -423,7 +423,7 @@ CorrectBatch <- function(refBatch, queBatch,
    memCorrData[[paste("Membership", mem)]] <- list("Cells Index" = idxCells, "Correction Vector" = corVector)
  }
 
- MST <- CalculateMST(cluMem$centers[, 1:10])
+ MST <- CalculateMST(cluMem$centers[, 1:2])
 
  # CHECK No Zero Correction Vectors ----
  isZero <- which(zeroCorrection == TRUE)
