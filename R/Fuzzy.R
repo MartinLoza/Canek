@@ -152,11 +152,11 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL, corGene = NULL,
       ## Change clustering
       cluMem$cluster[cluMem$cluster == as.integer(Node)] <- as.integer(Related_Edges_No_Zero)
       ## Assign the center of the centers of the nodes and eliminate the unnecesary node
-      cluMem$centers[Related_Edges_No_Zero,] <- colMeans(rbind(cluMem$centers[Node,], cluMem$centers[Related_Edges_No_Zero,]))
+      #cluMem$centers[Related_Edges_No_Zero,] <- colMeans(rbind(cluMem$centers[Node,], cluMem$centers[Related_Edges_No_Zero,]))
       ## Eliminate the node related data
-      cluMem$centers <- cluMem$centers[-which(rownames(cluMem$centers) == Node),]
-      zeroCorrection <- zeroCorrection[-which(names(zeroCorrection) == Node)]
-      corGene <- corGene[,-which(colnames(corGene) == Node)]
+      cluMem$centers <- cluMem$centers[-which(rownames(cluMem$centers) == Node),, drop = FALSE]
+      zeroCorrection <- zeroCorrection[-which(names(zeroCorrection) == Node), drop = FALSE]
+      corGene <- corGene[,-which(colnames(corGene) == Node), drop = FALSE]
 
       isZero <- which(zeroCorrection == TRUE)
 
