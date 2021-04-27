@@ -7,8 +7,9 @@
 CheckZeroCV(
   MST = NULL,
   cluMem = NULL,
-  memCorrData = NULL,
   corGene = NULL,
+  fuzzyPCA = fuzzyPCA,
+  memCorrData = NULL,
   zeroCorrection = NULL
 )
 }
@@ -17,9 +18,11 @@ CheckZeroCV(
 
 \item{cluMem}{Clusters used on MST}
 
-\item{memCorrData}{Data to correct}
-
 \item{corGene}{Data to correct}
+
+\item{fuzzyPCA}{Number of PCs to use in the fuzzy process.}
+
+\item{memCorrData}{Data to correct}
 
 \item{zeroCorrection}{Vector indicating which membership has a zero correction vector}
 }

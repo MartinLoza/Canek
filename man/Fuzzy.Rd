@@ -4,7 +4,14 @@
 \alias{Fuzzy}
 \title{Title Fuzzy}
 \usage{
-Fuzzy(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
+Fuzzy(
+  cluMem = NULL,
+  pcaQue = NULL,
+  corCell = NULL,
+  fuzzyPCA = 10,
+  MST = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{cluMem}{Memberships' clustering data.}
@@ -13,6 +20,10 @@ Fuzzy(cluMem = NULL, pcaQue = NULL, corCell = NULL, verbose = FALSE)
 
 \item{corCell}{Matrix containing the initial membership assignment.
 Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.}
+
+\item{fuzzyPCA}{Number of PCs to use in the fuzzy process.}
+
+\item{MST}{Minimum spanning tree}
 
 \item{verbose}{Print output.}
 }

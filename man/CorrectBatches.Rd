@@ -16,6 +16,7 @@ CorrectBatches(
   pairsFilter = FALSE,
   perCellMNN = 0.08,
   fuzzy = TRUE,
+  fuzzyPCA = 10,
   estMethod = "Median",
   clusterMethod = "louvain",
   doCosNorm = FALSE,
@@ -53,6 +54,8 @@ with an associated MNN pair. If the proportion is low, an specific correction ve
 not calculated for this membership.}
 
 \item{fuzzy}{Use fuzzy logic to join the local correction vectors.}
+
+\item{fuzzyPCA}{Number of PCs to use in the fuzzy process.}
 
 \item{estMethod}{Method to use when estimating the correction vectors:
 \itemize{

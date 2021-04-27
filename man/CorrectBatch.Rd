@@ -20,9 +20,10 @@ CorrectBatch(
   pcaDim = 50,
   perCellMNN = 0.08,
   fuzzy = TRUE,
+  fuzzyPCA = 10,
   estMethod = "Median",
-  pairsFilter = FALSE,
   clusterMethod = "louvain",
+  pairsFilter = FALSE,
   doCosNorm = FALSE,
   verbose = FALSE
 )
@@ -65,16 +66,18 @@ not calculated for this membership.}
 
 \item{fuzzy}{Use fuzzy logic to join the local correction vectors.}
 
+\item{fuzzyPCA}{Number of PCs to use in the fuzzy process.}
+
 \item{estMethod}{Method to use when estimating the correction vectors:
 \itemize{
   \item{Median. Use the cells median distance.}
   \item{EKF. Use an extended Kalman filter.}
 }}
 
+\item{clusterMethod}{Method used to identify memberships.}
+
 \item{pairsFilter}{Filter MNNs pairs before estimating the correction vectors. If TRUE,
 the pairs are filtered from outliers using an interquartile range method.}
-
-\item{clusterMethod}{Method used to identify memberships.}
 
 \item{doCosNorm}{Whether to do cosine normalization.}
 
