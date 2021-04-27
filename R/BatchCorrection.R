@@ -285,7 +285,6 @@ CorrectBatch <- function(refBatch, queBatch,
   memPairs <- NULL
   memCorrData <- list()
   corGene <- NULL
-  fuzzyData <- NULL
   nMem <- NULL
 
   if(!is.null(queNumCelltypes)){
@@ -433,9 +432,8 @@ CorrectBatch <- function(refBatch, queBatch,
    warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
  }else if(length(isZero) != 0){
 
-   noZeroCV <- CheckZeroCV(cluMem = cluMem, corGene = corGene,
-                           memCorrData = memCorrData,
-                           zeroCorrection = zeroCorrection, MST = MST)
+   noZeroCV <- CheckZeroCV(cluMem = cluMem, corGene = corGene, fuzzyPCA = fuzzyPCA,
+                           memCorrData = memCorrData, zeroCorrection = zeroCorrection, MST = MST)
 
    memCorrData <- noZeroCV$memCorrData
    corGene <- noZeroCV$corGene
@@ -462,15 +460,15 @@ CorrectBatch <- function(refBatch, queBatch,
 
    if(verbose)
      cat('\n\n Fuzzy process ')
-   fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue,
+   fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue, MST = MST,
                       fuzzyPCA = fuzzyPCA, corCell = corCell,
                       verbose = verbose)
 
    corCell <- fuzzyData$`Fuzzy Memberships`
 
  }else{
-   fuzzyData[["MST"]] <- MST
-   fuzzyData[["Fuzzy Memberships"]] <- corCell
+   fuzzyData <- list("Fuzzy Memberships" = corCell, "MST" = MST,
+                     "Fuzzied" =  NULL, "Edges Data" = NULL)
  }
 
  corMatrix <- (corGene  %*% t(corCell/rowSums(corCell)) )

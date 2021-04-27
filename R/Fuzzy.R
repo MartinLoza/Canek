@@ -8,12 +8,14 @@
 #' @param corCell Matrix containing the initial membership assignment.
 #' Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.
 #' @param verbose Print output.
+#' @param fuzzyPCA Number of PCs to use in the fuzzy process.
+#' @param MST Minimum spanning tree
 #'
 #' @details This function stablishes the fuzzification for the cells' membership.
 #'  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
 #'   for each of the edges of the MST.#'
 #'
-Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, verbose = FALSE){
+Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, MST = NULL, verbose = FALSE){
 
   #INIT
   nCells <- nrow(pcaQue)
@@ -121,8 +123,9 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, v
 #' @param memCorrData Data to correct
 #' @param corGene Data to correct
 #' @param zeroCorrection Vector indicating which membership has a zero correction vector
+#' @param fuzzyPCA Number of PCs to use in the fuzzy process.
 #'
-CheckZeroCV <-function(MST = NULL, cluMem = NULL, corGene = NULL,
+CheckZeroCV <-function(MST = NULL, cluMem = NULL, corGene = NULL, fuzzyPCA = fuzzyPCA,
                        memCorrData = NULL, zeroCorrection = NULL){
 
 
