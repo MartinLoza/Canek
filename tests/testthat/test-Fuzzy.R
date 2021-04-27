@@ -12,5 +12,5 @@ test_that("Fuzzy works", {
   expect_equal(min(rowSums(Fuzzy_Data$`Fuzzy Memberships`)), 1)
   expect_equal(max(rowSums(Fuzzy_Data$`Fuzzy Memberships`)), 1, tolerance = 1e-04)
   expect_equal(nrow(Fuzzy_Data$`Fuzzy Memberships`), ncol(z$`B2/B1`$`Query Batch (B2)`))
-  expect_false(length(which(Fuzzy_Data$Fuzzied == TRUE)) == 0)
+  expect_false(length(which(Fuzzy_Data$Fuzzied == TRUE)) != 0)
 })
