@@ -30,7 +30,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, v
   mst <- CalculateMST(cluMem$centers[,1:fuzzyPCA])
 
   #Get edges from MST
-  edges <- igraph::as_edgelist(mst, names = FALSE)
+  edges <- igraph::as_edgelist(MST, names = TRUE)
 
   # now we analize one edge
   #edge = 1
@@ -41,7 +41,7 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, v
     outNode <- edges[edge,2]
 
     #Get the cells related with the memberships
-    idxCells <- which( cluMem$cluster == inNode | cluMem$cluster == outNode )
+    idxCells <- which( cluMem$cluster == as.integer(inNode) | cluMem$cluster == as.integer(outNode) )
     edgeCells <- pcaQue[idxCells, 1:fuzzyPCA, drop = FALSE]
 
     #Get the centers of the memberships
