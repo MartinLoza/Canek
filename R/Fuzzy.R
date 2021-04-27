@@ -158,14 +158,18 @@ CheckZeroCV <-function(MST = NULL, cluMem = NULL, corGene = NULL,
       zeroCorrection <- zeroCorrection[-which(names(zeroCorrection) == Node)]
       corGene <- corGene[,-which(colnames(corGene) == Node)]
 
-      ##Re-calculate the MST
-      MST <- CalculateMST(cluMem$centers[, 1:2])
-
-      # Update the loop info
-      idx = 1
       isZero <- which(zeroCorrection == TRUE)
-      Cluster_Dist <- as.matrix(dist(cluMem$centers,upper = TRUE))
-      adjMST <- igraph::as_adjacency_matrix(MST)
+
+      if(length(isZero) != 0){
+        ##Re-calculate the MST
+        MST <- CalculateMST(cluMem$centers[,1:fuzzyPCA])
+
+        # Update the loop info
+        Cluster_Dist <- as.matrix(dist(cluMem$centers,upper = TRUE))
+        adjMST <- igraph::as_adjacency_matrix(MST)
+      }
+
+      idx = 1
 
     }else{ #If we don't find any related node with no zero correction vector, we analize the next node
       idx = idx + 1
