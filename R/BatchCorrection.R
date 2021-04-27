@@ -347,7 +347,7 @@ CorrectBatch <- function(refBatch, queBatch,
 
  # INIT correction matrix ----
  corGene <- matrix(0, nrow = nrow(refBatch), ncol = nMem)
-
+ colnames(corGene) <- seq_len(nMem)
  zeroCorrection <- rep(FALSE, nMem)
 
  for(mem in 1:nMem){
