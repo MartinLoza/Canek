@@ -137,8 +137,9 @@
     <pre class="usage"><span class='fu'>CheckZeroCV</span><span class='op'>(</span>
   MST <span class='op'>=</span> <span class='cn'>NULL</span>,
   cluMem <span class='op'>=</span> <span class='cn'>NULL</span>,
-  memCorrData <span class='op'>=</span> <span class='cn'>NULL</span>,
   corGene <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fuzzyPCA <span class='op'>=</span> <span class='va'>fuzzyPCA</span>,
+  memCorrData <span class='op'>=</span> <span class='cn'>NULL</span>,
   zeroCorrection <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
@@ -154,11 +155,15 @@
       <td><p>Clusters used on MST</p></td>
     </tr>
     <tr>
-      <th>memCorrData</th>
+      <th>corGene</th>
       <td><p>Data to correct</p></td>
     </tr>
     <tr>
-      <th>corGene</th>
+      <th>fuzzyPCA</th>
+      <td><p>Number of PCs to use in the fuzzy process.</p></td>
+    </tr>
+    <tr>
+      <th>memCorrData</th>
       <td><p>Data to correct</p></td>
     </tr>
     <tr>

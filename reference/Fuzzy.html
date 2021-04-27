@@ -134,7 +134,14 @@
     <p>Function to score cell's memberships by fuzzy logic</p>
     </div>
 
-    <pre class="usage"><span class='fu'>Fuzzy</span><span class='op'>(</span>cluMem <span class='op'>=</span> <span class='cn'>NULL</span>, pcaQue <span class='op'>=</span> <span class='cn'>NULL</span>, corCell <span class='op'>=</span> <span class='cn'>NULL</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>Fuzzy</span><span class='op'>(</span>
+  cluMem <span class='op'>=</span> <span class='cn'>NULL</span>,
+  pcaQue <span class='op'>=</span> <span class='cn'>NULL</span>,
+  corCell <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fuzzyPCA <span class='op'>=</span> <span class='fl'>10</span>,
+  MST <span class='op'>=</span> <span class='cn'>NULL</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -151,6 +158,14 @@
       <th>corCell</th>
       <td><p>Matrix containing the initial membership assignment.
 Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.</p></td>
+    </tr>
+    <tr>
+      <th>fuzzyPCA</th>
+      <td><p>Number of PCs to use in the fuzzy process.</p></td>
+    </tr>
+    <tr>
+      <th>MST</th>
+      <td><p>Minimum spanning tree</p></td>
     </tr>
     <tr>
       <th>verbose</th>

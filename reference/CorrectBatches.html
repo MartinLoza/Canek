@@ -146,6 +146,7 @@
   pairsFilter <span class='op'>=</span> <span class='cn'>FALSE</span>,
   perCellMNN <span class='op'>=</span> <span class='fl'>0.08</span>,
   fuzzy <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  fuzzyPCA <span class='op'>=</span> <span class='fl'>10</span>,
   estMethod <span class='op'>=</span> <span class='st'>"Median"</span>,
   clusterMethod <span class='op'>=</span> <span class='st'>"louvain"</span>,
   doCosNorm <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -207,6 +208,10 @@ not calculated for this membership.</p></td>
     <tr>
       <th>fuzzy</th>
       <td><p>Use fuzzy logic to join the local correction vectors.</p></td>
+    </tr>
+    <tr>
+      <th>fuzzyPCA</th>
+      <td><p>Number of PCs to use in the fuzzy process.</p></td>
     </tr>
     <tr>
       <th>estMethod</th>

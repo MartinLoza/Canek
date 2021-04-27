@@ -150,9 +150,10 @@
   pcaDim <span class='op'>=</span> <span class='fl'>50</span>,
   perCellMNN <span class='op'>=</span> <span class='fl'>0.08</span>,
   fuzzy <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  fuzzyPCA <span class='op'>=</span> <span class='fl'>10</span>,
   estMethod <span class='op'>=</span> <span class='st'>"Median"</span>,
-  pairsFilter <span class='op'>=</span> <span class='cn'>FALSE</span>,
   clusterMethod <span class='op'>=</span> <span class='st'>"louvain"</span>,
+  pairsFilter <span class='op'>=</span> <span class='cn'>FALSE</span>,
   doCosNorm <span class='op'>=</span> <span class='cn'>FALSE</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
@@ -228,6 +229,10 @@ not calculated for this membership.</p></td>
       <td><p>Use fuzzy logic to join the local correction vectors.</p></td>
     </tr>
     <tr>
+      <th>fuzzyPCA</th>
+      <td><p>Number of PCs to use in the fuzzy process.</p></td>
+    </tr>
+    <tr>
       <th>estMethod</th>
       <td><p>Method to use when estimating the correction vectors:</p><ul>
 <li><p>Median. Use the cells median distance.</p></li>
@@ -235,13 +240,13 @@ not calculated for this membership.</p></td>
 </ul></td>
     </tr>
     <tr>
+      <th>clusterMethod</th>
+      <td><p>Method used to identify memberships.</p></td>
+    </tr>
+    <tr>
       <th>pairsFilter</th>
       <td><p>Filter MNNs pairs before estimating the correction vectors. If TRUE,
 the pairs are filtered from outliers using an interquartile range method.</p></td>
-    </tr>
-    <tr>
-      <th>clusterMethod</th>
-      <td><p>Method used to identify memberships.</p></td>
     </tr>
     <tr>
       <th>doCosNorm</th>
