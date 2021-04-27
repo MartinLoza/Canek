@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
       </span>
     </div>
 
@@ -143,7 +143,7 @@
   maxMem <span class='op'>=</span> <span class='fl'>5</span>,
   pairs <span class='op'>=</span> <span class='cn'>NULL</span>,
   kNN <span class='op'>=</span> <span class='fl'>30</span>,
-  sampling <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sampling <span class='op'>=</span> <span class='cn'>FALSE</span>,
   numSamples <span class='op'>=</span> <span class='cn'>NULL</span>,
   idxQuery <span class='op'>=</span> <span class='cn'>NULL</span>,
   idxRef <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -152,6 +152,8 @@
   fuzzy <span class='op'>=</span> <span class='cn'>TRUE</span>,
   estMethod <span class='op'>=</span> <span class='st'>"Median"</span>,
   pairsFilter <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  clusterMethod <span class='op'>=</span> <span class='st'>"louvain"</span>,
+  doCosNorm <span class='op'>=</span> <span class='cn'>FALSE</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -238,6 +240,14 @@ not calculated for this membership.</p></td>
 the pairs are filtered from outliers using an interquartile range method.</p></td>
     </tr>
     <tr>
+      <th>clusterMethod</th>
+      <td><p>Method used to identify memberships.</p></td>
+    </tr>
+    <tr>
+      <th>doCosNorm</th>
+      <td><p>Whether to do cosine normalization.</p></td>
+    </tr>
+    <tr>
       <th>verbose</th>
       <td><p>Print output.</p></td>
     </tr>
@@ -260,7 +270,7 @@ for each cluster using its MNNs pairs and use these vectors to remove the batch 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='va'>SimBatches</span><span class='op'>$</span><span class='va'>batches</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
 <span class='va'>y</span> <span class='op'>&lt;-</span> <span class='va'>SimBatches</span><span class='op'>$</span><span class='va'>batches</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>z</span> <span class='op'>&lt;-</span> <span class='fu'>Canek</span><span class='fu'>:::</span><span class='fu'>CorrectBatch</span><span class='op'>(</span><span class='va'>x</span>,<span class='va'>y</span><span class='op'>)</span>
+<span class='va'>z</span> <span class='op'>&lt;-</span> <span class='fu'>CorrectBatch</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span>
 <span class='va'>Corrected</span> <span class='op'>&lt;-</span> <span class='va'>z</span><span class='op'>$</span><span class='va'>`Corrected Query Batch`</span>
 
 <span class='va'>Uncorrected_PCA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/prcomp.html'>prcomp</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>x</span>,<span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>

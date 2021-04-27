@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Title Fuzzy — Fuzzy • Canek</title>
+<title>MeanBE — MeanBE • Canek</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Title Fuzzy — Fuzzy" />
-<meta property="og:description" content="Function to score cell's memberships by fuzzy logic" />
+<meta property="og:title" content="MeanBE — MeanBE" />
+<meta property="og:description" content="Batch effect estimation using the MNNs pairs." />
 
 
 
@@ -125,44 +125,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Title Fuzzy</h1>
+    <h1>MeanBE</h1>
     
-    <div class="hidden name"><code>Fuzzy.Rd</code></div>
+    <div class="hidden name"><code>MeanBE.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Function to score cell's memberships by fuzzy logic</p>
+    <p>Batch effect estimation using the MNNs pairs.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>Fuzzy</span><span class='op'>(</span>cluMem <span class='op'>=</span> <span class='cn'>NULL</span>, pcaQue <span class='op'>=</span> <span class='cn'>NULL</span>, corCell <span class='op'>=</span> <span class='cn'>NULL</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>MeanBE</span><span class='op'>(</span><span class='va'>refBatch</span>, <span class='va'>queBatch</span>, <span class='va'>pairs</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>cluMem</th>
-      <td><p>Memberships' clustering data.</p></td>
+      <th>refBatch</th>
+      <td><p>Reference batch.</p></td>
     </tr>
     <tr>
-      <th>pcaQue</th>
-      <td><p>PCA representation of the cells.</p></td>
+      <th>queBatch</th>
+      <td><p>Query batch.</p></td>
     </tr>
     <tr>
-      <th>corCell</th>
-      <td><p>Matrix containing the initial membership assignment.
-Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal to 1.</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Print output.</p></td>
+      <th>pairs</th>
+      <td><p>A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cells.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list containing the estimated correction vector and the estimation data.
+The length of the correction vector is equal to the number of genes.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function stablishes the fuzzification for the cells' membership.
- A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
-  for each of the edges of the MST.#'</p>
+    <p>The input batches must have the same number of genes. The model used on the estimation has the form of g_ref = g_que + be, where
+the batch effect is represented as a value added to the reference gene expression. The batch effect is estimated as
+the median of the gene expression difference among the reference and the query batch, e.g. Median(g_ref - g_que).</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

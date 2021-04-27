@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Prices of 50,000 round cut diamonds. — SimBatches • Canek</title>
+<title>Dataset with simulated single cell RNA-seq from 2 batches. — SimBatches • Canek</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Prices of 50,000 round cut diamonds. — SimBatches" />
-<meta property="og:description" content="A dataset containing the prices and other attributes of almost 54,000
-diamonds." />
+<meta property="og:title" content="Dataset with simulated single cell RNA-seq from 2 batches. — SimBatches" />
+<meta property="og:description" content="Dataset with simulated single cell RNA-seq from 2 batches." />
 
 
 
@@ -83,7 +82,7 @@ diamonds." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
       </span>
     </div>
 
@@ -126,14 +125,13 @@ diamonds." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Prices of 50,000 round cut diamonds.</h1>
+    <h1>Dataset with simulated single cell RNA-seq from 2 batches.</h1>
     
     <div class="hidden name"><code>SimBatches.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A dataset containing the prices and other attributes of almost 54,000
-diamonds.</p>
+    <p>Dataset with simulated single cell RNA-seq from 2 batches.</p>
     </div>
 
     <pre class="usage"><span class='va'>SimBatches</span></pre>
@@ -141,16 +139,14 @@ diamonds.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data frame with 53940 rows and 10 variables:</p><dl>
-  <dt>price</dt><dd><p>price, in US dollars</p></dd>
-  <dt>carat</dt><dd><p>weight of the diamond, in carats</p></dd>
+    <p>A list with the following elements:</p><dl>
+  <dt>batches</dt><dd><p>a list with two matrices representing the two batches</p></dd>
+  <dt>pairs</dt><dd><p>matrix of pairs between the two batches.</p></dd>
+  <dt>cell_types</dt><dd><p>a factor with the cell clusters.</p></dd>
   ...
 
 </dl>
 
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
-
-    <p><a href='http://www.diamondse.info/'>http://www.diamondse.info/</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

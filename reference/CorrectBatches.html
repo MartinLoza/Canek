@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
       </span>
     </div>
 
@@ -139,7 +139,7 @@
   hierarchical <span class='op'>=</span> <span class='cn'>TRUE</span>,
   queNumCelltypes <span class='op'>=</span> <span class='cn'>NULL</span>,
   maxMem <span class='op'>=</span> <span class='fl'>5</span>,
-  sampling <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sampling <span class='op'>=</span> <span class='cn'>FALSE</span>,
   numSamples <span class='op'>=</span> <span class='cn'>NULL</span>,
   kNN <span class='op'>=</span> <span class='fl'>30</span>,
   pcaDim <span class='op'>=</span> <span class='fl'>50</span>,
@@ -147,6 +147,9 @@
   perCellMNN <span class='op'>=</span> <span class='fl'>0.08</span>,
   fuzzy <span class='op'>=</span> <span class='cn'>TRUE</span>,
   estMethod <span class='op'>=</span> <span class='st'>"Median"</span>,
+  clusterMethod <span class='op'>=</span> <span class='st'>"louvain"</span>,
+  doCosNorm <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  fracSampling <span class='op'>=</span> <span class='cn'>NULL</span>,
   debug <span class='op'>=</span> <span class='cn'>FALSE</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
@@ -211,6 +214,18 @@ not calculated for this membership.</p></td>
 <li><p>Median. Use the cells median distance</p></li>
 <li><p>EKF. Use an extended Kalman filter</p></li>
 </ul></td>
+    </tr>
+    <tr>
+      <th>clusterMethod</th>
+      <td><p>Method used to identify memberships.</p></td>
+    </tr>
+    <tr>
+      <th>doCosNorm</th>
+      <td><p>Whether to do cosine normalization.</p></td>
+    </tr>
+    <tr>
+      <th>fracSampling</th>
+      <td><p>Fraction of cells to sample in the hierarchical selection (default is NULL, no sampling).</p></td>
     </tr>
     <tr>
       <th>debug</th>
