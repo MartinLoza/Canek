@@ -11,7 +11,6 @@
 #' @importFrom irlba prcomp_irlba
 #' @importFrom fpc pamk
 #' @importFrom FNN get.knnx
-#' @importFrom batchelor cosineNorm
 #' @importFrom matrixStats rowMedians
 ## usethis namespace: end
 NULL
