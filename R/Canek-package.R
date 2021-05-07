@@ -10,7 +10,6 @@
 #' @importFrom bluster makeSNNGraph
 #' @importFrom irlba prcomp_irlba
 #' @importFrom fpc pamk
-#' @importFrom spdep Rotation
 #' @importFrom FNN get.knnx
 #' @importFrom batchelor cosineNorm
 #' @importFrom matrixStats rowMedians
