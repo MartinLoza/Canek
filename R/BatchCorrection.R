@@ -82,7 +82,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
   # Cosine normalize the input batches
   if (doCosNorm)
-    cnBatches <- lapply(lsBatches, batchelor::cosineNorm)
+    cnBatches <- lapply(lsBatches, CosNorm)
   else
     cnBatches <- lsBatches
 
@@ -169,7 +169,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     lsBatches[[1]] <- cbind(lsBatches[[1]], Correction[["Corrected Query Batch"]])
     # new cb at the beginning
     if (doCosNorm)
-      cnBatches[[1]] <- batchelor::cosineNorm(lsBatches[[1]])
+      cnBatches[[1]] <- CosNorm(lsBatches[[1]])
     else
       cnBatches[[1]] <- lsBatches[[1]]
     names(lsBatches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
@@ -298,8 +298,8 @@ CorrectBatch <- function(refBatch, queBatch,
   # FIND MNN pairs ----
   if(is.null(pairs)){
     if (doCosNorm) {
-      if (is.null(cnRef)) cnRef <- batchelor::cosineNorm(refBatch)
-      if (is.null(cnQue)) cnQue <- batchelor::cosineNorm(queBatch)
+      if (is.null(cnRef)) cnRef <- CosNorm(refBatch)
+      if (is.null(cnQue)) cnQue <- CosNorm(queBatch)
     } else {
       cnRef <- refBatch
       cnQue <- queBatch
