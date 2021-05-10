@@ -27,6 +27,7 @@ Suggests:
     SingleCellExperiment,
     SeuratData,
     SummarizedExperiment,
+    Matrix (>= 1.3-3),  
     knitr,
     rmarkdown
 License: MIT + file LICENSE
