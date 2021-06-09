@@ -75,6 +75,10 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   inCellNames <- lapply(lsBatches, colnames)
   inCellNames <- Reduce(c,inCellNames) #input cell names
 
+  #Check unique cell names
+  if(any(duplicated(inCellNames)))
+    stop(' Cell names are not unique. Ensure all cell names are unique across batches.', call. = TRUE)
+
   #Check input batches as matrices
   lsBatches <- lapply(lsBatches, as.matrix)
 
