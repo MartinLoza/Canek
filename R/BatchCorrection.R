@@ -149,8 +149,6 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       Query <- 2
     }
 
-    #order <- c(order, rep(namesBatches[Query], ncol(lsBatches[[Query]])))
-
     # Correction
     if(verbose)
       cat(paste('\nINTEGRATING', namesBatches[Query],"INTO", namesBatches[1],"\n", sep = " "))
@@ -186,12 +184,6 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   }
 
   #order output dataset
-  # outOrder <- integer()
-  # for(i in namesInBatches){
-  #   outOrder <- c(outOrder, which(order == i))
-  # }
-  #
-  # lsBatches[[1]] <- lsBatches[[1]][,outOrder]
   lsBatches[[1]] <- lsBatches[[1]][,inOrderCells]
 
   if(debug || verbose){
