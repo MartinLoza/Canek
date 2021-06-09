@@ -183,12 +183,12 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     }
   }
 
+  #order output dataset
+  lsBatches[[1]] <- lsBatches[[1]][,inCellNames]
+
   if(debug == TRUE){
     lsCorrection[["Batches Integrated"]] <- lsBatches[[1]]
   }
-
-  #order output dataset
-  lsBatches[[1]] <- lsBatches[[1]][,inCellNames]
 
   if(debug || verbose){
     tTotal <- difftime(Sys.time(), tTotal, units = "min")
