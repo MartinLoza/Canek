@@ -72,8 +72,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   namesInBatches <- names(lsBatches)
   numBatches <- length(lsBatches)
   lsCorrection <- list()
-  inOrderCells <- lapply(lsBatches, colnames)
-  inOrderCells <- Reduce(c,inOrderCells)
+  inCellNames <- lapply(lsBatches, colnames)
+  inCellNames <- Reduce(c,inCellNames) #input cell names
 
   #Check input batches as matrices
   lsBatches <- lapply(lsBatches, as.matrix)
@@ -184,7 +184,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   }
 
   #order output dataset
-  lsBatches[[1]] <- lsBatches[[1]][,inOrderCells]
+  lsBatches[[1]] <- lsBatches[[1]][,inCellNames]
 
   if(debug || verbose){
     tTotal <- difftime(Sys.time(), tTotal, units = "min")
