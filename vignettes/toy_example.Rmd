@@ -1,0 +1,102 @@
+---
+title: "Run Canek on a toy example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Run Canek on a toy example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.width = 5,
+  fig.height = 5,
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Canek)
+
+# Functions
+## Function to plot the pca coordinates
+plotPCA <- function(pcaData = NULL, label = NULL, legPosition = "topleft"){
+  col <- as.integer(label) 
+  plot(x = pcaData[,"PC1"], y = pcaData[,"PC2"],
+       col = as.integer(label), cex = 0.75, pch = 19,
+       xlab = "PC1", ylab = "PC2")
+  legend(legPosition,  pch = 19,
+         legend = levels(label), 
+         col =  unique(as.integer(label)))
+}
+```
+
+## Load the data
+
+On this toy example we use the two simulated batches included in the `SimBatches` data from Canek's package. `SimBatches` is a list containing:
+
+* `batches`: Simulated scRNA-seq datasets with genes (rows) and cells (columns). Simulations were performed using [Splatter](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html).
+* `cell_type`: a factor containing the celltype labels of the batches
+
+```{r}
+lsData <- list(B1 = SimBatches$batches[[1]], B2 = SimBatches$batches[[2]])
+batch <- factor(c(rep("Batch-1", ncol(lsData[[1]])),
+                  rep("Batch-2", ncol(lsData[[2]]))))
+celltype <- SimBatches$cell_types
+table(batch)
+table(celltype)
+```
+
+## PCA before correction
+
+We perform the Principal Component Analysys (PCA) of the joined datasets and scatter plot the first two PCs. The batch-effect causes cells to group by batch. 
+
+```{r}
+data <- Reduce(cbind, lsData)
+pcaData <- prcomp(t(data), center = TRUE, scale. = TRUE)$x
+```
+
+```{r}
+plotPCA(pcaData = pcaData, label = batch, legPosition = "bottomleft")
+plotPCA(pcaData = pcaData, label = celltype, legPosition = "bottomleft")
+```
+
+## Run Canek
+
+We correct the toy batches using the function *RunCanek*. This function accepts:
+
+* List of matrices
+* Seurat object
+* List of Seurat objects
+* SingleCellExperiment object
+* List of SingleCellExperiment objects
+
+On this example we use the list of matrices created before.
+
+```{r}
+data <- RunCanek(lsData)
+```
+
+## PCA after correction
+
+We perform PCA of the corrected datasets and plot the first two PCs. After correction, the cells group by their corresponding cell type.
+
+```{r}
+pcaData <- prcomp(t(data), center = TRUE, scale. = TRUE)$x
+```
+
+```{r}
+plotPCA(pcaData = pcaData, label = batch, legPosition = "topleft")
+plotPCA(pcaData = pcaData, label = celltype, legPosition = "topleft")
+```
+
+## Session info
+
+```{r}
+sessionInfo()
+```
+
+
+
