@@ -84,7 +84,7 @@ RunCanekSeurat <- function(x, slot = "data", assay = "RNA", features = NULL, sel
   Seurat::LogSeuratCommand(x)
 }
 
-RunCanekSingleCellExperiment <- function(x, assay = NULL, debug = FALSE, ...) {
+RunCanekSingleCellExperiment <- function(x, assay = "logcounts", debug = FALSE, ...) {
   counts <- lapply(x, SummarizedExperiment::assay, i = assay)
   counts <- Canek::CorrectBatches(counts, debug = debug, ...)
 
