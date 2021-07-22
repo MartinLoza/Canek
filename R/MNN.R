@@ -100,13 +100,14 @@ GetMnnPairs <- function(refBatch = NULL, queBatch = NULL, kNN = 25){
 #' @return Data frame with kNN and distances.
 FindkNN <- function(m1 = NULL, m2 = NULL,k = NULL){
   nObservations <- nrow(m1)
-  df <- data.frame(matrix(data = integer(), ncol = (k+1), nrow = nObservations*k))
+  nrows <- nObservations*k
+  df <- data.frame(matrix(data = integer(), ncol = 3, nrow = nrows))
   colnames(df) <- c("m1", "m2", "distance")
 
   NN <- FNN::get.knnx(data = m2, query = m1, k = k)
   df[["m1"]] <- rep(x = seq_len(nObservations), each = k)
-  df[["m2"]] <- Reduce(rbind, t(NN$nn.index))
-  df[["distance"]] <- Reduce(rbind, t(NN$nn.dist))
+  df[["m2"]] <- t(NN$nn.index)[1:nrows]
+  df[["distance"]] <- t(NN$nn.dist)[1:nrows]
 
   return(df)
 }
