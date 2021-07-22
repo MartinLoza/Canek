@@ -144,9 +144,13 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       })
 
       nPairs <- lapply(pcaBatches, function(x){
-        pairs <- GetMnnPairs(refBatch = t(x$x[1:nCellsRef, ]),
-                             queBatch = t(x$x[(nCellsRef+1):nrow(x$x), ]),
-                             kNN = 30)$Pairs
+        # pairs <- GetMnnPairs(refBatch = t(x$x[1:nCellsRef, ]),
+        #                        queBatch = t(x$x[(nCellsRef+1):nrow(x$x), ]),
+        #                        kNN = 10)$Pairs
+
+        pairs <- FindMNN(m1 = x$x[1:nCellsRef, ], m2 = x$x[(nCellsRef+1):nrow(x$x), ], k = 10)
+        #pairs <- as.matrix(pairs)
+
         return(nrow(pairs))
       })
 
@@ -321,11 +325,14 @@ CorrectBatch <- function(refBatch, queBatch,
     if(verbose)
       cat(paste("\n\nFinding mutual nearest neighbors from", kNN,"nearest neighbors"))
 
-    pairs <- GetMnnPairs(refBatch = if(is.null(idxRef)) t(pcaRef) else t(pcaRef[,idxRef]),
-                         queBatch = if(is.null(idxQuery)) t(pcaQue) else t(pcaRef[,idxQuery]),
-                         kNN = kNN)
+    # pairs <- GetMnnPairs(refBatch = if(is.null(idxRef)) t(pcaRef) else t(pcaRef[,idxRef]),
+    #                        queBatch = if(is.null(idxQuery)) t(pcaQue) else t(pcaRef[,idxQuery]),
+    #                        kNN = kNN)
+    # pairs <- pairs$Pairs
 
-    pairs <- pairs$Pairs
+    pairs <- FindMNN(m1 = pcaRef, m2 = pcaQue, k = kNN)[,1:2]
+    pairs <- as.matrix(pairs[,c("m2", "m1")])
+
   }else{
 
     pcaQue <- prcomp_irlba(t(queBatch),n = 10)
