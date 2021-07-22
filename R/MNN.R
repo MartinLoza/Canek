@@ -89,3 +89,49 @@ GetMnnPairs <- function(refBatch = NULL, queBatch = NULL, kNN = 25){
   return(Pairs)
 
 }
+
+
+#' FindkNN
+#'
+#' @param m1 Main matrix.
+#' @param m2 Matrix to compare.
+#' @param k Number of neighbors.
+#'
+#' @return Data frame with kNN and distances.
+FindkNN <- function(m1 = NULL, m2 = NULL,k = NULL){
+  nObservations <- nrow(m1)
+  df <- data.frame(matrix(data = integer(), ncol = (k+1), nrow = nObservations*k))
+  colnames(df) <- c("m1", "m2", "distance")
+
+  NN <- FNN::get.knnx(data = m2, query = m1, k = k)
+  df[["m1"]] <- rep(x = seq_len(nObservations), each = k)
+  df[["m2"]] <- Reduce(rbind, t(NN$nn.index))
+  df[["distance"]] <- Reduce(rbind, t(NN$nn.dist))
+
+  return(df)
+}
+
+#' FindMNN
+#'
+#' @param m1 Main matrix.
+#' @param m2 Matrix to compare.
+#' @param k Number of neighbors.
+#'
+#' @return Data frame with MNN and distances.
+FindMNN <- function(m1 = NULL, m2 = NULL, k = NULL){
+
+  ## Obtain the crossed kNN pairs
+  m1m2NN <- FindkNN(m1 = m1, m2 = m2, k = k)
+  m2m1NN <- FindkNN(m1 = m2, m2 = m1, k = k)
+  ## Accomodate
+  colnames(m2m1NN) <- c("m2","m1", "distance")
+  m2m1NN <- m2m1NN[,colnames(m1m2NN)]
+  df <- rbind(m1m2NN, m2m1NN)
+  ## Find MNN
+  df[["pair"]] <- paste(df$m1, df$m2, sep = "_")
+  df <- df[duplicated(df$pair),]
+  rownames(df) <- df$pair
+  df <- df[,c("m1", "m2", "distance")]
+
+  return(df)
+}
