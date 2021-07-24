@@ -376,19 +376,37 @@ CorrectBatch <- function(refBatch, queBatch,
  if(verbose)
   cat(paste('\n\tNumber of MNN pairs:', nrow(pairs)))
 
-  # FIND memberships ----
-  switch(clusterMethod,
-    "kmeans" = {
-      cluster <- ClusterKMeans(pcaQue[, 1:10], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
-    },
-    "louvain" = {
-      cluster <- ClusterLouvain(pcaQue[, 1:10], k = kNN, verbose = verbose)
-    },
-    stop("cluster method unknown.")
-  )
+  ## TEST LOOP 2.
+  # Do clustering only in the first iteration.
+  if(loop == 1){
+    # FIND memberships ----
+    switch(clusterMethod,
+           "kmeans" = {
+             cluster <- ClusterKMeans(pcaQue[, 1:10], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
+           },
+           "louvain" = {
+             cluster <- ClusterLouvain(pcaQue[, 1:10], k = kNN, verbose = verbose)
+           },
+           stop("cluster method unknown.")
+    )
+  }
 
   cluMem <- cluster$result
   nMem <- cluster$nMem
+
+  # # FIND memberships ----
+  # switch(clusterMethod,
+  #   "kmeans" = {
+  #     cluster <- ClusterKMeans(pcaQue[, 1:10], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
+  #   },
+  #   "louvain" = {
+  #     cluster <- ClusterLouvain(pcaQue[, 1:10], k = kNN, verbose = verbose)
+  #   },
+  #   stop("cluster method unknown.")
+  # )
+  #
+  # cluMem <- cluster$result
+  # nMem <- cluster$nMem
 
  # INIT correction matrix ----
  corGene <- matrix(0, nrow = nrow(refBatch), ncol = nMem)
