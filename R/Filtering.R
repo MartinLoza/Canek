@@ -4,8 +4,6 @@
 #'
 #' Function to filter MNNs pairs
 #'
-#' @param refBatch Reference batch single-cell data.
-#' @param queBatch Query's batch single-cell data.
 #' @param pairs A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.
 #' @param verbose Print output.
 #'
@@ -30,17 +28,3 @@ PairsFiltering <- function(pairs, verbose = FALSE){
 
   return(pairs[-outliers,])
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
