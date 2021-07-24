@@ -27,7 +27,9 @@ CorrectBatch(
   doCosNorm = FALSE,
   verbose = FALSE,
   scale = FALSE,
-  repetitions = 1
+  repetitions = 1,
+  sigma = 0.001,
+  plotSilouette = FALSE
 )
 }
 \arguments{

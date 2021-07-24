@@ -25,6 +25,8 @@ CorrectBatches(
   verbose = FALSE,
   scale = FALSE,
   repetitions = 1,
+  sigma = 0.001,
+  plotSilouette = FALSE,
   ...
 )
 }

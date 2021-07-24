@@ -63,7 +63,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            estMethod = "Median", clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
                            debug = FALSE, verbose = FALSE, scale = FALSE,
-                           repetitions = 1, ... ){
+                           repetitions = 1, sigma = 1e-3, plotSilouette = FALSE,
+                           ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -189,7 +190,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                  sampling = sampling, numSamples = numSamples,
                                  cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
                                  doCosNorm = doCosNorm, clusterMethod = clusterMethod,
-                                 verbose = verbose, scale = scale, repetitions = repetitions)
+                                 verbose = verbose, scale = scale, repetitions = repetitions,
+                                 sigma = sigma, plotSilouette = plotSilouette)
 
       # new ref at the beginning
       lsBatches <- lsBatches[-Query]
@@ -300,13 +302,15 @@ CorrectBatch <- function(refBatch, queBatch,
                          estMethod = "Median", clusterMethod = "louvain",
                          pairsFilter = FALSE, doCosNorm = FALSE,
                          verbose = FALSE, scale = FALSE,
-                         repetitions = 1) {
+                         repetitions = 1, sigma = 1e-3, plotSilouette = FALSE) {
 
   tBatch <- Sys.time()
   queIn <- queBatch
 
   ## TEST LOOP 2
   # ------------------------------------------------
+  sil <- rep(0, repetitions)
+  dersil <- sil
   for(loop in seq_len(repetitions)){
 
   debugData <- list(info = list(), membership = list())
@@ -346,6 +350,26 @@ CorrectBatch <- function(refBatch, queBatch,
 
     pcaRef <- pcaBatches$x[1:nCellsRef,]
     pcaQue <- pcaBatches$x[(nCellsRef+1):nCells,]
+
+    ## TEST. ERASE
+    if(repetitions > 1){
+      lbatch <- factor(c(rep(1, nCellsRef), rep(2, nCellsQue)))
+      sil[loop] <- kBET::batch_sil(pca.data = pcaBatches, batch = lbatch, nPCs = pcaDim)
+    }else{
+      sil[loop] <- 0
+    }
+
+    if(loop == 1){
+      dersil[1] <- 0
+    }else{
+      dersil[loop] <- sil[loop] - sil[(loop-1)]
+    }
+
+    if(verbose)
+      print(paste0("Loop: ", loop, ". Silhouette batch: ", sil[loop], " , derivative: ", dersil[loop]))
+
+    if(abs(dersil[loop]) <= sigma && loop != 1)
+      break
 
     rm(pcaBatches)
 
@@ -592,7 +616,10 @@ CorrectBatch <- function(refBatch, queBatch,
 
   ## TEST LOOP 2.
   tBatch <- difftime(Sys.time(), tBatch, units = "min")
-
+  if(plotSilouette){
+    print(plot(sil, type = "b"))
+    print(plot(dersil, type = "b"))
+  }
 
  return(list("Reference Batch (B1)" = refBatch, "Query Batch (B2)" = queIn,
              "Corrected Query Batch"= queCorrected, "Correction Data" = correctionData,
