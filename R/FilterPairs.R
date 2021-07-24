@@ -21,14 +21,13 @@ PairsFiltering <- function(refBatch,queBatch, pairs, verbose = FALSE){
     v1 <- t(refBatch[,pairs[,2]])
     v2 <- t(queBatch[,pairs[,1]])
 
-    d <- as.matrix(dist(rbind(v1,v2)))
-    d <- d[matrix(seq(from = 1, to = (nrow(v1)*2)), ncol = 2)]
-
-    q <- quantile(d)
+    distance <- as.matrix(dist(rbind(v1,v2)))
+    distance <- distance[matrix(seq(from = 1, to = (nrow(v1)*2)), ncol = 2)]
+    q <- quantile(distance)
 
     IQR <- q["75%"] - q["25%"]
 
-    outliers <- c(which(d < (q["25%"] - (1.5*IQR))), which(d > (q["75%"] + (1.5*IQR))))
+    outliers <- c(which(distance < (q["25%"] - (1.5*IQR))), which(distance > (q["75%"] + (1.5*IQR))))
 
     return(pairs[-outliers,])
 }
