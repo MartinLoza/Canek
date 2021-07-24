@@ -325,17 +325,21 @@ CorrectBatch <- function(refBatch, queBatch,
     if(verbose)
       cat(paste("\n\nFinding mutual nearest neighbors from", kNN,"nearest neighbors"))
 
+    ## TEST MNN
     # pairs <- GetMnnPairs(refBatch = if(is.null(idxRef)) t(pcaRef) else t(pcaRef[,idxRef]),
     #                        queBatch = if(is.null(idxQuery)) t(pcaQue) else t(pcaRef[,idxQuery]),
     #                        kNN = kNN)
     # pairs <- pairs$Pairs
 
-    pairs <- FindMNN(m1 = pcaRef, m2 = pcaQue, k = kNN)[,1:2]
-    pairs <- as.matrix(pairs[,c("m2", "m1")])
-    colnames(pairs) <- c("query", "ref")
+    ## TEST FILTERING
+    # pairs <- FindMNN(m1 = pcaRef, m2 = pcaQue, k = kNN)[,1:2]
+    # pairs <- as.matrix(pairs[,c("m2", "m1")])
+    # colnames(pairs) <- c("query", "ref")
+    pairs <- FindMNN(m1 = pcaRef, m2 = pcaQue, k = kNN)
+    pairs <- as.matrix(pairs[,c("m2", "m1", "distance")])
+    colnames(pairs) <- c("query", "ref", "distance")
 
   }else{
-
     pcaQue <- prcomp_irlba(t(queBatch),n = 10)
     pcaQue <- pcaQue$x
   }
@@ -384,10 +388,12 @@ CorrectBatch <- function(refBatch, queBatch,
    if(pairsFilter){
 
      if (nrow(memPairs) > 10){
-       memPairs <- PairsFiltering(refBatch = t(pcaRef), queBatch = t(pcaQue),
-                                  pairs = memPairs, verbose = verbose)
 
-        if(verbose)
+       ## TEST FILTERING
+       # memPairs <- PairsFiltering(refBatch = t(pcaRef), queBatch = t(pcaQue),
+       #                            pairs = memPairs, verbose = verbose)
+       memPairs <- PairsFiltering(pairs = memPairs, verbose = verbose)
+       if(verbose)
           cat( paste('\n\tNumber of selected pairs:', nrow(memPairs) ) )
       }else {
         if (verbose)

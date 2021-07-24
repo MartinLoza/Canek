@@ -13,24 +13,22 @@
 #'
 #' @details Filter MNN pairs by quantiles.
 #'
-PairsFiltering <- function(refBatch,queBatch, pairs, verbose = FALSE){
-
-    if(verbose)
-      cat("\n\nFitering pairs by quantiles")
+PairsFiltering <- function(pairs, verbose = FALSE){
+  if(verbose)
+    cat("\n\nFitering pairs by quantiles")
 
     ## TEST FILTERING
-    v1 <- t(refBatch[,pairs[,"ref"]])
-    v2 <- t(queBatch[,pairs[,"query"]])
+    # v1 <- t(refBatch[,pairs[,"ref"]])
+    # v2 <- t(queBatch[,pairs[,"query"]])
+    # distance <- as.matrix(dist(rbind(v1,v2)))
+    # distance <- distance[matrix(seq(from = 1, to = (nrow(v1)*2)), ncol = 2)]
+  distance <- pairs[,"distance"]
+  q <- quantile(distance)
+  IQR <- q["75%"] - q["25%"]
 
-    distance <- as.matrix(dist(rbind(v1,v2)))
-    distance <- distance[matrix(seq(from = 1, to = (nrow(v1)*2)), ncol = 2)]
-    q <- quantile(distance)
+  outliers <- c(which(distance < (q["25%"] - (1.5*IQR))), which(distance > (q["75%"] + (1.5*IQR))))
 
-    IQR <- q["75%"] - q["25%"]
-
-    outliers <- c(which(distance < (q["25%"] - (1.5*IQR))), which(distance > (q["75%"] + (1.5*IQR))))
-
-    return(pairs[-outliers,])
+  return(pairs[-outliers,])
 }
 
 
