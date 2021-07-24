@@ -75,6 +75,9 @@ RunCanekSeurat <- function(x, slot = "data", assay = "RNA", features = NULL, sel
   x[["Canek"]] <- integrated
   Seurat::DefaultAssay(x) <- "Canek"
 
+  ## TEST SCALING
+  features <- features[features %in% rownames(counts)] # remove the genes with only zeros in at least one batch
+
   Seurat::VariableFeatures(x, assay = "Canek") <- features
 
   if (debug) {

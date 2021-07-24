@@ -25,7 +25,8 @@ CorrectBatch(
   clusterMethod = "louvain",
   pairsFilter = FALSE,
   doCosNorm = FALSE,
-  verbose = FALSE
+  verbose = FALSE,
+  scale = FALSE
 )
 }
 \arguments{

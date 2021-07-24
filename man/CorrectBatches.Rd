@@ -23,6 +23,7 @@ CorrectBatches(
   fracSampling = NULL,
   debug = FALSE,
   verbose = FALSE,
+  scale = FALSE,
   ...
 )
 }
