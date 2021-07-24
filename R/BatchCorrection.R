@@ -189,6 +189,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                  sampling = sampling, numSamples = numSamples,
                                  cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
                                  doCosNorm = doCosNorm, clusterMethod = clusterMethod,
+                                 verbose = verbose, scale = scale, repetitions = repetitions)
 
       # new ref at the beginning
       lsBatches <- lsBatches[-Query]
@@ -298,9 +299,15 @@ CorrectBatch <- function(refBatch, queBatch,
                          fuzzy = TRUE, fuzzyPCA = 10,
                          estMethod = "Median", clusterMethod = "louvain",
                          pairsFilter = FALSE, doCosNorm = FALSE,
-                         verbose = FALSE, scale = FALSE) {
+                         verbose = FALSE, scale = FALSE,
+                         repetitions = 1) {
 
   tBatch <- Sys.time()
+  queIn <- queBatch
+
+  ## TEST LOOP 2
+  # ------------------------------------------------
+  for(loop in seq_len(repetitions)){
 
   debugData <- list(info = list(), membership = list())
 
@@ -470,6 +477,10 @@ CorrectBatch <- function(refBatch, queBatch,
  isZero <- which(zeroCorrection == TRUE)
  if(length(isZero) == nMem){
    warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
+   MSTFuzzy <- MST
+   cluMemFuzzy <- cluMem
+   nMemFuzzy <- nMem
+
  }else if(length(isZero) != 0){
 
    noZeroCV <- CheckZeroCV(cluMem = cluMem, corGene = corGene, fuzzyPCA = fuzzyPCA,
@@ -477,9 +488,18 @@ CorrectBatch <- function(refBatch, queBatch,
 
    memCorrData <- noZeroCV$memCorrData
    corGene <- noZeroCV$corGene
-   MST <- noZeroCV$MST
-   cluMem <- noZeroCV$cluMem
-   nMem <- ncol(corGene)
+
+   ## TEST LOOP 2
+   # MST <- noZeroCV$MST
+   # cluMem <- noZeroCV$cluMem
+   # nMem <- ncol(corGene)
+   MSTFuzzy <- noZeroCV$MST
+   cluMemFuzzy <- noZeroCV$cluMem
+   nMemFuzzy <- ncol(corGene)
+ }else{
+   MSTFuzzy <- MST
+   cluMemFuzzy <- cluMem
+   nMemFuzzy <- nMem
  }
 
 
@@ -492,27 +512,30 @@ CorrectBatch <- function(refBatch, queBatch,
 
  # Init membership's cells (1 to the cell's membership and 0 to the other memberships)
  for (Mem in colnames(corGene)){
-   corCell[which(cluMem$cluster == as.integer(Mem)), Mem] <- 1
+   corCell[which(cluMemFuzzy$cluster == as.integer(Mem)), Mem] <- 1
  }
 
  # Fuzzy process and Correction
- if(fuzzy && nMem > 1){
+ if(fuzzy && nMemFuzzy > 1){
 
    if(verbose)
      cat('\n\n Fuzzy process ')
-   fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue, MST = MST,
+   fuzzyData <- Fuzzy(cluMem = cluMemFuzzy, pcaQue = pcaQue, MST = MSTFuzzy,
                       fuzzyPCA = fuzzyPCA, corCell = corCell,
                       verbose = verbose)
 
    corCell <- fuzzyData$`Fuzzy Memberships`
 
  }else{
-   fuzzyData <- list("Fuzzy Memberships" = corCell, "MST" = MST,
+   fuzzyData <- list("Fuzzy Memberships" = corCell, "MST" = MSTFuzzy,
                      "Fuzzied" =  NULL, "Edges Data" = NULL)
  }
 
  corMatrix <- (corGene  %*% t(corCell/rowSums(corCell)) )
  queCorrected <-  queBatch + corMatrix
+
+ ## TEST LOOP 2
+ queBatch <- queCorrected
 
  debugData$matrix$corMatrix <- corMatrix
  debugData$matrix$corCell <- corCell
@@ -521,13 +544,14 @@ CorrectBatch <- function(refBatch, queBatch,
  debugData$matrix$features <- rownames(queCorrected)
 
   # SET data lists to return ----
- memData <- list("Cluster Membership" = nMem, "Membership Correction Data" = memCorrData)
+ memData <- list("Cluster Membership" = nMemFuzzy, "Membership Correction Data" = memCorrData)
 
  correctionData <- list("Correction Matrix" = corMatrix, "MNN Pairs" = pairs,
                         "Membership Data" = memData, "Fuzzy Data" = fuzzyData,
-                        "Clusters" = cluMem)
+                        "Clusters" = cluMemFuzzy)
 
- tBatch <- difftime(Sys.time(), tBatch, units = "min")
+ ## TEST LOOP 2
+ # tBatch <- difftime(Sys.time(), tBatch, units = "min")
 
 
  debugData$info$cputime <- tBatch
@@ -542,8 +566,17 @@ CorrectBatch <- function(refBatch, queBatch,
  if(verbose)
    cat(paste0('\nBatch correction time: ', tBatch, " seconds"))
 
+ pairs <- NULL
 
- return(list("Reference Batch (B1)" = refBatch, "Query Batch (B2)" = queBatch,
+ ## TEST LOOP 2.
+ #-------------------------------
+  }
+
+  ## TEST LOOP 2.
+  tBatch <- difftime(Sys.time(), tBatch, units = "min")
+
+
+ return(list("Reference Batch (B1)" = refBatch, "Query Batch (B2)" = queIn,
              "Corrected Query Batch"= queCorrected, "Correction Data" = correctionData,
              "Correction_Time" = tBatch, debug = debugData))
 }

@@ -26,7 +26,8 @@ CorrectBatch(
   pairsFilter = FALSE,
   doCosNorm = FALSE,
   verbose = FALSE,
-  scale = FALSE
+  scale = FALSE,
+  repetitions = 1
 )
 }
 \arguments{
