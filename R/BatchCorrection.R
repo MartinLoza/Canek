@@ -181,22 +181,6 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     if(verbose)
       cat(paste('\nINTEGRATING', namesBatches[Query],"INTO", namesBatches[1],"\n", sep = " "))
 
-    ## TEST LOOP
-    #----------------------------------------
-
-    # Correction <- CorrectBatch(refBatch = lsBatches[[1]], queBatch = lsBatches[[Query]],
-    #                            queNumCelltypes = queNumCelltypes, pcaDim = pcaDim,
-    #                            maxMem = maxMem, kNN = kNN,
-    #                            fuzzy = fuzzy, fuzzyPCA = fuzzyPCA, estMethod = estMethod,
-    #                            pairsFilter = pairsFilter, perCellMNN = perCellMNN,
-    #                            sampling = sampling, numSamples = numSamples,
-    #                            cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
-    #                            doCosNorm = doCosNorm, clusterMethod = clusterMethod,
-    #                            verbose = verbose, scale = scale)
-    #
-
-    for(loop in seq_len(repetitions)){
-
       Correction <- CorrectBatch(refBatch = lsBatches[[1]], queBatch = lsBatches[[Query]],
                                  queNumCelltypes = queNumCelltypes, pcaDim = pcaDim,
                                  maxMem = maxMem, kNN = kNN,
@@ -205,11 +189,6 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                  sampling = sampling, numSamples = numSamples,
                                  cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
                                  doCosNorm = doCosNorm, clusterMethod = clusterMethod,
-                                 verbose = verbose, scale = scale)
-
-
-      lsBatches[[Query]] <- Correction[["Corrected Query Batch"]]
-    }
 
       # new ref at the beginning
       lsBatches <- lsBatches[-Query]
