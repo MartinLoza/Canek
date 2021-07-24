@@ -60,9 +60,8 @@ EkfBE <- function(refBatch, queBatch, pairs, sampling = FALSE, numSamples = NULL
   }
 
   if (sampling) {
-    Samples <- sample(c(1:Num_Pairs),size = numSamples, replace = FALSE)
-    Samples <- matrix(c(pairs[Samples,1], pairs[Samples,2] ), nrow = numSamples)
-    colnames(Samples) <- colnames(pairs)
+    idx <- sample(c(1:Num_Pairs),size = numSamples, replace = FALSE)
+    Samples <- pairs[idx, , drop = FALSE]
   } else {
     numSamples <- Num_Pairs
     Samples <- pairs
