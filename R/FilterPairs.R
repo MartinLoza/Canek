@@ -18,8 +18,9 @@ PairsFiltering <- function(refBatch,queBatch, pairs, verbose = FALSE){
     if(verbose)
       cat("\n\nFitering pairs by quantiles")
 
-    v1 <- t(refBatch[,pairs[,2]])
-    v2 <- t(queBatch[,pairs[,1]])
+    ## TEST FILTERING
+    v1 <- t(refBatch[,pairs[,"ref"]])
+    v2 <- t(queBatch[,pairs[,"query"]])
 
     distance <- as.matrix(dist(rbind(v1,v2)))
     distance <- distance[matrix(seq(from = 1, to = (nrow(v1)*2)), ncol = 2)]

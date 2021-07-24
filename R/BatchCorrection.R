@@ -332,6 +332,7 @@ CorrectBatch <- function(refBatch, queBatch,
 
     pairs <- FindMNN(m1 = pcaRef, m2 = pcaQue, k = kNN)[,1:2]
     pairs <- as.matrix(pairs[,c("m2", "m1")])
+    colnames(pairs) <- c("query", "ref")
 
   }else{
 
@@ -339,7 +340,7 @@ CorrectBatch <- function(refBatch, queBatch,
     pcaQue <- pcaQue$x
   }
 
-  debugData$pairs <- data.frame(ref = colnames(refBatch)[pairs[, 2]], query = colnames(queBatch)[pairs[, 1]])
+  debugData$pairs <- data.frame(ref = colnames(refBatch)[pairs[, "ref"]], query = colnames(queBatch)[pairs[, "query"]])
 
  if(verbose)
   cat(paste('\n\tNumber of MNN pairs:', nrow(pairs)))
@@ -377,7 +378,7 @@ CorrectBatch <- function(refBatch, queBatch,
    # Membership cells number
    numCellMem <- ncol(queBatch[,idxCells])
 
-   memPairs <- pairs[pairs[, 1] %in% idxCells, , drop = FALSE]
+   memPairs <- pairs[pairs[, "query"] %in% idxCells, , drop = FALSE]
 
    # FILTER pairs ----
    if(pairsFilter){

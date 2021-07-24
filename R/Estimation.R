@@ -103,9 +103,9 @@ EkfBE <- function(refBatch, queBatch, pairs, sampling = FALSE, numSamples = NULL
      for (k in Index_Vector) {
 
       #Reference
-      x[, Index_Epoch] = refBatch[, Samples[k,2]]
+      x[, Index_Epoch] = refBatch[, Samples[k,"ref"]]
       # Prediction
-      xs[, Index_Epoch] = queBatch[, Samples[k,1]] + w[, Index_Epoch-1]
+      xs[, Index_Epoch] = queBatch[, Samples[k,"query"]] + w[, Index_Epoch-1]
       #Error
       Error <- x[, Index_Epoch] - xs[, Index_Epoch]
       #Kalman Gain
@@ -150,8 +150,8 @@ MedianBE <- function(refBatch, queBatch, pairs) {
   # be -> g_ref - g_que
 
   #Get pairs index
-  pQue <- pairs[,1]
-  pRef <- pairs[,2]
+  pQue <- pairs[,"query"]
+  pRef <- pairs[,"ref"]
 
   #Subsetting
   pRef <- refBatch[,pRef]
@@ -179,8 +179,8 @@ MedianBE <- function(refBatch, queBatch, pairs) {
 #'
 MeanBE <- function(refBatch, queBatch, pairs) {
   # Get pairs.
-  pQue <- pairs[, 1]
-  pRef <- pairs[, 2]
+  pQue <- pairs[, "query"]
+  pRef <- pairs[, "ref"]
 
   # Get cells.
   pRef <- refBatch[, pRef]

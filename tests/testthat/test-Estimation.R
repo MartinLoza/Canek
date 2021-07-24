@@ -2,6 +2,7 @@ set.seed(0)
 
 Batches <- SimBatches$batches
 Pairs <- SimBatches$pairs
+colnames(Pairs) <- c("query", "ref")
 x <- Canek:::EkfBE(refBatch = Batches[[1]], queBatch = Batches[[2]], pairs = Pairs, sampling = TRUE)
 y <- Canek:::MedianBE(refBatch = Batches[[1]], queBatch = Batches[[2]], pairs = Pairs)
 
