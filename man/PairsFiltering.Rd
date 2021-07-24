@@ -4,13 +4,9 @@
 \alias{PairsFiltering}
 \title{Title PairsFiltering}
 \usage{
-PairsFiltering(refBatch, queBatch, pairs, verbose = FALSE)
+PairsFiltering(pairs, verbose = FALSE)
 }
 \arguments{
-\item{refBatch}{Reference batch single-cell data.}
-
-\item{queBatch}{Query's batch single-cell data.}
-
 \item{pairs}{A matrix containing MNNs pairs. First column corresponds to query-batch cell indexes.}
 
 \item{verbose}{Print output.}
