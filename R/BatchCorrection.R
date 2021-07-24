@@ -62,7 +62,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            fuzzy = TRUE, fuzzyPCA = 10,
                            estMethod = "Median", clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
-                           debug = FALSE, verbose = FALSE, scale = FALSE, ... ){
+                           debug = FALSE, verbose = FALSE, scale = FALSE,
+                           repetitions = 1, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -180,30 +181,50 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     if(verbose)
       cat(paste('\nINTEGRATING', namesBatches[Query],"INTO", namesBatches[1],"\n", sep = " "))
 
-    Correction <- CorrectBatch(refBatch = lsBatches[[1]], queBatch = lsBatches[[Query]],
-                               queNumCelltypes = queNumCelltypes, pcaDim = pcaDim,
-                               maxMem = maxMem, kNN = kNN,
-                               fuzzy = fuzzy, fuzzyPCA = fuzzyPCA, estMethod = estMethod,
-                               pairsFilter = pairsFilter, perCellMNN = perCellMNN,
-                               sampling = sampling, numSamples = numSamples,
-                               cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
-                               doCosNorm = doCosNorm, clusterMethod = clusterMethod,
-                               verbose = verbose, scale = scale)
+    ## TEST LOOP
+    #----------------------------------------
 
-    # new ref at the beginning
-    lsBatches <- lsBatches[-Query]
-    cnBatches <- cnBatches[-Query]
-    lsBatches[[1]] <- cbind(lsBatches[[1]], Correction[["Corrected Query Batch"]])
-    # new cb at the beginning
-    if (doCosNorm)
-      cnBatches[[1]] <- CosNorm(lsBatches[[1]])
-    else
-      cnBatches[[1]] <- lsBatches[[1]]
-    names(lsBatches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
+    # Correction <- CorrectBatch(refBatch = lsBatches[[1]], queBatch = lsBatches[[Query]],
+    #                            queNumCelltypes = queNumCelltypes, pcaDim = pcaDim,
+    #                            maxMem = maxMem, kNN = kNN,
+    #                            fuzzy = fuzzy, fuzzyPCA = fuzzyPCA, estMethod = estMethod,
+    #                            pairsFilter = pairsFilter, perCellMNN = perCellMNN,
+    #                            sampling = sampling, numSamples = numSamples,
+    #                            cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
+    #                            doCosNorm = doCosNorm, clusterMethod = clusterMethod,
+    #                            verbose = verbose, scale = scale)
+    #
 
-    if(debug == TRUE){
-      lsCorrection[[names(lsBatches)[1]]] <- Correction
+    for(loop in seq_len(repetitions)){
+
+      Correction <- CorrectBatch(refBatch = lsBatches[[1]], queBatch = lsBatches[[Query]],
+                                 queNumCelltypes = queNumCelltypes, pcaDim = pcaDim,
+                                 maxMem = maxMem, kNN = kNN,
+                                 fuzzy = fuzzy, fuzzyPCA = fuzzyPCA, estMethod = estMethod,
+                                 pairsFilter = pairsFilter, perCellMNN = perCellMNN,
+                                 sampling = sampling, numSamples = numSamples,
+                                 cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
+                                 doCosNorm = doCosNorm, clusterMethod = clusterMethod,
+                                 verbose = verbose, scale = scale)
+
+
+      lsBatches[[Query]] <- Correction[["Corrected Query Batch"]]
     }
+
+      # new ref at the beginning
+      lsBatches <- lsBatches[-Query]
+      cnBatches <- cnBatches[-Query]
+      lsBatches[[1]] <- cbind(lsBatches[[1]], Correction[["Corrected Query Batch"]])
+      # new cb at the beginning
+      if (doCosNorm)
+        cnBatches[[1]] <- CosNorm(lsBatches[[1]])
+      else
+        cnBatches[[1]] <- lsBatches[[1]]
+      names(lsBatches)[1] <- paste(namesBatches[1],namesBatches[Query],sep = "/")
+
+      if(debug == TRUE){
+        lsCorrection[[names(lsBatches)[1]]] <- Correction
+      }
   }
 
   #order output dataset

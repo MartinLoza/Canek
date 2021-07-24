@@ -24,6 +24,7 @@ CorrectBatches(
   debug = FALSE,
   verbose = FALSE,
   scale = FALSE,
+  repetitions = 1,
   ...
 )
 }
