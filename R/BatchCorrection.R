@@ -97,9 +97,13 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     zeroGenes <- unique(zeroGenes)
     zeroGenes <- !(rownames(lsBatches[[1]]) %in% zeroGenes)
     ## Remove the zero genes
-    lsBatches <- lapply(lsBatches, function(batch){
-      return(batch[zeroGenes,])
-    })
+    if(length(zeroGenes) != 0){
+      warning('\nWarning: Genes with only-zeros in at least one batch were found. Integration will be perform only in the non-zero genes.', call. = TRUE)
+
+      lsBatches <- lapply(lsBatches, function(batch){
+        return(batch[zeroGenes,])
+      })
+    }
   }
   ### END OF TEST
 
