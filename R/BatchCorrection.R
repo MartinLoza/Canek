@@ -62,7 +62,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            fuzzy = TRUE, fuzzyPCA = 10,
                            estMethod = "Median", clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
-                           debug = FALSE, verbose = FALSE, ... ){
+                           debug = FALSE, verbose = FALSE,
+                           scale = TRUE,... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -88,6 +89,19 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
   #Check input batches as matrices
   lsBatches <- lapply(lsBatches, as.matrix)
+
+  ## TEST SCALING
+  if(scale){
+    ## Check genes with only zeros on each batch.
+    zeroGenes <- unlist(lapply(lsBatches, WhichRowZeros))
+    zeroGenes <- unique(zeroGenes)
+    zeroGenes <- !(rownames(lsBatches[[1]]) %in% zeroGenes)
+    ## Remove the zero genes
+    lsBatches <- lapply(lsBatches, function(batch){
+      return(batch[zeroGenes,])
+    })
+  }
+  ### END OF TEST
 
   # First batch is the one with highest number of cells
   nCells <- sapply(lsBatches, ncol)
@@ -172,7 +186,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                sampling = sampling, numSamples = numSamples,
                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
                                doCosNorm = doCosNorm, clusterMethod = clusterMethod,
-                               verbose = verbose)
+                               scale = scale, verbose = verbose)
 
     # new ref at the beginning
     lsBatches <- lsBatches[-Query]
@@ -282,7 +296,7 @@ CorrectBatch <- function(refBatch, queBatch,
                          fuzzy = TRUE, fuzzyPCA = 10,
                          estMethod = "Median", clusterMethod = "louvain",
                          pairsFilter = FALSE, doCosNorm = FALSE,
-                         verbose = FALSE) {
+                         scale = TRUE, verbose = FALSE) {
 
   tBatch <- Sys.time()
 
@@ -311,7 +325,17 @@ CorrectBatch <- function(refBatch, queBatch,
       cnQue <- queBatch
     }
 
-    pcaBatches <- prcomp_irlba(t(cbind(cnRef, cnQue)), n = pcaDim)
+    ## TEST SCALE
+    #pcaBatches <- prcomp_irlba(t(cbind(cnRef, cnQue)), n = pcaDim)
+    pcaBatches <- cbind(cnRef, cnQue)
+    if(scale){
+      pcaBatches <- RowScale(pcaBatches, center = TRUE, scale = TRUE)
+      pcaBatches <- prcomp_irlba(t(pcaBatches), n = pcaDim, center = FALSE, scale. = FALSE )
+    }else{
+      pcaBatches <- prcomp_irlba(t(pcaBatches), n = pcaDim, center = TRUE, scale. = FALSE)
+    }
+    ## END OF TEST
+
 
     pcaRef <- pcaBatches$x[1:nCellsRef,]
     pcaQue <- pcaBatches$x[(nCellsRef+1):nCells,]
