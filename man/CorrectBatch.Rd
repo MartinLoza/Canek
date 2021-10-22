@@ -25,6 +25,7 @@ CorrectBatch(
   clusterMethod = "louvain",
   pairsFilter = FALSE,
   doCosNorm = FALSE,
+  scale = TRUE,
   verbose = FALSE
 )
 }

@@ -336,7 +336,6 @@ CorrectBatch <- function(refBatch, queBatch,
     }
     ## END OF TEST
 
-
     pcaRef <- pcaBatches$x[1:nCellsRef,]
     pcaQue <- pcaBatches$x[(nCellsRef+1):nCells,]
 
