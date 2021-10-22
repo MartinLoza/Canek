@@ -98,7 +98,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     zeroGenes <- !(rownames(lsBatches[[1]]) %in% zeroGenes)
     ## Remove the zero genes
     if(length(zeroGenes) != 0){
-      warning('\nWarning: Genes with only-zeros in at least one batch were found. Integration will be perform only in the non-zero genes.', call. = TRUE)
+      warning('\nWarning: Genes with only-zeros in at least one batch were found. Integration will be perform only for non-zero genes.', call. = TRUE)
 
       lsBatches <- lapply(lsBatches, function(batch){
         return(batch[zeroGenes,])
@@ -158,7 +158,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
         } else {
           m <- t(cbind(cnBatches[[1]], cnBatches[[n]]))
         }
-        prcomp_irlba(m)
+        prcomp_irlba(m, scale. = TRUE)
       })
 
       nPairs <- lapply(pcaBatches, function(x){
