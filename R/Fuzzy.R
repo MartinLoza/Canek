@@ -25,6 +25,17 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, M
   corCell <- as.data.frame(corCell)
   corCell[["Fuzzified"]] <- FALSE
 
+  ## TEST SCALE CLUSTERS PCA
+  for(mem in unique(cluMem$cluster)){
+    idx <- which(cluMem$cluster == mem)
+    pcaMem <- pcaQue[idx,]
+    centersMem <- colMeans(pcaMem)
+    pcaMem <- scale(pcaMem, center = FALSE, scale = TRUE)
+    pcaMem <- sweep(x = pcaMem, MARGIN = 2,STATS = -centersMem)
+    pcaQue[idx,] <- pcaMem
+  }
+  ##
+
   # Create Minimum spanning tree (MST) by using centers of Memberships as nodes
   if(verbose)
     cat( '\n\tObtaining Minimum Spanning Tree' )
