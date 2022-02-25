@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -37,18 +39,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -61,6 +57,9 @@
   <ul class="dropdown-menu" role="menu">
 <li>
       <a href="../articles/seurat.html">Run Canek on Seurat objects</a>
+    </li>
+    <li>
+      <a href="../articles/toy_example.html">Run Canek on a toy example</a>
     </li>
   </ul>
 </li>
@@ -89,40 +88,37 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span>
 <span class="co">#&gt; Attaching SeuratObject</span></code></pre></div>
-<div id="create-seurat-object" class="section level1">
-<h1 class="hasAnchor">
-<a href="#create-seurat-object" class="anchor"></a>Create Seurat object</h1>
+<div class="section level2">
+<h2 id="create-seurat-object">Create Seurat object<a class="anchor" aria-label="anchor" href="#create-seurat-object"></a>
+</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">batch</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://satijalab.org/seurat/reference/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="va">batch</span><span class="op">]</span><span class="op">]</span>, project <span class="op">=</span> <span class="va">batch</span><span class="op">)</span> 
+<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">batch</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="va">batch</span><span class="op">]</span><span class="op">]</span>, project <span class="op">=</span> <span class="va">batch</span><span class="op">)</span> 
 <span class="op">}</span><span class="op">)</span>
-<span class="co">#&gt; Warning: The following arguments are not used: row.names</span>
-
-<span class="co">#&gt; Warning: The following arguments are not used: row.names</span>
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">x</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">x</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="va">x</span><span class="op">[[</span><span class="st">"cell_type"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">cell_types</span>
 <span class="va">x</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 500 features across 1579 samples within 1 assay </span>
 <span class="co">#&gt; Active assay: RNA (500 features, 0 variable features)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">orig.ident</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">orig.ident</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  B1  B2 </span>
 <span class="co">#&gt; 631 948</span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, selection.method <span class="op">=</span> <span class="st">"mean.var.plot"</span><span class="op">)</span>
-<span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeaturePlot.html">VariableFeaturePlot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, selection.method <span class="op">=</span> <span class="st">"mean.var.plot"</span><span class="op">)</span>
+<span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeaturePlot.html" class="external-link">VariableFeaturePlot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">#&gt; Centering and scaling data matrix</span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">#&gt; Warning in irlba(A = t(x = object), nv = npcs, ...): You're computing too large</span>
 <span class="co">#&gt; a percentage of total singular values, use a standard svd instead.</span>
 <span class="co">#&gt; PC_ 1 </span>
@@ -147,33 +143,33 @@
 <span class="co">#&gt;     Gene473, Gene209, Gene326, Gene304, Gene261, Gene89, Gene474, Gene342, Gene187, Gene460 </span>
 <span class="co">#&gt;     Gene50, Gene18, Gene4, Gene396, Gene61, Gene213, Gene147, Gene361, Gene422, Gene381 </span>
 <span class="co">#&gt; PC_ 4 </span>
-<span class="co">#&gt; Positive:  Gene61, Gene449, Gene261, Gene239, Gene461, Gene162, Gene209, Gene141, Gene342, Gene195 </span>
-<span class="co">#&gt;     Gene5, Gene439, Gene31, Gene250, Gene24, Gene136, Gene54, Gene94, Gene64, Gene298 </span>
-<span class="co">#&gt;     Gene22, Gene323, Gene14, Gene147, Gene366, Gene381, Gene211, Gene474, Gene140, Gene359 </span>
-<span class="co">#&gt; Negative:  Gene183, Gene401, Gene224, Gene471, Gene327, Gene361, Gene311, Gene50, Gene373, Gene65 </span>
+<span class="co">#&gt; Positive:  Gene183, Gene401, Gene224, Gene471, Gene327, Gene361, Gene311, Gene50, Gene373, Gene65 </span>
 <span class="co">#&gt;     Gene378, Gene422, Gene4, Gene322, Gene223, Gene74, Gene487, Gene207, Gene220, Gene213 </span>
 <span class="co">#&gt;     Gene497, Gene375, Gene18, Gene78, Gene453, Gene243, Gene410, Gene304, Gene473, Gene492 </span>
+<span class="co">#&gt; Negative:  Gene61, Gene449, Gene261, Gene239, Gene461, Gene162, Gene209, Gene141, Gene342, Gene195 </span>
+<span class="co">#&gt;     Gene5, Gene439, Gene31, Gene250, Gene24, Gene136, Gene54, Gene94, Gene64, Gene298 </span>
+<span class="co">#&gt;     Gene22, Gene323, Gene14, Gene147, Gene366, Gene381, Gene211, Gene474, Gene140, Gene359 </span>
 <span class="co">#&gt; PC_ 5 </span>
-<span class="co">#&gt; Positive:  Gene422, Gene195, Gene89, Gene209, Gene250, Gene432, Gene22, Gene342, Gene147, Gene396 </span>
-<span class="co">#&gt;     Gene359, Gene140, Gene78, Gene453, Gene220, Gene243, Gene14, Gene474, Gene326, Gene50 </span>
-<span class="co">#&gt;     Gene322, Gene439, Gene77, Gene425, Gene298, Gene183, Gene24, Gene438, Gene162, Gene361 </span>
-<span class="co">#&gt; Negative:  Gene94, Gene207, Gene449, Gene461, Gene75, Gene4, Gene410, Gene304, Gene261, Gene65 </span>
+<span class="co">#&gt; Positive:  Gene94, Gene207, Gene449, Gene461, Gene75, Gene4, Gene410, Gene304, Gene261, Gene65 </span>
 <span class="co">#&gt;     Gene354, Gene327, Gene366, Gene136, Gene54, Gene492, Gene473, Gene74, Gene18, Gene31 </span>
-<span class="co">#&gt;     Gene341, Gene323, Gene348, Gene239, Gene223, Gene311, Gene213, Gene172, Gene224, Gene61</span></code></pre></div>
-<div id="pca-plot-before-correction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pca-plot-before-correction" class="anchor"></a>PCA plot before correction</h2>
+<span class="co">#&gt;     Gene341, Gene323, Gene348, Gene239, Gene223, Gene311, Gene213, Gene172, Gene224, Gene61 </span>
+<span class="co">#&gt; Negative:  Gene422, Gene195, Gene89, Gene209, Gene250, Gene432, Gene22, Gene342, Gene147, Gene396 </span>
+<span class="co">#&gt;     Gene359, Gene140, Gene78, Gene453, Gene220, Gene243, Gene14, Gene474, Gene326, Gene50 </span>
+<span class="co">#&gt;     Gene322, Gene439, Gene77, Gene425, Gene298, Gene183, Gene24, Gene438, Gene162, Gene361</span></code></pre></div>
+<div class="section level3">
+<h3 id="pca-plot-before-correction">PCA plot before correction<a class="anchor" aria-label="anchor" href="#pca-plot-before-correction"></a>
+</h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"orig.ident"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"orig.ident"</span><span class="op">)</span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"cell_type"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"cell_type"</span><span class="op">)</span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-7-2.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 </div>
-<div id="run-canek" class="section level1">
-<h1 class="hasAnchor">
-<a href="#run-canek" class="anchor"></a>Run Canek</h1>
+<div class="section level2">
+<h2 id="run-canek">Run Canek<a class="anchor" aria-label="anchor" href="#run-canek"></a>
+</h2>
 <p>We pass the column containing the batch information.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RunCanek.html">RunCanek</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"orig.ident"</span><span class="op">)</span>
@@ -181,14 +177,14 @@
 <span class="co">#&gt; TRUE, : You're computing too large a percentage of total singular values, use a</span>
 <span class="co">#&gt; standard svd instead.</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">#&gt; Centering and scaling data matrix</span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, nfeatures <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>
-<span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeaturePlot.html">VariableFeaturePlot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, nfeatures <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>
+<span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeaturePlot.html" class="external-link">VariableFeaturePlot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">#&gt; Warning in irlba(A = t(x = object), nv = npcs, ...): You're computing too large</span>
 <span class="co">#&gt; a percentage of total singular values, use a standard svd instead.</span>
 <span class="co">#&gt; PC_ 1 </span>
@@ -220,20 +216,20 @@
 <span class="co">#&gt;     Gene261, Gene327, Gene136, Gene354, Gene54, Gene492, Gene341, Gene323, Gene74, Gene473 </span>
 <span class="co">#&gt;     Gene18, Gene348, Gene311, Gene31, Gene239, Gene172, Gene64, Gene213, Gene223, Gene451 </span>
 <span class="co">#&gt; PC_ 5 </span>
-<span class="co">#&gt; Positive:  Gene224, Gene425, Gene94, Gene497, Gene147, Gene451, Gene187, Gene326, Gene396, Gene438 </span>
-<span class="co">#&gt;     Gene162, Gene460, Gene378, Gene75, Gene213, Gene77, Gene298, Gene24, Gene473, Gene487 </span>
-<span class="co">#&gt;     Gene328, Gene223, Gene14, Gene243, Gene401, Gene31, Gene469, Gene311, Gene359, Gene50 </span>
-<span class="co">#&gt; Negative:  Gene250, Gene89, Gene22, Gene322, Gene354, Gene140, Gene432, Gene183, Gene439, Gene65 </span>
+<span class="co">#&gt; Positive:  Gene250, Gene89, Gene22, Gene322, Gene354, Gene140, Gene432, Gene183, Gene439, Gene65 </span>
 <span class="co">#&gt;     Gene78, Gene61, Gene449, Gene74, Gene18, Gene64, Gene4, Gene410, Gene373, Gene195 </span>
-<span class="co">#&gt;     Gene366, Gene141, Gene327, Gene54, Gene207, Gene261, Gene342, Gene474, Gene492, Gene5</span></code></pre></div>
-<div id="pca-plot-after-correction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pca-plot-after-correction" class="anchor"></a>PCA plot after correction</h2>
+<span class="co">#&gt;     Gene366, Gene141, Gene327, Gene54, Gene207, Gene261, Gene342, Gene474, Gene492, Gene5 </span>
+<span class="co">#&gt; Negative:  Gene224, Gene425, Gene94, Gene497, Gene147, Gene451, Gene187, Gene326, Gene396, Gene438 </span>
+<span class="co">#&gt;     Gene162, Gene460, Gene378, Gene75, Gene213, Gene77, Gene298, Gene24, Gene473, Gene487 </span>
+<span class="co">#&gt;     Gene328, Gene223, Gene14, Gene243, Gene401, Gene31, Gene469, Gene311, Gene359, Gene50</span></code></pre></div>
+<div class="section level3">
+<h3 id="pca-plot-after-correction">PCA plot after correction<a class="anchor" aria-label="anchor" href="#pca-plot-after-correction"></a>
+</h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"orig.ident"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"orig.ident"</span><span class="op">)</span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"cell_type"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"cell_type"</span><span class="op">)</span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-12-2.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -250,11 +246,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Martin Loza, Diego Diez.</p>
+  <p></p>
+<p>Developed by Martin Loza, Diego Diez.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -262,6 +260,8 @@
 
   
 
+
+  
 
   </body>
 </html>

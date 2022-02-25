@@ -1,11 +1,11 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
-  articles/seurat: seurat.html
+  seurat: seurat.html
   toy_example: toy_example.html
-last_built: 2021-10-01T16:32Z
+last_built: 2022-02-25T07:56Z
 urls:
-  reference: https://MartinLoza.github.io/Canek//reference
-  article: https://MartinLoza.github.io/Canek//articles
+  reference: https://MartinLoza.github.io/Canek/reference
+  article: https://MartinLoza.github.io/Canek/articles
 

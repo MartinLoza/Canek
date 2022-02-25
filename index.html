@@ -27,6 +27,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -39,18 +41,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -62,7 +58,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/articles/seurat.html">Run Canek on Seurat objects</a>
+      <a href="articles/seurat.html">Run Canek on Seurat objects</a>
     </li>
     <li>
       <a href="articles/toy_example.html">Run Canek on a toy example</a>
@@ -87,15 +83,15 @@
 </p>
 <p><img src="reference/figures/README-logo.png" width="50%"></p>
 
-<div id="canek" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#canek" class="anchor"></a>Canek</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="canek">Canek<a class="anchor" aria-label="anchor" href="#canek"></a>
+</h1></div>
 <!-- badges: start -->
-<p><a href="https://github.com/MartinLoza/Canek/actions"><img src="https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <!-- badges: end --></p>
+
 <p>The goal of Canek is to correct batch effect from single cell transcriptomics.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <!--
 You can install the released version of Canek from [CRAN](https://CRAN.R-project.org) with:
 
@@ -103,17 +99,17 @@ You can install the released version of Canek from [CRAN](https://CRAN.R-project
 install.packages("Canek")
 ```
 -->
-<p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
+<p>You can install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MartinLoza/Canek"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
 <p>This is a basic example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
 <span class="co">#&gt; Registered S3 method overwritten by 'spdep':</span>
 <span class="co">#&gt;   method   from</span>
 <span class="co">#&gt;   plot.mst ape</span>
@@ -133,17 +129,33 @@ install.packages("Canek")
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Martin Loza <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-3342-2643" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Diego Diez <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2325-4893" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing Canek</a></li>
+</ul>
+</div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Martin Loza <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-3342-2643" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Diego Diez <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2325-4893" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/MartinLoza/Canek/actions" class="external-link"><img src="https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
@@ -152,11 +164,13 @@ install.packages("Canek")
 
 
       <footer><div class="copyright">
-  <p>Developed by Martin Loza, Diego Diez.</p>
+  <p></p>
+<p>Developed by Martin Loza, Diego Diez.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -164,6 +178,8 @@ install.packages("Canek")
 
   
 
+
+  
 
   </body>
 </html>

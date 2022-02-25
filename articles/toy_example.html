@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -37,18 +39,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -60,7 +56,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/articles/seurat.html">Run Canek on Seurat objects</a>
+      <a href="../articles/seurat.html">Run Canek on Seurat objects</a>
     </li>
     <li>
       <a href="../articles/toy_example.html">Run Canek on a toy example</a>
@@ -92,50 +88,50 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
 
 <span class="co"># Functions</span>
 <span class="co">## Function to plot the pca coordinates</span>
 <span class="va">plotPCA</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">pcaData</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">label</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">legPosition</span> <span class="op">=</span> <span class="st">"topleft"</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html">as.integer</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span> 
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">pcaData</span><span class="op">[</span>,<span class="st">"PC1"</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">pcaData</span><span class="op">[</span>,<span class="st">"PC2"</span><span class="op">]</span>,
-       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html">as.integer</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span>, cex <span class="op">=</span> <span class="fl">0.75</span>, pch <span class="op">=</span> <span class="fl">19</span>,
+  <span class="va">col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span> 
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">pcaData</span><span class="op">[</span>,<span class="st">"PC1"</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">pcaData</span><span class="op">[</span>,<span class="st">"PC2"</span><span class="op">]</span>,
+       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span>, cex <span class="op">=</span> <span class="fl">0.75</span>, pch <span class="op">=</span> <span class="fl">19</span>,
        xlab <span class="op">=</span> <span class="st">"PC1"</span>, ylab <span class="op">=</span> <span class="st">"PC2"</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="va">legPosition</span>,  pch <span class="op">=</span> <span class="fl">19</span>,
-         legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span>, 
-         col <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html">as.integer</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="va">legPosition</span>,  pch <span class="op">=</span> <span class="fl">19</span>,
+         legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span>, 
+         col <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<div id="load-the-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#load-the-data" class="anchor"></a>Load the data</h2>
+<div class="section level2">
+<h2 id="load-the-data">Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"></a>
+</h2>
 <p>On this toy example we use the two simulated batches included in the <code>SimBatches</code> data from Canek’s package. <code>SimBatches</code> is a list containing:</p>
 <ul>
 <li>
-<code>batches</code>: Simulated scRNA-seq datasets with genes (rows) and cells (columns). Simulations were performed using <a href="https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html">Splatter</a>.</li>
+<code>batches</code>: Simulated scRNA-seq datasets with genes (rows) and cells (columns). Simulations were performed using <a href="https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html" class="external-link">Splatter</a>.</li>
 <li>
 <code>cell_type</code>: a factor containing the celltype labels of the batches</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">lsData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>B1 <span class="op">=</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, B2 <span class="op">=</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="va">batch</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"Batch-1"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">lsData</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
-                  <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"Batch-2"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">lsData</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">lsData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>B1 <span class="op">=</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, B2 <span class="op">=</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="va">batch</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Batch-1"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">lsData</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
+                  <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Batch-2"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">lsData</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">celltype</span> <span class="op">&lt;-</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">cell_types</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">batch</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">batch</span><span class="op">)</span>
 <span class="co">#&gt; batch</span>
 <span class="co">#&gt; Batch-1 Batch-2 </span>
 <span class="co">#&gt;     631     948</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">celltype</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">celltype</span><span class="op">)</span>
 <span class="co">#&gt; celltype</span>
 <span class="co">#&gt; Cell Type 1 Cell Type 2 Cell Type 3 Cell Type 4 </span>
 <span class="co">#&gt;        1451          53          38          37</span></code></pre></div>
 </div>
-<div id="pca-before-correction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pca-before-correction" class="anchor"></a>PCA before correction</h2>
+<div class="section level2">
+<h2 id="pca-before-correction">PCA before correction<a class="anchor" aria-label="anchor" href="#pca-before-correction"></a>
+</h2>
 <p>We perform the Principal Component Analysys (PCA) of the joined datasets and scatter plot the first two PCs. The batch-effect causes cells to group by batch.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html">Reduce</a></span><span class="op">(</span><span class="va">cbind</span>, <span class="va">lsData</span><span class="op">)</span>
-<span class="va">pcaData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span>, scale. <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">x</span></code></pre></div>
+<code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="va">cbind</span>, <span class="va">lsData</span><span class="op">)</span>
+<span class="va">pcaData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span>, scale. <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">x</span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plotPCA</span><span class="op">(</span>pcaData <span class="op">=</span> <span class="va">pcaData</span>, label <span class="op">=</span> <span class="va">batch</span>, legPosition <span class="op">=</span> <span class="st">"bottomleft"</span><span class="op">)</span></code></pre></div>
 <p><img src="toy_example_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;"></p>
@@ -143,9 +139,9 @@
 <code class="sourceCode R"><span class="fu">plotPCA</span><span class="op">(</span>pcaData <span class="op">=</span> <span class="va">pcaData</span>, label <span class="op">=</span> <span class="va">celltype</span>, legPosition <span class="op">=</span> <span class="st">"bottomleft"</span><span class="op">)</span></code></pre></div>
 <p><img src="toy_example_files/figure-html/unnamed-chunk-4-2.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="run-canek" class="section level2">
-<h2 class="hasAnchor">
-<a href="#run-canek" class="anchor"></a>Run Canek</h2>
+<div class="section level2">
+<h2 id="run-canek">Run Canek<a class="anchor" aria-label="anchor" href="#run-canek"></a>
+</h2>
 <p>We correct the toy batches using the function <em>RunCanek</em>. This function accepts:</p>
 <ul>
 <li>List of matrices</li>
@@ -158,12 +154,12 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RunCanek.html">RunCanek</a></span><span class="op">(</span><span class="va">lsData</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="pca-after-correction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pca-after-correction" class="anchor"></a>PCA after correction</h2>
+<div class="section level2">
+<h2 id="pca-after-correction">PCA after correction<a class="anchor" aria-label="anchor" href="#pca-after-correction"></a>
+</h2>
 <p>We perform PCA of the corrected datasets and plot the first two PCs. After correction, the cells group by their corresponding cell type.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pcaData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span>, scale. <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">x</span></code></pre></div>
+<code class="sourceCode R"><span class="va">pcaData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span>, scale. <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">x</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plotPCA</span><span class="op">(</span>pcaData <span class="op">=</span> <span class="va">pcaData</span>, label <span class="op">=</span> <span class="va">batch</span>, legPosition <span class="op">=</span> <span class="st">"topleft"</span><span class="op">)</span></code></pre></div>
 <p><img src="toy_example_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
@@ -171,12 +167,12 @@
 <code class="sourceCode R"><span class="fu">plotPCA</span><span class="op">(</span>pcaData <span class="op">=</span> <span class="va">pcaData</span>, label <span class="op">=</span> <span class="va">celltype</span>, legPosition <span class="op">=</span> <span class="st">"topleft"</span><span class="op">)</span></code></pre></div>
 <p><img src="toy_example_files/figure-html/unnamed-chunk-7-2.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="session-info" class="section level2">
-<h2 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session info</h2>
+<div class="section level2">
+<h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; R version 4.1.1 (2021-08-10)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.1.2 (2021-11-01)</span>
 <span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
 <span class="co">#&gt; Running under: Ubuntu 20.04.3 LTS</span>
 <span class="co">#&gt; </span>
@@ -197,26 +193,27 @@
 <span class="co">#&gt; [1] Canek_0.1.7</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;  [1] modeltools_0.2-23    xfun_0.26            bslib_0.3.0         </span>
-<span class="co">#&gt;  [4] kernlab_0.9-29       lattice_0.20-45      htmltools_0.5.2     </span>
-<span class="co">#&gt;  [7] stats4_4.1.1         yaml_2.2.1           rlang_0.4.11        </span>
-<span class="co">#&gt; [10] pkgdown_1.6.1        jquerylib_0.1.4      prabclus_2.3-2      </span>
-<span class="co">#&gt; [13] BiocParallel_1.26.2  BiocGenerics_0.38.0  fpc_2.2-9           </span>
-<span class="co">#&gt; [16] matrixStats_0.61.0   robustbase_0.93-9    stringr_1.4.0       </span>
-<span class="co">#&gt; [19] ragg_1.1.3           memoise_2.0.0        evaluate_0.14       </span>
-<span class="co">#&gt; [22] knitr_1.36           fastmap_1.1.0        irlba_2.3.3         </span>
-<span class="co">#&gt; [25] flexmix_2.3-17       parallel_4.1.1       numbers_0.8-2       </span>
-<span class="co">#&gt; [28] class_7.3-19         DEoptimR_1.0-9       highr_0.9           </span>
-<span class="co">#&gt; [31] BiocNeighbors_1.10.0 Rcpp_1.0.7           diptest_0.76-0      </span>
-<span class="co">#&gt; [34] cachem_1.0.6         S4Vectors_0.30.1     desc_1.4.0          </span>
-<span class="co">#&gt; [37] jsonlite_1.7.2       FNN_1.1.3            systemfonts_1.0.2   </span>
-<span class="co">#&gt; [40] fs_1.5.0             textshaping_0.3.5    digest_0.6.28       </span>
-<span class="co">#&gt; [43] stringi_1.7.4        bluster_1.2.1        grid_4.1.1          </span>
-<span class="co">#&gt; [46] rprojroot_2.0.2      tools_4.1.1          magrittr_2.0.1      </span>
-<span class="co">#&gt; [49] sass_0.4.0           cluster_2.1.2        crayon_1.4.1        </span>
-<span class="co">#&gt; [52] pkgconfig_2.0.3      MASS_7.3-54          Matrix_1.3-4        </span>
-<span class="co">#&gt; [55] rmarkdown_2.11       R6_2.5.1             mclust_5.4.7        </span>
-<span class="co">#&gt; [58] nnet_7.3-16          igraph_1.2.6         compiler_4.1.1</span></code></pre></div>
+<span class="co">#&gt;  [1] modeltools_0.2-23    xfun_0.29            bslib_0.3.1         </span>
+<span class="co">#&gt;  [4] kernlab_0.9-29       purrr_0.3.4          lattice_0.20-45     </span>
+<span class="co">#&gt;  [7] htmltools_0.5.2      stats4_4.1.2         yaml_2.3.5          </span>
+<span class="co">#&gt; [10] rlang_1.0.1          pkgdown_2.0.2        jquerylib_0.1.4     </span>
+<span class="co">#&gt; [13] prabclus_2.3-2       BiocParallel_1.28.3  BiocGenerics_0.40.0 </span>
+<span class="co">#&gt; [16] fpc_2.2-9            matrixStats_0.61.0   robustbase_0.93-9   </span>
+<span class="co">#&gt; [19] stringr_1.4.0        ragg_1.2.2           memoise_2.0.1       </span>
+<span class="co">#&gt; [22] evaluate_0.15        knitr_1.37           fastmap_1.1.0       </span>
+<span class="co">#&gt; [25] irlba_2.3.5          flexmix_2.3-17       parallel_4.1.2      </span>
+<span class="co">#&gt; [28] numbers_0.8-2        class_7.3-20         highr_0.9           </span>
+<span class="co">#&gt; [31] DEoptimR_1.0-10      BiocNeighbors_1.12.0 Rcpp_1.0.8          </span>
+<span class="co">#&gt; [34] diptest_0.76-0       cachem_1.0.6         S4Vectors_0.32.3    </span>
+<span class="co">#&gt; [37] desc_1.4.0           jsonlite_1.8.0       FNN_1.1.3           </span>
+<span class="co">#&gt; [40] systemfonts_1.0.4    fs_1.5.2             textshaping_0.3.6   </span>
+<span class="co">#&gt; [43] digest_0.6.29        stringi_1.7.6        bluster_1.4.0       </span>
+<span class="co">#&gt; [46] grid_4.1.2           rprojroot_2.0.2      cli_3.2.0           </span>
+<span class="co">#&gt; [49] tools_4.1.2          magrittr_2.0.2       sass_0.4.0          </span>
+<span class="co">#&gt; [52] cluster_2.1.2        crayon_1.5.0         pkgconfig_2.0.3     </span>
+<span class="co">#&gt; [55] MASS_7.3-55          Matrix_1.4-0         rmarkdown_2.11      </span>
+<span class="co">#&gt; [58] R6_2.5.1             mclust_5.4.9         nnet_7.3-17         </span>
+<span class="co">#&gt; [61] igraph_1.2.11        compiler_4.1.2</span></code></pre></div>
 </div>
   </div>
 
@@ -231,11 +228,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Martin Loza, Diego Diez.</p>
+  <p></p>
+<p>Developed by Martin Loza, Diego Diez.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -243,6 +242,8 @@
 
   
 
+
+  
 
   </body>
 </html>
