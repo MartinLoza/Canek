@@ -1,4 +1,4 @@
-# Canek v0.1.7
+# Canek 0.2.0
 
 ## R CMD check results
 There were no ERRORs, WARNINGs, or NOTEs
