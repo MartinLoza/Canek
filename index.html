@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -51,7 +51,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -64,6 +64,9 @@
       <a href="articles/toy_example.html">Run Canek on a toy example</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -80,25 +83,25 @@
   <div class="contents col-md-9">
 
 <p align="center">
-</p>
-<p><img src="reference/figures/README-logo.png" width="50%"></p>
-
+<img src="reference/figures/README-logo.png" width="50%"></p>
 <div class="section level1">
 <div class="page-header"><h1 id="canek">Canek<a class="anchor" aria-label="anchor" href="#canek"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of Canek is to correct batch effect from single cell transcriptomics.</p>
+<p><em>Unbiased integration of single cell transcriptome replicates</em></p>
+<p>Check out the manuscript in NAR Genomics and Bioinformatics:</p>
+<ul>
+<li><a href="https://academic.oup.com/nargab/article/4/1/lqac022/6548822?login=true" class="external-link">Canek manuscript</a></li>
+<li><a href="https://academic.oup.com/nargab/article-pdf/4/1/lqac022/42899055/lqac022.pdf" class="external-link">PDF</a></li>
+</ul>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<!--
-You can install the released version of Canek from [CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("Canek")
-```
--->
+<!-- You can install the released version of Canek from [CRAN](https://CRAN.R-project.org) with: -->
+<!-- ``` r -->
+<!-- install.packages("Canek") -->
+<!-- ``` -->
 <p>You can install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
@@ -110,18 +113,21 @@ install.packages("Canek")
 <p>This is a basic example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
-<span class="co">#&gt; Registered S3 method overwritten by 'spdep':</span>
-<span class="co">#&gt;   method   from</span>
-<span class="co">#&gt;   plot.mst ape</span>
 
 <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/RunCanek.html">RunCanek</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">)</span>
 <span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>
-<span class="co">#&gt;        Cell701  Cell702  Cell703  Cell704  Cell705</span>
-<span class="co">#&gt; Gene1 6.664089 5.711871 6.277570 6.117087 6.720634</span>
-<span class="co">#&gt; Gene2 6.962410 6.934708 7.857783 6.586155 7.419143</span>
-<span class="co">#&gt; Gene3 6.063297 5.654124 5.545338 6.164500 5.734249</span>
-<span class="co">#&gt; Gene4 6.641050 5.922194 5.971686 6.360457 6.731420</span>
-<span class="co">#&gt; Gene5 4.503925 3.358179 1.160355 2.163020 3.391893</span></code></pre></div>
+<span class="co">#&gt;          Cell1    Cell2    Cell3    Cell4    Cell5</span>
+<span class="co">#&gt; Gene1 6.153816 6.216487 6.955690 6.680703 6.599896</span>
+<span class="co">#&gt; Gene2 6.925125 7.046951 7.335873 7.623013 7.017121</span>
+<span class="co">#&gt; Gene3 5.451978 6.140471 6.149198 6.046806 6.158075</span>
+<span class="co">#&gt; Gene4 6.793623 7.044712 6.857325 6.274883 6.287759</span>
+<span class="co">#&gt; Gene5 2.791353 2.271425 4.410185 2.571911 3.155063</span></code></pre></div>
+<p>For more tutorials using Canek check out our github page and vignettes:</p>
+<ul>
+<li><a href="https://martinloza.github.io/Canek/index.html" class="external-link">Canek website</a></li>
+<li><a href="https://martinloza.github.io/Canek/articles/toy_example.html" class="external-link">Run Canek on a toy example vignette</a></li>
+<li><a href="https://martinloza.github.io/Canek/articles/seurat.html" class="external-link">Run Canek on Seurat objects vignette</a></li>
+</ul>
 </div>
 </div>
 
