@@ -25,18 +25,20 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg)](https://github.com/MartinLoza/Canek/actions)
 <!-- badges: end -->
 
-The goal of Canek is to correct batch effect from single cell transcriptomics. 
+*Unbiased integration of single cell transcriptome replicates*
+
+Check out the manuscript in NAR Genomics and Bioinformatics:
+
+- [Canek manuscript](https://academic.oup.com/nargab/article/4/1/lqac022/6548822?login=true)
+- [PDF](https://academic.oup.com/nargab/article-pdf/4/1/lqac022/42899055/lqac022.pdf)
 
 ## Installation
 
-<!--
-You can install the released version of Canek from [CRAN](https://CRAN.R-project.org) with:
+<!-- You can install the released version of Canek from [CRAN](https://CRAN.R-project.org) with: -->
 
-``` r
-install.packages("Canek")
-```
--->
-
+<!-- ``` r -->
+<!-- install.packages("Canek") -->
+<!-- ``` -->
 You can install the development version from [GitHub](https://github.com/) with:
 
 ``` r
@@ -53,4 +55,10 @@ library(Canek)
 res <- RunCanek(SimBatches$batches)
 res[1:5, 1:5]
 ```
+
+For more tutorials using Canek check out our github page and vignettes:
+
+- [Canek website](https://martinloza.github.io/Canek/index.html)
+- [Run Canek on a toy example vignette](https://martinloza.github.io/Canek/articles/toy_example.html)
+- [Run Canek on Seurat objects vignette](https://martinloza.github.io/Canek/articles/seurat.html)
 
