@@ -1,0 +1,13 @@
+citEntry(entry="article",
+         title = "Unbiased integration of single cell transcriptome replicates",
+         author = personList( as.person("Martin Loza"),
+                              as.person("Shunsuke Teraguchi"),
+                              as.person("Daron M. Standley"),
+                              as.person("Diego Diez")),
+         year = 2022,
+         number = 4,
+         volume = 1,
+         pages = "lqac022",
+         doi = "10.1093/nargab/lqac022",
+         journal = "NAR Genomics and Bioinformatics",
+         textVersion = "Loza,M., Teraguchi,S., Standley,D.M. and Diez,D. (2022) Unbiased integration of single cell transcriptome replicates. Nar Genom Bioinform, 4, lqac022.")
