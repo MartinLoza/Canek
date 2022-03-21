@@ -14,13 +14,12 @@
 
 ## Citation
 
-Please cite Canek if you use it in your research with:
+If you use Canek in your research please cite our work using:
 
-*Loza,M., Teraguchi,S., Standley,D.M. and Diez,D. (2022) Unbiased
-integration of single cell transcriptome replicates. Nar Genom
-Bioinform, 4, lqac022.*
-
-Check out the manuscript in NAR Genomics and Bioinformatics:
+Loza M, Teraguchi S, Standley DM, Diez D (2022). “Unbiased integration
+of single cell transcriptome replicates.” *NAR Genomics and
+Bioinformatics*, *1*(4), lqac022. doi: 10.1093/nargab/lqac022 (URL:
+<https://doi.org/10.1093/nargab/lqac022>).
 
 -   [Canek
     manuscript](https://academic.oup.com/nargab/article/4/1/lqac022/6548822?login=true)

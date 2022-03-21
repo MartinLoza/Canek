@@ -28,11 +28,12 @@ knitr::opts_chunk$set(
 
 ## Citation
 
-Please cite Canek if you use it in your research with:
+If you use Canek in your research please cite our work using:
 
-*Loza,M., Teraguchi,S., Standley,D.M. and Diez,D. (2022) Unbiased integration of single cell transcriptome replicates. Nar Genom Bioinform, 4, lqac022.*
-
-Check out the manuscript in NAR Genomics and Bioinformatics:
+```{r echo=FALSE, results='asis', comment=""}
+cit <- citation("Canek")
+print(cit, style = "text")
+```
 
 - [Canek manuscript](https://academic.oup.com/nargab/article/4/1/lqac022/6548822?login=true)
 - [PDF](https://academic.oup.com/nargab/article-pdf/4/1/lqac022/42899055/lqac022.pdf)
