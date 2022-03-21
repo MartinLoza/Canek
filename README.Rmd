@@ -25,7 +25,12 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg)](https://github.com/MartinLoza/Canek/actions)
 <!-- badges: end -->
 
-*Unbiased integration of single cell transcriptome replicates*
+
+## Citation
+
+Please cite Canek if you use it in your research with:
+
+*Loza,M., Teraguchi,S., Standley,D.M. and Diez,D. (2022) Unbiased integration of single cell transcriptome replicates. Nar Genom Bioinform, 4, lqac022.*
 
 Check out the manuscript in NAR Genomics and Bioinformatics:
 
