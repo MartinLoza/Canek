@@ -131,7 +131,7 @@
 <div class="section level2">
 <h2 id="pca-before-correction">PCA before correction<a class="anchor" aria-label="anchor" href="#pca-before-correction"></a>
 </h2>
-<p>We perform the Principal Component Analysys (PCA) of the joined datasets and scatter plot the first two PCs. The batch-effect causes cells to group by batch.</p>
+<p>We perform the Principal Component Analysis (PCA) of the joined datasets and scatter plot the first two PCs. The batch-effect causes cells to group by batch.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="va">cbind</span>, <span class="va">lsData</span><span class="op">)</span>
 <span class="va">pcaData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span>, scale. <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">x</span></code></pre></div>
