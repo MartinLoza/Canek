@@ -31,7 +31,7 @@ Matrix dimensions are expected as #Cell x #Memberships, with each row sum equal 
 Function to score cell's memberships by fuzzy logic
 }
 \details{
-This function stablishes the fuzzification for the cells' membership.
+This function perform the fuzzification for the cells' membership.
  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
   for each of the edges of the MST.#'
 }

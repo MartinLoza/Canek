@@ -11,7 +11,7 @@
 #' @param fuzzyPCA Number of PCs to use in the fuzzy process.
 #' @param MST Minimum spanning tree
 #'
-#' @details This function stablishes the fuzzification for the cells' membership.
+#' @details This function perform the fuzzification for the cells' membership.
 #'  A minimum spanning tree (MST) is created among memberships, and the fuzzification is performed
 #'   for each of the edges of the MST.#'
 #'

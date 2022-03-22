@@ -51,7 +51,7 @@ table(celltype)
 
 ## PCA before correction
 
-We perform the Principal Component Analysys (PCA) of the joined datasets and scatter plot the first two PCs. The batch-effect causes cells to group by batch. 
+We perform the Principal Component Analysis (PCA) of the joined datasets and scatter plot the first two PCs. The batch-effect causes cells to group by batch. 
 
 ```{r}
 data <- Reduce(cbind, lsData)
