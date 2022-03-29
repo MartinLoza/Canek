@@ -40,11 +40,12 @@ print(cit, style = "text")
 
 ## Installation
 
-<!-- You can install the released version of Canek from [CRAN](https://CRAN.R-project.org) with: -->
+You can install the release version of Canek from [CRAN](https://CRAN.R-project.org) with:
 
-<!-- ``` r -->
-<!-- install.packages("Canek") -->
-<!-- ``` -->
+```
+install.packages("Canek")
+```
+
 You can install the development version from [GitHub](https://github.com/) with:
 
 ``` r

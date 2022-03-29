@@ -27,10 +27,10 @@ Bioinformatics*, *1*(4), lqac022. doi: 10.1093/nargab/lqac022 (URL:
 
 ## Installation
 
-<!-- You can install the released version of Canek from [CRAN](https://CRAN.R-project.org) with: -->
-<!-- ``` r -->
-<!-- install.packages("Canek") -->
-<!-- ``` -->
+You can install the release version of Canek from
+[CRAN](https://CRAN.R-project.org) with:
+
+    install.packages("Canek")
 
 You can install the development version from
 [GitHub](https://github.com/) with:
@@ -50,7 +50,7 @@ library(Canek)
 res <- RunCanek(SimBatches$batches)
 res[1:5, 1:5]
 #>          Cell1    Cell2    Cell3    Cell4    Cell5
-#> Gene1 6.153816 6.216487 6.955690 6.680703 6.599896
+#> Gene1 6.153816 6.218394 6.955690 6.682506 6.599896
 #> Gene2 6.925125 7.046951 7.335873 7.623013 7.017121
 #> Gene3 5.451978 6.140471 6.149198 6.046806 6.158075
 #> Gene4 6.793623 7.044712 6.857325 6.274883 6.287759
