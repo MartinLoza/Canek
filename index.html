@@ -14,7 +14,7 @@
 <script src="pkgdown.js"></script><meta property="og:title" content="Batch Correction of Single Cell Transcriptome Data">
 <meta property="og:description" content="Non-linear/linear hybrid method for batch-effect correction
     that uses Mutual Nearest Neighbors (MNNs) to identify similar cells between 
-    datasets.">
+    datasets. Reference: Loza M. et al. (NAR Genomics and Bioinformatics, 2020) &lt;doi:10.1093/nargab/lqac022&gt;.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -102,12 +102,10 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<!-- You can install the released version of Canek from [CRAN](https://CRAN.R-project.org) with: -->
-<!-- ``` r -->
-<!-- install.packages("Canek") -->
-<!-- ``` -->
+<p>You can install the release version of Canek from <a href="https://CRAN.R-project.org" class="external-link">CRAN</a> with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span>(<span class="st">"Canek"</span>)</span></code></pre></div>
 <p>You can install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MartinLoza/Canek"</span><span class="op">)</span></code></pre></div>
 </div>
@@ -115,13 +113,13 @@
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>This is a basic example:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
 
 <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/RunCanek.html">RunCanek</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">)</span>
 <span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>
 <span class="co">#&gt;          Cell1    Cell2    Cell3    Cell4    Cell5</span>
-<span class="co">#&gt; Gene1 6.153816 6.216487 6.955690 6.680703 6.599896</span>
+<span class="co">#&gt; Gene1 6.153816 6.218394 6.955690 6.682506 6.599896</span>
 <span class="co">#&gt; Gene2 6.925125 7.046951 7.335873 7.623013 7.017121</span>
 <span class="co">#&gt; Gene3 5.451978 6.140471 6.149198 6.046806 6.158075</span>
 <span class="co">#&gt; Gene4 6.793623 7.044712 6.857325 6.274883 6.287759</span>
@@ -138,7 +136,14 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=Canek" class="external-link">View on CRAN</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -166,6 +171,9 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/MartinLoza/Canek/actions" class="external-link"><img src="https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://cran.r-project.org/package=Canek" class="external-link"><img src="https://www.r-pkg.org/badges/version/Canek" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://cran.r-project.org/package=Canek" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/Canek" alt="CRAN Downloads"></a></li>
+<li><a href="https://cran.r-project.org/package=Canek" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/Canek" alt="CRAN Downloads"></a></li>
 </ul>
 </div>
 
