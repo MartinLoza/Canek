@@ -10,7 +10,7 @@ Authors@R: c(
     )
 Description: Non-linear/linear hybrid method for batch-effect correction
     that uses Mutual Nearest Neighbors (MNNs) to identify similar cells between 
-    datasets.
+    datasets. Reference: Loza M. et al. (NAR Genomics and Bioinformatics, 2020) <doi:10.1093/nargab/lqac022>.
 Depends:
     R (>= 2.10)
 Imports:
