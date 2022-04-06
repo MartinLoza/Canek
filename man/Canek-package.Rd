@@ -6,7 +6,7 @@
 \alias{Canek-package}
 \title{Canek: Batch Correction of Single Cell Transcriptome Data}
 \description{
-Non-linear/linear hybrid method for batch-effect correction that uses Mutual Nearest Neighbors (MNNs) to identify similar cells between datasets.
+Non-linear/linear hybrid method for batch-effect correction that uses Mutual Nearest Neighbors (MNNs) to identify similar cells between datasets. Reference: Loza M. et al. (NAR Genomics and Bioinformatics, 2020) <doi:10.1093/nargab/lqac022>.
 }
 \author{
 \strong{Maintainer}: Martin Loza \email{martin.loza.lopez@gmail.com} (\href{https://orcid.org/0000-0002-3342-2643}{ORCID})
