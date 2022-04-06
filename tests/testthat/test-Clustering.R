@@ -16,6 +16,6 @@ test_that("Clustering with kmeans works", {
 test_that("Clustering with louvain works", {
   expect_false(is.null(dataLouvain))
   expect_equal(names(dataLouvain), c("cluster", "centers"))
-  expect_equal(as.integer(table(dataLouvain$cluster)), c(178,146,162,145))
-  expect_equal(dim(dataLouvain$centers), c(4, 10))
+  expect_equal(as.integer(table(dataLouvain$cluster)), c(96, 125, 140, 171, 99))
+  expect_equal(dim(dataLouvain$centers), c(5, 10))
 })
