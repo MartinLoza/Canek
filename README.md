@@ -17,18 +17,69 @@ Downloads](https://cranlogs.r-pkg.org/badges/Canek)](https://cran.r-project.org/
 Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Canek)](https://cran.r-project.org/package=Canek)
 <!-- badges: end -->
 
-## Citation
+*Canek is an R package to correct batch effects from single-cell RNA-seq
+biological replicates*.
 
-If you use Canek in your research please cite our work using:
+### Motivation to develop Canek
 
-Loza M, Teraguchi S, Standley DM, Diez D (2022). “Unbiased integration
-of single cell transcriptome replicates.” *NAR Genomics and
-Bioinformatics*, *1*(4), lqac022. doi: 10.1093/nargab/lqac022 (URL:
-<https://doi.org/10.1093/nargab/lqac022>).
+As single-cell genomics technologies become mainstream, more
+laboratories will perform experiments under different conditions with
+biological replicates obtained using a common technology. In this
+scenario, integration of datasets with minimal impact on cell phenotype
+is essential.
+
+### The workflow
+
+Canek leverages information from mutual nearest neighbor to combine
+local linear corrections with cell-specific non-linear corrections
+within a fuzzy logic framework.
+
+<p align="center">
+<img src="man/figures/README-workflow.png" width="100%"/>
+</p>
+<style type="text/css">
+    ol { list-style-type: upper-alpha; }
+</style>
+
+<font size="2">
+
+> A. Canek starts with a reference batch and query batch, assuming a
+> predominantly linear batch effect.
+>
+> B. Cell clusters are defined on the query batch and MNN pairs (arrows)
+> are used to define batch effect observations.
+>
+> C. The MNN pairs from each cluster are used to estimate cluster
+> specific correction vectors. These vectors can be used to correct the
+> batch effect or, (D) a non-linear correction can be applied by
+> calculating cell-specific correction vectors using fuzzy logic.
+
+<font size="3">
+
+### Results
+
+Canek was the highest scored method in tests specifically designed to
+assess **over-correction**, where Canek corrected batch effects without
+distortion to the structures of cells as compared with a gold standard.
+
+For more information about Canek check out our manuscript in **NAR
+Genomics and Bioinformatics**:
 
 -   [Canek
     manuscript](https://academic.oup.com/nargab/article/4/1/lqac022/6548822?login=true)
 -   [PDF](https://academic.oup.com/nargab/article-pdf/4/1/lqac022/42899055/lqac022.pdf)
+
+## Usage
+
+You can use Canek directly with *normalized-count matrices*, *Seurat*
+objects or *SingleCellExperiment* objects. For more details, check out
+our GitHub page and vignettes:
+
+-   [Canek website](https://martinloza.github.io/Canek/index.html)
+-   [Run Canek on a toy example
+    vignette](https://martinloza.github.io/Canek/articles/toy_example.html)
+-   [Run Canek on Seurat objects
+    vignette](https://martinloza.github.io/Canek/articles/seurat.html)
 
 ## Installation
 
@@ -45,27 +96,11 @@ You can install the development version from
 remotes::install_github("MartinLoza/Canek")
 ```
 
-## Example
+## Citation
 
-This is a basic example:
+If you use Canek in your research please cite our work using:
 
-``` r
-library(Canek)
-
-res <- RunCanek(SimBatches$batches)
-res[1:5, 1:5]
-#>          Cell1    Cell2    Cell3    Cell4    Cell5
-#> Gene1 6.145644 6.228590 6.960904 6.665023 6.586427
-#> Gene2 6.919552 7.048549 7.328128 7.649456 7.005002
-#> Gene3 5.468337 6.115350 6.146068 6.085750 6.142014
-#> Gene4 6.810614 7.076788 6.872226 6.359445 6.303407
-#> Gene5 2.848188 2.160687 4.454532 2.467829 3.165861
-```
-
-For more tutorials using Canek check out our github page and vignettes:
-
--   [Canek website](https://martinloza.github.io/Canek/index.html)
--   [Run Canek on a toy example
-    vignette](https://martinloza.github.io/Canek/articles/toy_example.html)
--   [Run Canek on Seurat objects
-    vignette](https://martinloza.github.io/Canek/articles/seurat.html)
+Loza M, Teraguchi S, Standley DM, Diez D (2022). “Unbiased integration
+of single cell transcriptome replicates.” *NAR Genomics and
+Bioinformatics*, *1*(4), lqac022. doi: 10.1093/nargab/lqac022 (URL:
+<https://doi.org/10.1093/nargab/lqac022>).
