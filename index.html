@@ -87,14 +87,46 @@
 <div class="page-header"><h1 id="canek">Canek<a class="anchor" aria-label="anchor" href="#canek"></a>
 </h1></div>
 <!-- badges: start -->
-<div class="section level2">
-<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
-</h2>
-<p>If you use Canek in your research please cite our work using:</p>
-<p>Loza M, Teraguchi S, Standley DM, Diez D (2022). “Unbiased integration of single cell transcriptome replicates.” <em>NAR Genomics and Bioinformatics</em>, <em>1</em>(4), lqac022. doi: 10.1093/nargab/lqac022 (URL: <a href="https://doi.org/10.1093/nargab/lqac022" class="external-link uri">https://doi.org/10.1093/nargab/lqac022</a>).</p>
+<p><em>Canek is an R package to correct batch effects from single-cell RNA-seq biological replicates</em>.</p>
+<div class="section level3">
+<h3 id="motivation-to-develop-canek">Motivation to develop Canek<a class="anchor" aria-label="anchor" href="#motivation-to-develop-canek"></a>
+</h3>
+<p>As single-cell genomics technologies become mainstream, more laboratories will perform experiments under different conditions with biological replicates obtained using a common technology. In this scenario, integration of datasets with minimal impact on cell phenotype is essential.</p>
+</div>
+<div class="section level3">
+<h3 id="the-workflow">The workflow<a class="anchor" aria-label="anchor" href="#the-workflow"></a>
+</h3>
+<p>Canek leverages information from mutual nearest neighbor to combine local linear corrections with cell-specific non-linear corrections within a fuzzy logic framework.</p>
+<p align="center"><img src="reference/figures/README-workflow.png" width="100%"></p>
+<style type="text/css">
+    ol { list-style-type: upper-alpha; }
+</style>
+<p><font size="2"></font></p>
+<blockquote>
+<p>A. Canek starts with a reference batch and query batch, assuming a predominantly linear batch effect.</p>
+<p>B. Cell clusters are defined on the query batch and MNN pairs (arrows) are used to define batch effect observations.</p>
+<p>C. The MNN pairs from each cluster are used to estimate cluster specific correction vectors. These vectors can be used to correct the batch effect or, (D) a non-linear correction can be applied by calculating cell-specific correction vectors using fuzzy logic.</p>
+</blockquote>
+<p><font size="3"></font></p>
+</div>
+<div class="section level3">
+<h3 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
+</h3>
+<p>Canek was the highest scored method in tests specifically designed to assess <strong>over-correction</strong>, where Canek corrected batch effects without distortion to the structures of cells as compared with a gold standard.</p>
+<p>For more information about Canek check out our manuscript in <strong>NAR Genomics and Bioinformatics</strong>:</p>
 <ul>
 <li><a href="https://academic.oup.com/nargab/article/4/1/lqac022/6548822?login=true" class="external-link">Canek manuscript</a></li>
 <li><a href="https://academic.oup.com/nargab/article-pdf/4/1/lqac022/42899055/lqac022.pdf" class="external-link">PDF</a></li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<p>You can use Canek directly with <em>normalized-count matrices</em>, <em>Seurat</em> objects or <em>SingleCellExperiment</em> objects. For more details, check out our GitHub page and vignettes:</p>
+<ul>
+<li><a href="https://martinloza.github.io/Canek/index.html" class="external-link">Canek website</a></li>
+<li><a href="https://martinloza.github.io/Canek/articles/toy_example.html" class="external-link">Run Canek on a toy example vignette</a></li>
+<li><a href="https://martinloza.github.io/Canek/articles/seurat.html" class="external-link">Run Canek on Seurat objects vignette</a></li>
 </ul>
 </div>
 <div class="section level2">
@@ -108,26 +140,10 @@
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MartinLoza/Canek"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>This is a basic example:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
-
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/RunCanek.html">RunCanek</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">)</span>
-<span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>
-<span class="co">#&gt;          Cell1    Cell2    Cell3    Cell4    Cell5</span>
-<span class="co">#&gt; Gene1 6.145644 6.228590 6.960904 6.665023 6.586427</span>
-<span class="co">#&gt; Gene2 6.919552 7.048549 7.328128 7.649456 7.005002</span>
-<span class="co">#&gt; Gene3 5.468337 6.115350 6.146068 6.085750 6.142014</span>
-<span class="co">#&gt; Gene4 6.810614 7.076788 6.872226 6.359445 6.303407</span>
-<span class="co">#&gt; Gene5 2.848188 2.160687 4.454532 2.467829 3.165861</span></code></pre></div>
-<p>For more tutorials using Canek check out our github page and vignettes:</p>
-<ul>
-<li><a href="https://martinloza.github.io/Canek/index.html" class="external-link">Canek website</a></li>
-<li><a href="https://martinloza.github.io/Canek/articles/toy_example.html" class="external-link">Run Canek on a toy example vignette</a></li>
-<li><a href="https://martinloza.github.io/Canek/articles/seurat.html" class="external-link">Run Canek on Seurat objects vignette</a></li>
-</ul>
+<p>If you use Canek in your research please cite our work using:</p>
+<p>Loza M, Teraguchi S, Standley DM, Diez D (2022). “Unbiased integration of single cell transcriptome replicates.” <em>NAR Genomics and Bioinformatics</em>, <em>1</em>(4), lqac022. doi: 10.1093/nargab/lqac022 (URL: <a href="https://doi.org/10.1093/nargab/lqac022" class="external-link uri">https://doi.org/10.1093/nargab/lqac022</a>).</p>
 </div>
 </div>
 
