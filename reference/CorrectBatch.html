@@ -38,6 +38,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
+    </li>
+    <li>
       <a href="../articles/seurat.html">Run Canek on Seurat objects</a>
     </li>
     <li>
@@ -95,60 +98,103 @@
     <h2>Arguments</h2>
     <dl><dt>refBatch</dt>
 <dd><p>Reference batch.</p></dd>
+
+
 <dt>queBatch</dt>
 <dd><p>Query batch (batch to correct).</p></dd>
+
+
 <dt>cnRef</dt>
 <dd><p>Cosine normalization of the reference batch.</p></dd>
+
+
 <dt>cnQue</dt>
 <dd><p>Cosine normalization of the query batch.</p></dd>
+
+
 <dt>queNumCelltypes</dt>
 <dd><p>Number of cell types in the query batch. By default Canek searches the number of cell
 types using an heuristic algorithm. Change this parameter if you know the number of cell types in advanced.</p></dd>
+
+
 <dt>maxMem</dt>
 <dd><p>Maximum number of memberships from the query batch. This parameter is used on the
 heuristic algorithm to find the number of cell types.</p></dd>
+
+
 <dt>pairs</dt>
 <dd><p>A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cell indexes.</p></dd>
+
+
 <dt>kNN</dt>
 <dd><p>Number of k-nearest-neighbors used to define the MNNs pairs.</p></dd>
+
+
 <dt>sampling</dt>
 <dd><p>Use MNNs pairs sampling when using a Kalman filter to estimate the correction vector.</p></dd>
+
+
 <dt>numSamples</dt>
 <dd><p>If sampling. Number of MNNs pairs samples to use on the estimation process.</p></dd>
+
+
 <dt>idxQuery</dt>
 <dd><p>Numerical vector indicating the index of the cells from the query batch to use
 on the correction vector estimation.</p></dd>
+
+
 <dt>idxRef</dt>
 <dd><p>Numerical vector indicating the index of the cells from the reference batch to use
 on the correction vector estimation.</p></dd>
+
+
 <dt>pcaDim</dt>
 <dd><p>Number of PCA dimensions to use.</p></dd>
+
+
 <dt>perCellMNN</dt>
 <dd><p>Threshold value to decide if a membership's correction value is calculated.
 As a rough interpretation, this values can be thought as the proportion of cells from a membership
 with an associated MNN pair. If the proportion is low, an specific correction vectors is
 not calculated for this membership.</p></dd>
+
+
 <dt>fuzzy</dt>
 <dd><p>Use fuzzy logic to join the local correction vectors.</p></dd>
+
+
 <dt>fuzzyPCA</dt>
 <dd><p>Number of PCs to use in the fuzzy process.</p></dd>
+
+
 <dt>estMethod</dt>
 <dd><p>Method to use when estimating the correction vectors:</p><ul><li><p>Median. Use the cells median distance.</p></li>
 <li><p>EKF. Use an extended Kalman filter.</p></li>
 </ul></dd>
+
+
 <dt>clusterMethod</dt>
 <dd><p>Method used to identify memberships.</p></dd>
+
+
 <dt>pairsFilter</dt>
 <dd><p>Filter MNNs pairs before estimating the correction vectors. If TRUE,
 the pairs are filtered from outliers using an interquartile range method.</p></dd>
+
+
 <dt>doCosNorm</dt>
 <dd><p>Whether to do cosine normalization.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>Print output.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list containing the input batches, the corrected query batch, and the correction data</p>
+    
+
+<p>A list containing the input batches, the corrected query batch, and the correction data</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -187,7 +233,7 @@ for each cluster using its MNNs pairs and use these vectors to remove the batch 
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

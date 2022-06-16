@@ -38,6 +38,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
+    </li>
+    <li>
       <a href="../articles/seurat.html">Run Canek on Seurat objects</a>
     </li>
     <li>
@@ -80,20 +83,33 @@
     <h2>Arguments</h2>
     <dl><dt>refBatch</dt>
 <dd><p>Reference batch.</p></dd>
+
+
 <dt>queBatch</dt>
 <dd><p>Query batch.</p></dd>
+
+
 <dt>pairs</dt>
 <dd><p>A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cells.</p></dd>
+
+
 <dt>sampling</dt>
 <dd><p>Sample MNNs pairs.</p></dd>
+
+
 <dt>numSamples</dt>
 <dd><p>If sampling, number of MNNs pairs samples to use on the estimation process.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>Print output.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list containing the estimated correction vector and the estimation data.
+    
+
+<p>A list containing the estimated correction vector and the estimation data.
 The length of the correction vector is equal to the number of genes.</p>
     </div>
     <div id="details">
@@ -115,7 +131,7 @@ the query batches.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

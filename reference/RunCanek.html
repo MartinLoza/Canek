@@ -38,6 +38,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
+    </li>
+    <li>
       <a href="../articles/seurat.html">Run Canek on Seurat objects</a>
     </li>
     <li>
@@ -92,26 +95,45 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>object with expression counts or list of matrices.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments passed down to methods.</p></dd>
+
+
 <dt>batches</dt>
 <dd><p>for S4 objects the column containing batch information.</p></dd>
+
+
 <dt>slot</dt>
 <dd><p>slot used for Seurat objects (default: data).</p></dd>
+
+
 <dt>assay</dt>
 <dd><p>assay used for Seurat objects (default: RNA).</p></dd>
+
+
 <dt>features</dt>
 <dd><p>optional vector of features to use for correction.</p></dd>
+
+
 <dt>selection.method</dt>
 <dd><p>method used for FindVariableFeatures on Seurat objects when features is NULL.</p></dd>
+
+
 <dt>fvf.nfeatures</dt>
 <dd><p>function used to collapse variable features from different batches. Default is intersect.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>whether to store information about correction vector.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of the appropriate type.</p>
+    
+
+<p>An object of the appropriate type.</p>
     </div>
 
   </div>
@@ -126,7 +148,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
