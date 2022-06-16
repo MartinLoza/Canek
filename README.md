@@ -80,6 +80,8 @@ our GitHub page and vignettes:
     vignette](https://martinloza.github.io/Canek/articles/toy_example.html)
 -   [Run Canek on Seurat objects
     vignette](https://martinloza.github.io/Canek/articles/seurat.html)
+-   [Run Canek on SingleCellExperiment objects
+    vignette](https://martinloza.github.io/Canek/articles/SingleCellExperiment.html)
 
 ## Installation
 

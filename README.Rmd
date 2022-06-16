@@ -71,6 +71,7 @@ You can use Canek directly with *normalized-count matrices*, *Seurat* objects or
 - [Canek website](https://martinloza.github.io/Canek/index.html)
 - [Run Canek on a toy example vignette](https://martinloza.github.io/Canek/articles/toy_example.html)
 - [Run Canek on Seurat objects vignette](https://martinloza.github.io/Canek/articles/seurat.html)
+- [Run Canek on SingleCellExperiment objects vignette](https://martinloza.github.io/Canek/articles/SingleCellExperiment.html)
 
 ## Installation
 
