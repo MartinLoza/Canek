@@ -1,0 +1,175 @@
+---
+title: "Run Canek on SingleCellExperiment objects"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Use Canek with Bioconductor}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+In this vignette, we demonstrate how to use `Canek` to correct batch effects from `SingleCellExperiment` objects following the recommendations from [Bioconductor](https://bioconductor.org/books/release/OSCA/) multi-sample analysis. 
+The toy data sets used in this vignette are included in the `Canek` R package. 
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.width = 7,
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Init
+
+```{r setup, message=FALSE}
+library(Canek)
+library(SingleCellExperiment)
+library(scater)
+library(batchelor)
+library(scran)
+library(ggplot2)
+library(patchwork)
+```
+
+## Create SingleCellExperiment objects
+
+```{r}
+#Create independent SingleCellExperiment objects
+sce <- lapply(names(Canek::SimBatches$batches), function(batch) {
+  counts <- SimBatches$batches[[batch]]     #get the counts
+  SingleCellExperiment(list(counts=counts),      #create the sce object
+                       mainExpName = "example_sce")
+})
+
+#Add batch labels
+names_batch <- c("B1", "B2")
+names(sce) <- names_batch
+sce$B1[["batch"]] <- "B1"
+sce$B2[["batch"]] <- "B2"
+
+#Add cell-type labels (included in Canek's package)
+celltypes <- Canek::SimBatches$cell_types
+ct_B1_idx <- 1:ncol(sce$B1)
+ct_B2_idx <- (ncol(sce$B1)+1):length(celltypes)
+sce$B1[["celltype"]] <- celltypes[ct_B1_idx]
+sce$B2[["celltype"]] <- celltypes[ct_B2_idx]
+```
+
+Let's check the cells distribution across batches.
+
+```{r}
+table(sce$B1$batch)
+table(sce$B2$batch)
+```
+
+## Pre-processing
+
+In the pre-processing steps, we perform the normalization of counts and the variance analysis of genes independently for each batch. Then, we find common variable genes to use in downstream analyses. 
+
+### Normalization
+
+We perform scaling normalization within each batch using the `multiBatchNorm` function from [batchelor](https://bioconductor.org/packages/release/bioc/html/batchelor.html) Bioconductor package. 
+
+```{r}
+sce <- batchelor::multiBatchNorm(sce[["B1"]], sce[["B2"]])
+names(sce) <- names_batch
+```
+
+### Feature selection
+
+We use the `combineVar` function from [scran](https://bioconductor.org/packages/release/bioc/html/scran.html) Bioconductor package. This function receives independent variance models of genes for each of the batches. This allows us to select highly variable genes while preserving within-batch differences. 
+
+We found 273 combined variable features.
+
+```{r}
+#Get independent features' variant models
+sce_var <- lapply(X = sce, FUN = scran::modelGeneVar) 
+#Combine the independent variables
+combined_features <- scran::combineVar(sce_var[["B1"]], sce_var[["B2"]])
+#Select features using the `bio` statistics (see combineVar documentation for further details)
+combined_features <- combined_features$bio > 0
+sum(combined_features)
+```
+
+### Visualization before batch effects correction
+
+Then, we merge the two datasets and use the combined variable features for the Principal Components Analysis.
+
+```{r}
+uncorrected <- cbind(sce[["B1"]], sce[["B2"]])
+uncorrected <- scater::runPCA(x = uncorrected[combined_features,], scale = TRUE)
+```
+
+Let's check out the elbow plot of the PCs.
+
+```{r}
+pca_uncorrected <- SingleCellExperiment::reducedDim(x = uncorrected, type = "PCA")
+variance <- apply(X = pca_uncorrected, MARGIN = 2, FUN = var)
+plot(x = 1:30, y = variance[1:30], xlab = "Principal components", ylab = "Variance")
+```
+
+The variance stabilizes after the first seven PCs. In this test, we will use 10 PCs to calculate the UMAP visualization, but feel free to try other numbers.
+
+```{r}
+set.seed(777)
+uncorrected <- scater::runUMAP(x = uncorrected, dimred = "PCA", pca = 10)
+```
+
+We can now visualize the uncorrected data by batch and cell-type labels. 
+
+```{r}
+p1 <- scater::plotUMAP(object = uncorrected, colour_by="batch") 
+p2 <- scater::plotUMAP(object = uncorrected, colour_by="celltype") 
+p1 + p2
+```
+
+We can observe that the cells labeled as *Cell Type 1* got divided into two groups that correlated with batch labels. Let's minimize this batch differences with Canek.
+
+## Correcting batch effects with Canek
+
+Canek accepts either a list of `SingleCellExperiments` objects or single objects with a `batch` identifier. We can pass a vector of variable features to use in the integration.
+
+```{r}
+features <- rownames(uncorrected)[combined_features]
+#RunCanek in a list of SingleCellExperiment objects
+#corrected <- Canek::RunCanek(x = sce, features = features)
+#RunCanek in a single object with a batch identifier
+corrected <- Canek::RunCanek(x = uncorrected, batches = "batch", features = features)
+```
+
+### Visualization after batch effects correction with Canek
+
+To perform PCA it's important to use the corrected log counts. These are saved in the assay `Canek` in the `SingleCellExperiment` object and can be specified by changing the `exprs_values` parameter.
+
+```{r}
+corrected <- scater::runPCA(x = corrected, scale = TRUE, exprs_values = "Canek")
+```
+
+Let's check out the elbow plot after correction. 
+
+```{r}
+pca_corrected <- SingleCellExperiment::reducedDim(x = corrected, type = "PCA")
+variance <- apply(X = pca_corrected, MARGIN = 2, FUN = var)
+plot(x = 1:30, y = variance[1:30], xlab = "Principal components", ylab = "Variance")
+``` 
+
+After correction, the elbow plot has changed and 5 PCs will be enough to calculate the UMAP visualization.
+
+```{r}
+set.seed(777)
+corrected <- scater::runUMAP(x = corrected, dimred = "PCA", pca = 5)
+```
+
+We can now visualize the corrected data by batch and cell-type labels. We can observe that after batch-correction with Canek, we minimize the batch difference in cells from *Cell Type 1* while preserving the other cell types.
+
+```{r}
+p1 <- scater::plotUMAP(object = corrected, colour_by="batch")
+p2 <- scater::plotUMAP(object = corrected, colour_by="celltype")
+p1 + p2
+```
+## Session info
+
+```{r}
+sessionInfo()
+```
+
