@@ -22,7 +22,7 @@ After experiencing diverse problems and difficulties correcting batch effects, w
 In this vignette, we will explain further these tips with a guided batch correction example using two *thymus* data sets from [Tabula Muris](https://tabula-muris.ds.czbiohub.org/#:~:text=Tabula%20Muris%20is%20a%20compendium,from%2020%20organs%20and%20tissues.):
 
 * [droplets](https://figshare.com/ndownloader/files/13090580)
-* [facs](https://figshare.com/ndownloader/files/13092398) data sets.
+* [facs](https://figshare.com/ndownloader/files/13092398)
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
