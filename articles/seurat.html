@@ -56,6 +56,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
+    </li>
+    <li>
       <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
     </li>
     <li>
@@ -94,83 +97,83 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span>
-<span class="co">#&gt; Attaching SeuratObject</span>
-<span class="co">#&gt; Attaching sp</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Attaching SeuratObject</span></span>
+<span><span class="co">#&gt; Attaching sp</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="create-seurat-object">Create Seurat object<a class="anchor" aria-label="anchor" href="#create-seurat-object"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">batch</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="va">batch</span><span class="op">]</span><span class="op">]</span>, project <span class="op">=</span> <span class="va">batch</span><span class="op">)</span> 
-<span class="op">}</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">x</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="va">x</span><span class="op">[[</span><span class="st">"cell_type"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">cell_types</span>
-<span class="va">x</span>
-<span class="co">#&gt; An object of class Seurat </span>
-<span class="co">#&gt; 500 features across 1579 samples within 1 assay </span>
-<span class="co">#&gt; Active assay: RNA (500 features, 0 variable features)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">batch</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span><span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="va">batch</span><span class="op">]</span><span class="op">]</span>, project <span class="op">=</span> <span class="va">batch</span><span class="op">)</span> </span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">x</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">[[</span><span class="st">"cell_type"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">cell_types</span></span>
+<span><span class="va">x</span></span>
+<span><span class="co">#&gt; An object of class Seurat </span></span>
+<span><span class="co">#&gt; 500 features across 1579 samples within 1 assay </span></span>
+<span><span class="co">#&gt; Active assay: RNA (500 features, 0 variable features)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">orig.ident</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  B1  B2 </span>
-<span class="co">#&gt; 631 948</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">orig.ident</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  B1  B2 </span></span>
+<span><span class="co">#&gt; 631 948</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, selection.method <span class="op">=</span> <span class="st">"mean.var.plot"</span><span class="op">)</span>
-<span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeaturePlot.html" class="external-link">VariableFeaturePlot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, selection.method <span class="op">=</span> <span class="st">"mean.var.plot"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeaturePlot.html" class="external-link">VariableFeaturePlot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-<span class="co">#&gt; Centering and scaling data matrix</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Centering and scaling data matrix</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-<span class="co">#&gt; Warning in irlba(A = t(x = object), nv = npcs, ...): You're computing too large</span>
-<span class="co">#&gt; a percentage of total singular values, use a standard svd instead.</span>
-<span class="co">#&gt; PC_ 1 </span>
-<span class="co">#&gt; Positive:  Gene65, Gene410, Gene373, Gene449, Gene323, Gene473, Gene61, Gene250, Gene50, Gene89 </span>
-<span class="co">#&gt;     Gene378, Gene342, Gene469, Gene24, Gene207, Gene213, Gene54, Gene471, Gene224, Gene64 </span>
-<span class="co">#&gt;     Gene4, Gene348, Gene432, Gene375, Gene94, Gene422, Gene439, Gene396, Gene78, Gene487 </span>
-<span class="co">#&gt; Negative:  Gene461, Gene341, Gene492, Gene183, Gene136, Gene31, Gene366, Gene311, Gene5, Gene140 </span>
-<span class="co">#&gt;     Gene460, Gene438, Gene162, Gene187, Gene211, Gene370, Gene401, Gene172, Gene147, Gene474 </span>
-<span class="co">#&gt;     Gene326, Gene223, Gene74, Gene354, Gene220, Gene361, Gene304, Gene77, Gene322, Gene359 </span>
-<span class="co">#&gt; PC_ 2 </span>
-<span class="co">#&gt; Positive:  Gene322, Gene31, Gene223, Gene211, Gene64, Gene373, Gene341, Gene410, Gene449, Gene323 </span>
-<span class="co">#&gt;     Gene224, Gene220, Gene327, Gene361, Gene461, Gene207, Gene61, Gene89, Gene209, Gene183 </span>
-<span class="co">#&gt;     Gene375, Gene487, Gene75, Gene354, Gene378, Gene451, Gene348, Gene471, Gene77, Gene460 </span>
-<span class="co">#&gt; Negative:  Gene4, Gene366, Gene74, Gene213, Gene136, Gene65, Gene473, Gene94, Gene492, Gene5 </span>
-<span class="co">#&gt;     Gene78, Gene14, Gene311, Gene326, Gene432, Gene422, Gene438, Gene401, Gene497, Gene328 </span>
-<span class="co">#&gt;     Gene474, Gene250, Gene381, Gene147, Gene141, Gene342, Gene54, Gene172, Gene239, Gene162 </span>
-<span class="co">#&gt; PC_ 3 </span>
-<span class="co">#&gt; Positive:  Gene311, Gene239, Gene471, Gene322, Gene492, Gene410, Gene323, Gene65, Gene378, Gene354 </span>
-<span class="co">#&gt;     Gene5, Gene469, Gene250, Gene183, Gene136, Gene207, Gene438, Gene348, Gene461, Gene453 </span>
-<span class="co">#&gt;     Gene439, Gene366, Gene64, Gene31, Gene140, Gene75, Gene22, Gene432, Gene141, Gene24 </span>
-<span class="co">#&gt; Negative:  Gene327, Gene94, Gene224, Gene223, Gene77, Gene449, Gene74, Gene341, Gene220, Gene162 </span>
-<span class="co">#&gt;     Gene473, Gene209, Gene326, Gene304, Gene261, Gene89, Gene474, Gene342, Gene187, Gene460 </span>
-<span class="co">#&gt;     Gene50, Gene18, Gene4, Gene396, Gene61, Gene213, Gene147, Gene361, Gene422, Gene381 </span>
-<span class="co">#&gt; PC_ 4 </span>
-<span class="co">#&gt; Positive:  Gene183, Gene401, Gene224, Gene471, Gene327, Gene361, Gene311, Gene50, Gene373, Gene65 </span>
-<span class="co">#&gt;     Gene378, Gene422, Gene4, Gene322, Gene223, Gene74, Gene487, Gene207, Gene220, Gene213 </span>
-<span class="co">#&gt;     Gene497, Gene375, Gene18, Gene78, Gene453, Gene243, Gene410, Gene304, Gene473, Gene492 </span>
-<span class="co">#&gt; Negative:  Gene61, Gene449, Gene261, Gene239, Gene461, Gene162, Gene209, Gene141, Gene342, Gene195 </span>
-<span class="co">#&gt;     Gene5, Gene439, Gene31, Gene250, Gene24, Gene136, Gene54, Gene94, Gene64, Gene298 </span>
-<span class="co">#&gt;     Gene22, Gene323, Gene14, Gene147, Gene366, Gene381, Gene211, Gene474, Gene140, Gene359 </span>
-<span class="co">#&gt; PC_ 5 </span>
-<span class="co">#&gt; Positive:  Gene94, Gene207, Gene449, Gene461, Gene75, Gene4, Gene410, Gene304, Gene261, Gene65 </span>
-<span class="co">#&gt;     Gene354, Gene327, Gene366, Gene136, Gene54, Gene492, Gene473, Gene74, Gene18, Gene31 </span>
-<span class="co">#&gt;     Gene341, Gene323, Gene348, Gene239, Gene223, Gene311, Gene213, Gene172, Gene224, Gene61 </span>
-<span class="co">#&gt; Negative:  Gene422, Gene195, Gene89, Gene209, Gene250, Gene432, Gene22, Gene342, Gene147, Gene396 </span>
-<span class="co">#&gt;     Gene359, Gene140, Gene78, Gene453, Gene220, Gene243, Gene14, Gene474, Gene326, Gene50 </span>
-<span class="co">#&gt;     Gene322, Gene439, Gene77, Gene425, Gene298, Gene183, Gene24, Gene438, Gene162, Gene361</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in irlba(A = t(x = object), nv = npcs, ...): You're computing too large</span></span>
+<span><span class="co">#&gt; a percentage of total singular values, use a standard svd instead.</span></span>
+<span><span class="co">#&gt; PC_ 1 </span></span>
+<span><span class="co">#&gt; Positive:  Gene65, Gene410, Gene373, Gene449, Gene323, Gene473, Gene61, Gene250, Gene50, Gene89 </span></span>
+<span><span class="co">#&gt;     Gene378, Gene342, Gene469, Gene24, Gene207, Gene213, Gene54, Gene471, Gene224, Gene64 </span></span>
+<span><span class="co">#&gt;     Gene4, Gene348, Gene432, Gene375, Gene94, Gene422, Gene439, Gene396, Gene78, Gene487 </span></span>
+<span><span class="co">#&gt; Negative:  Gene461, Gene341, Gene492, Gene183, Gene136, Gene31, Gene366, Gene311, Gene5, Gene140 </span></span>
+<span><span class="co">#&gt;     Gene460, Gene438, Gene162, Gene187, Gene211, Gene370, Gene401, Gene172, Gene147, Gene474 </span></span>
+<span><span class="co">#&gt;     Gene326, Gene223, Gene74, Gene354, Gene220, Gene361, Gene304, Gene77, Gene322, Gene359 </span></span>
+<span><span class="co">#&gt; PC_ 2 </span></span>
+<span><span class="co">#&gt; Positive:  Gene322, Gene31, Gene223, Gene211, Gene64, Gene373, Gene341, Gene410, Gene449, Gene323 </span></span>
+<span><span class="co">#&gt;     Gene224, Gene220, Gene327, Gene361, Gene461, Gene207, Gene61, Gene89, Gene209, Gene183 </span></span>
+<span><span class="co">#&gt;     Gene375, Gene487, Gene75, Gene354, Gene378, Gene451, Gene348, Gene471, Gene77, Gene460 </span></span>
+<span><span class="co">#&gt; Negative:  Gene4, Gene366, Gene74, Gene213, Gene136, Gene65, Gene473, Gene94, Gene492, Gene5 </span></span>
+<span><span class="co">#&gt;     Gene78, Gene14, Gene311, Gene326, Gene432, Gene422, Gene438, Gene401, Gene497, Gene328 </span></span>
+<span><span class="co">#&gt;     Gene474, Gene250, Gene381, Gene147, Gene141, Gene342, Gene54, Gene172, Gene239, Gene162 </span></span>
+<span><span class="co">#&gt; PC_ 3 </span></span>
+<span><span class="co">#&gt; Positive:  Gene311, Gene239, Gene471, Gene322, Gene492, Gene410, Gene323, Gene65, Gene378, Gene354 </span></span>
+<span><span class="co">#&gt;     Gene5, Gene469, Gene250, Gene183, Gene136, Gene207, Gene438, Gene348, Gene461, Gene453 </span></span>
+<span><span class="co">#&gt;     Gene439, Gene366, Gene64, Gene31, Gene140, Gene75, Gene22, Gene432, Gene141, Gene24 </span></span>
+<span><span class="co">#&gt; Negative:  Gene327, Gene94, Gene224, Gene223, Gene77, Gene449, Gene74, Gene341, Gene220, Gene162 </span></span>
+<span><span class="co">#&gt;     Gene473, Gene209, Gene326, Gene304, Gene261, Gene89, Gene474, Gene342, Gene187, Gene460 </span></span>
+<span><span class="co">#&gt;     Gene50, Gene18, Gene4, Gene396, Gene61, Gene213, Gene147, Gene361, Gene422, Gene381 </span></span>
+<span><span class="co">#&gt; PC_ 4 </span></span>
+<span><span class="co">#&gt; Positive:  Gene183, Gene401, Gene224, Gene471, Gene327, Gene361, Gene311, Gene50, Gene373, Gene65 </span></span>
+<span><span class="co">#&gt;     Gene378, Gene422, Gene4, Gene322, Gene223, Gene74, Gene487, Gene207, Gene220, Gene213 </span></span>
+<span><span class="co">#&gt;     Gene497, Gene375, Gene18, Gene78, Gene453, Gene243, Gene410, Gene304, Gene473, Gene492 </span></span>
+<span><span class="co">#&gt; Negative:  Gene61, Gene449, Gene261, Gene239, Gene461, Gene162, Gene209, Gene141, Gene342, Gene195 </span></span>
+<span><span class="co">#&gt;     Gene5, Gene439, Gene31, Gene250, Gene24, Gene136, Gene54, Gene94, Gene64, Gene298 </span></span>
+<span><span class="co">#&gt;     Gene22, Gene323, Gene14, Gene147, Gene366, Gene381, Gene211, Gene474, Gene140, Gene359 </span></span>
+<span><span class="co">#&gt; PC_ 5 </span></span>
+<span><span class="co">#&gt; Positive:  Gene94, Gene207, Gene449, Gene461, Gene75, Gene4, Gene410, Gene304, Gene261, Gene65 </span></span>
+<span><span class="co">#&gt;     Gene354, Gene327, Gene366, Gene136, Gene54, Gene492, Gene473, Gene74, Gene18, Gene31 </span></span>
+<span><span class="co">#&gt;     Gene341, Gene323, Gene348, Gene239, Gene223, Gene311, Gene213, Gene172, Gene224, Gene61 </span></span>
+<span><span class="co">#&gt; Negative:  Gene422, Gene195, Gene89, Gene209, Gene250, Gene432, Gene22, Gene342, Gene147, Gene396 </span></span>
+<span><span class="co">#&gt;     Gene359, Gene140, Gene78, Gene453, Gene220, Gene243, Gene14, Gene474, Gene326, Gene50 </span></span>
+<span><span class="co">#&gt;     Gene322, Gene439, Gene77, Gene425, Gene298, Gene183, Gene24, Gene438, Gene162, Gene361</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="pca-plot-before-correction">PCA plot before correction<a class="anchor" aria-label="anchor" href="#pca-plot-before-correction"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"orig.ident"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"orig.ident"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"cell_type"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"cell_type"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-7-2.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -179,64 +182,64 @@
 </h2>
 <p>We pass the column containing the batch information.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RunCanek.html">RunCanek</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"orig.ident"</span><span class="op">)</span>
-<span class="co">#&gt; Warning in (function (A, nv = 5, nu = nv, maxit = 1000, work = nv + 7, reorth =</span>
-<span class="co">#&gt; TRUE, : You're computing too large a percentage of total singular values, use a</span>
-<span class="co">#&gt; standard svd instead.</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RunCanek.html">RunCanek</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"orig.ident"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in (function (A, nv = 5, nu = nv, maxit = 1000, work = nv + 7, reorth =</span></span>
+<span><span class="co">#&gt; TRUE, : You're computing too large a percentage of total singular values, use a</span></span>
+<span><span class="co">#&gt; standard svd instead.</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-<span class="co">#&gt; Centering and scaling data matrix</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Centering and scaling data matrix</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, nfeatures <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>
-<span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeaturePlot.html" class="external-link">VariableFeaturePlot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, nfeatures <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeaturePlot.html" class="external-link">VariableFeaturePlot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-<span class="co">#&gt; Warning in irlba(A = t(x = object), nv = npcs, ...): You're computing too large</span>
-<span class="co">#&gt; a percentage of total singular values, use a standard svd instead.</span>
-<span class="co">#&gt; PC_ 1 </span>
-<span class="co">#&gt; Positive:  Gene31, Gene461, Gene322, Gene341, Gene211, Gene223, Gene64, Gene183, Gene361, Gene311 </span>
-<span class="co">#&gt;     Gene354, Gene220, Gene140, Gene207, Gene239, Gene410, Gene492, Gene323, Gene370, Gene460 </span>
-<span class="co">#&gt;     Gene451, Gene187, Gene438, Gene471, Gene75, Gene487, Gene209, Gene195, Gene453, Gene298 </span>
-<span class="co">#&gt; Negative:  Gene4, Gene65, Gene473, Gene74, Gene213, Gene94, Gene366, Gene50, Gene78, Gene342 </span>
-<span class="co">#&gt;     Gene250, Gene422, Gene14, Gene432, Gene327, Gene89, Gene54, Gene326, Gene497, Gene449 </span>
-<span class="co">#&gt;     Gene136, Gene396, Gene328, Gene224, Gene381, Gene474, Gene469, Gene373, Gene261, Gene141 </span>
-<span class="co">#&gt; PC_ 2 </span>
-<span class="co">#&gt; Positive:  Gene492, Gene311, Gene366, Gene136, Gene461, Gene5, Gene239, Gene438, Gene471, Gene183 </span>
-<span class="co">#&gt;     Gene140, Gene354, Gene401, Gene195, Gene4, Gene370, Gene147, Gene453, Gene65, Gene78 </span>
-<span class="co">#&gt;     Gene328, Gene172, Gene74, Gene497, Gene22, Gene359, Gene14, Gene213, Gene298, Gene432 </span>
-<span class="co">#&gt; Negative:  Gene327, Gene373, Gene449, Gene224, Gene223, Gene89, Gene61, Gene220, Gene50, Gene410 </span>
-<span class="co">#&gt;     Gene64, Gene211, Gene94, Gene341, Gene473, Gene209, Gene342, Gene77, Gene361, Gene322 </span>
-<span class="co">#&gt;     Gene375, Gene31, Gene323, Gene304, Gene261, Gene396, Gene207, Gene422, Gene18, Gene54 </span>
-<span class="co">#&gt; PC_ 3 </span>
-<span class="co">#&gt; Positive:  Gene61, Gene449, Gene261, Gene461, Gene162, Gene209, Gene342, Gene239, Gene141, Gene94 </span>
-<span class="co">#&gt;     Gene195, Gene24, Gene5, Gene439, Gene250, Gene136, Gene147, Gene298, Gene31, Gene77 </span>
-<span class="co">#&gt;     Gene14, Gene474, Gene54, Gene89, Gene341, Gene425, Gene359, Gene22, Gene64, Gene366 </span>
-<span class="co">#&gt; Negative:  Gene183, Gene401, Gene471, Gene224, Gene361, Gene327, Gene311, Gene322, Gene65, Gene373 </span>
-<span class="co">#&gt;     Gene378, Gene410, Gene50, Gene422, Gene207, Gene487, Gene4, Gene492, Gene223, Gene453 </span>
-<span class="co">#&gt;     Gene74, Gene370, Gene375, Gene497, Gene220, Gene18, Gene78, Gene213, Gene354, Gene243 </span>
-<span class="co">#&gt; PC_ 4 </span>
-<span class="co">#&gt; Positive:  Gene422, Gene195, Gene147, Gene89, Gene209, Gene250, Gene359, Gene22, Gene432, Gene342 </span>
-<span class="co">#&gt;     Gene396, Gene78, Gene140, Gene243, Gene453, Gene220, Gene77, Gene50, Gene326, Gene425 </span>
-<span class="co">#&gt;     Gene474, Gene14, Gene439, Gene322, Gene298, Gene438, Gene24, Gene183, Gene162, Gene460 </span>
-<span class="co">#&gt; Negative:  Gene410, Gene449, Gene94, Gene65, Gene207, Gene461, Gene366, Gene4, Gene304, Gene75 </span>
-<span class="co">#&gt;     Gene261, Gene136, Gene327, Gene354, Gene54, Gene74, Gene492, Gene18, Gene473, Gene323 </span>
-<span class="co">#&gt;     Gene341, Gene31, Gene311, Gene348, Gene172, Gene213, Gene239, Gene61, Gene451, Gene64 </span>
-<span class="co">#&gt; PC_ 5 </span>
-<span class="co">#&gt; Positive:  Gene224, Gene94, Gene425, Gene187, Gene451, Gene147, Gene497, Gene396, Gene326, Gene24 </span>
-<span class="co">#&gt;     Gene328, Gene487, Gene77, Gene162, Gene438, Gene378, Gene223, Gene75, Gene213, Gene473 </span>
-<span class="co">#&gt;     Gene243, Gene460, Gene298, Gene401, Gene14, Gene31, Gene469, Gene359, Gene381, Gene461 </span>
-<span class="co">#&gt; Negative:  Gene250, Gene89, Gene322, Gene22, Gene354, Gene140, Gene183, Gene432, Gene439, Gene65 </span>
-<span class="co">#&gt;     Gene449, Gene61, Gene54, Gene78, Gene74, Gene373, Gene195, Gene366, Gene4, Gene64 </span>
-<span class="co">#&gt;     Gene342, Gene410, Gene327, Gene18, Gene261, Gene5, Gene207, Gene474, Gene375, Gene239</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in irlba(A = t(x = object), nv = npcs, ...): You're computing too large</span></span>
+<span><span class="co">#&gt; a percentage of total singular values, use a standard svd instead.</span></span>
+<span><span class="co">#&gt; PC_ 1 </span></span>
+<span><span class="co">#&gt; Positive:  Gene31, Gene461, Gene322, Gene341, Gene211, Gene223, Gene64, Gene183, Gene361, Gene311 </span></span>
+<span><span class="co">#&gt;     Gene354, Gene220, Gene140, Gene207, Gene239, Gene410, Gene492, Gene323, Gene370, Gene460 </span></span>
+<span><span class="co">#&gt;     Gene451, Gene187, Gene438, Gene471, Gene75, Gene487, Gene209, Gene195, Gene453, Gene298 </span></span>
+<span><span class="co">#&gt; Negative:  Gene4, Gene65, Gene473, Gene74, Gene213, Gene94, Gene366, Gene50, Gene78, Gene342 </span></span>
+<span><span class="co">#&gt;     Gene250, Gene422, Gene14, Gene432, Gene327, Gene89, Gene54, Gene326, Gene497, Gene449 </span></span>
+<span><span class="co">#&gt;     Gene136, Gene396, Gene328, Gene224, Gene381, Gene474, Gene469, Gene373, Gene261, Gene141 </span></span>
+<span><span class="co">#&gt; PC_ 2 </span></span>
+<span><span class="co">#&gt; Positive:  Gene492, Gene311, Gene366, Gene136, Gene461, Gene5, Gene239, Gene438, Gene471, Gene183 </span></span>
+<span><span class="co">#&gt;     Gene140, Gene354, Gene401, Gene195, Gene4, Gene370, Gene147, Gene453, Gene65, Gene78 </span></span>
+<span><span class="co">#&gt;     Gene328, Gene172, Gene74, Gene497, Gene22, Gene359, Gene14, Gene213, Gene298, Gene432 </span></span>
+<span><span class="co">#&gt; Negative:  Gene327, Gene373, Gene449, Gene224, Gene223, Gene89, Gene61, Gene220, Gene50, Gene410 </span></span>
+<span><span class="co">#&gt;     Gene64, Gene211, Gene94, Gene341, Gene473, Gene209, Gene342, Gene77, Gene361, Gene322 </span></span>
+<span><span class="co">#&gt;     Gene375, Gene31, Gene323, Gene304, Gene261, Gene396, Gene207, Gene422, Gene18, Gene54 </span></span>
+<span><span class="co">#&gt; PC_ 3 </span></span>
+<span><span class="co">#&gt; Positive:  Gene61, Gene449, Gene261, Gene461, Gene162, Gene209, Gene342, Gene239, Gene141, Gene94 </span></span>
+<span><span class="co">#&gt;     Gene195, Gene24, Gene5, Gene439, Gene250, Gene136, Gene147, Gene298, Gene31, Gene77 </span></span>
+<span><span class="co">#&gt;     Gene14, Gene474, Gene54, Gene89, Gene341, Gene425, Gene359, Gene22, Gene64, Gene366 </span></span>
+<span><span class="co">#&gt; Negative:  Gene183, Gene401, Gene471, Gene224, Gene361, Gene327, Gene311, Gene322, Gene65, Gene373 </span></span>
+<span><span class="co">#&gt;     Gene378, Gene410, Gene50, Gene422, Gene207, Gene487, Gene4, Gene492, Gene223, Gene453 </span></span>
+<span><span class="co">#&gt;     Gene74, Gene370, Gene375, Gene497, Gene220, Gene18, Gene78, Gene213, Gene354, Gene243 </span></span>
+<span><span class="co">#&gt; PC_ 4 </span></span>
+<span><span class="co">#&gt; Positive:  Gene422, Gene195, Gene147, Gene89, Gene209, Gene250, Gene359, Gene22, Gene432, Gene342 </span></span>
+<span><span class="co">#&gt;     Gene396, Gene78, Gene140, Gene243, Gene453, Gene220, Gene77, Gene50, Gene326, Gene425 </span></span>
+<span><span class="co">#&gt;     Gene474, Gene14, Gene439, Gene322, Gene298, Gene438, Gene24, Gene183, Gene162, Gene460 </span></span>
+<span><span class="co">#&gt; Negative:  Gene410, Gene449, Gene94, Gene65, Gene207, Gene461, Gene366, Gene4, Gene304, Gene75 </span></span>
+<span><span class="co">#&gt;     Gene261, Gene136, Gene327, Gene354, Gene54, Gene74, Gene492, Gene18, Gene473, Gene323 </span></span>
+<span><span class="co">#&gt;     Gene341, Gene31, Gene311, Gene348, Gene172, Gene213, Gene239, Gene61, Gene451, Gene64 </span></span>
+<span><span class="co">#&gt; PC_ 5 </span></span>
+<span><span class="co">#&gt; Positive:  Gene224, Gene94, Gene425, Gene187, Gene451, Gene147, Gene497, Gene396, Gene326, Gene24 </span></span>
+<span><span class="co">#&gt;     Gene328, Gene487, Gene77, Gene162, Gene438, Gene378, Gene223, Gene75, Gene213, Gene473 </span></span>
+<span><span class="co">#&gt;     Gene243, Gene460, Gene298, Gene401, Gene14, Gene31, Gene469, Gene359, Gene381, Gene461 </span></span>
+<span><span class="co">#&gt; Negative:  Gene250, Gene89, Gene322, Gene22, Gene354, Gene140, Gene183, Gene432, Gene439, Gene65 </span></span>
+<span><span class="co">#&gt;     Gene449, Gene61, Gene54, Gene78, Gene74, Gene373, Gene195, Gene366, Gene4, Gene64 </span></span>
+<span><span class="co">#&gt;     Gene342, Gene410, Gene327, Gene18, Gene261, Gene5, Gene207, Gene474, Gene375, Gene239</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="pca-plot-after-correction">PCA plot after correction<a class="anchor" aria-label="anchor" href="#pca-plot-after-correction"></a>
 </h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"orig.ident"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"orig.ident"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"cell_type"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">x</span>, group.by <span class="op">=</span> <span class="st">"cell_type"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="seurat_files/figure-html/unnamed-chunk-12-2.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -259,7 +262,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

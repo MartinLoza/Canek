@@ -38,6 +38,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
+    </li>
+    <li>
       <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
     </li>
     <li>
@@ -69,29 +72,29 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">CorrectBatch</span><span class="op">(</span>
-  <span class="va">refBatch</span>,
-  <span class="va">queBatch</span>,
-  cnRef <span class="op">=</span> <span class="cn">NULL</span>,
-  cnQue <span class="op">=</span> <span class="cn">NULL</span>,
-  queNumCelltypes <span class="op">=</span> <span class="cn">NULL</span>,
-  maxMem <span class="op">=</span> <span class="fl">5</span>,
-  pairs <span class="op">=</span> <span class="cn">NULL</span>,
-  kNN <span class="op">=</span> <span class="fl">30</span>,
-  sampling <span class="op">=</span> <span class="cn">FALSE</span>,
-  numSamples <span class="op">=</span> <span class="cn">NULL</span>,
-  idxQuery <span class="op">=</span> <span class="cn">NULL</span>,
-  idxRef <span class="op">=</span> <span class="cn">NULL</span>,
-  pcaDim <span class="op">=</span> <span class="fl">50</span>,
-  perCellMNN <span class="op">=</span> <span class="fl">0.08</span>,
-  fuzzy <span class="op">=</span> <span class="cn">TRUE</span>,
-  fuzzyPCA <span class="op">=</span> <span class="fl">10</span>,
-  estMethod <span class="op">=</span> <span class="st">"Median"</span>,
-  clusterMethod <span class="op">=</span> <span class="st">"louvain"</span>,
-  pairsFilter <span class="op">=</span> <span class="cn">FALSE</span>,
-  doCosNorm <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">CorrectBatch</span><span class="op">(</span></span>
+<span>  <span class="va">refBatch</span>,</span>
+<span>  <span class="va">queBatch</span>,</span>
+<span>  cnRef <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cnQue <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  queNumCelltypes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  maxMem <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  pairs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kNN <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  sampling <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  numSamples <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  idxQuery <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  idxRef <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pcaDim <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  perCellMNN <span class="op">=</span> <span class="fl">0.08</span>,</span>
+<span>  fuzzy <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  fuzzyPCA <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  estMethod <span class="op">=</span> <span class="st">"Median"</span>,</span>
+<span>  clusterMethod <span class="op">=</span> <span class="st">"louvain"</span>,</span>
+<span>  pairsFilter <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  doCosNorm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -207,18 +210,18 @@ for each cluster using its MNNs pairs and use these vectors to remove the batch 
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu">CorrectBatch</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">Corrected</span> <span class="op">&lt;-</span> <span class="va">z</span><span class="op">$</span><span class="va">`Corrected Query Batch`</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">Uncorrected_PCA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Uncorrected_PCA</span><span class="op">$</span><span class="va">x</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu">CorrectBatch</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Corrected</span> <span class="op">&lt;-</span> <span class="va">z</span><span class="op">$</span><span class="va">`Corrected Query Batch`</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">Uncorrected_PCA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Uncorrected_PCA</span><span class="op">$</span><span class="va">x</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="CorrectBatch-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="va">Corrected_PCA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">z</span><span class="op">$</span><span class="va">`Corrected Query Batch`</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Corrected_PCA</span><span class="op">$</span><span class="va">x</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">Corrected_PCA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">z</span><span class="op">$</span><span class="va">`Corrected Query Batch`</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Corrected_PCA</span><span class="op">$</span><span class="va">x</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="CorrectBatch-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -233,7 +236,7 @@ for each cluster using its MNNs pairs and use these vectors to remove the batch 
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
