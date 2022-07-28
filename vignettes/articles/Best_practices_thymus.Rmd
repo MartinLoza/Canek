@@ -126,12 +126,12 @@ thymus_ls <- list()
 
 # Load the droplets data set
 #load(here("~/Downloads/droplet_Thymus_seurat_tiss.Robj"))
-load("https://figshare.com/ndownloader/files/13090580")
+load(url("https://figshare.com/ndownloader/files/13090580"))
 thymus_ls[["droplets"]] <- tiss
 
 # Load the facs data set
 #load(here("~/Downloads/facs_Thymus_seurat_tiss.Robj"))
-load("https://figshare.com/ndownloader/files/13092398")
+load(url("https://figshare.com/ndownloader/files/13092398"))
 thymus_ls[["facs"]] <- tiss
 rm(tiss)
 ```
