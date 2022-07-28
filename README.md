@@ -82,6 +82,8 @@ our GitHub page and vignettes:
     vignette](https://martinloza.github.io/Canek/articles/seurat.html)
 -   [Run Canek on SingleCellExperiment objects
     vignette](https://martinloza.github.io/Canek/articles/SingleCellExperiment.html)
+-   [Best practices on batch effects
+    correction](https://martinloza.github.io/Canek/articles/Best_practices_thymus.html)
 
 ## Installation
 
