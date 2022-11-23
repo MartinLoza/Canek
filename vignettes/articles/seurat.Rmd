@@ -32,28 +32,23 @@ x[["cell_type"]] <- SimBatches$cell_types
 x
 ```
 
-
 ```{r}
 table(x$orig.ident)
 ```
 
-
 ```{r}
 x <- NormalizeData(x)
-x <- FindVariableFeatures(x, selection.method = "mean.var.plot")
+x <- FindVariableFeatures(x, nfeatures=100)
 VariableFeaturePlot(x)
 ```
-
 
 ```{r}
 x <- ScaleData(x)
 ```
 
-
 ```{r}
 x <- RunPCA(x)
 ```
-
 
 ## PCA plot before correction
 
@@ -70,18 +65,16 @@ We pass the column containing the batch information.
 x <- RunCanek(x, "orig.ident")
 ```
 
+The features selected during integration are assigned as variable features.
+
+```{r}
+head(VariableFeatures(x, assay="Canek"))
+```
+
+We scale features and run PCA.
 
 ```{r}
 x <- ScaleData(x)
-```
-
-```{r}
-x <- FindVariableFeatures(x, nfeatures = 500)
-VariableFeaturePlot(x)
-```
-
-
-```{r}
 x <- RunPCA(x)
 ```
 
@@ -91,4 +84,3 @@ x <- RunPCA(x)
 DimPlot(x, group.by = "orig.ident")
 DimPlot(x, group.by = "cell_type")
 ```
-
