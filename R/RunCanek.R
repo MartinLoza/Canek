@@ -23,8 +23,40 @@ RunCanek <- function(x, ...) {
 #' @rdname RunCanek
 #' @export
 RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", fvf.nfeatures = 2000, debug = FALSE, ...) {
-  x <- Seurat::SplitObject(x, split.by = batches)
-  RunCanek(x, slot = slot, assay = assay, features = features, selection.method = selection.method, fvf.nfeatures = fvf.nfeatures, debug = debug, ...)
+  #x <- Seurat::SplitObject(x, split.by=batches)
+  #RunCanek(x, slot = slot, assay = assay, features = features, selection.method = selection.method, fvf.nfeatures = fvf.nfeatures, debug = debug, ...)
+
+  obj <- Seurat::DietSeurat(x, counts = TRUE, data = TRUE, scale.data = FALSE, assays = assay)
+
+  if (is.null(features)) {
+    features <- Seurat::SelectIntegrationFeatures(obj, nfeatures = nfeatures, fvf.nfeatures = fvf.nfeatures, selection.method = selection.method, verbose = FALSE)
+  }
+
+  counts <- lapply(x, function(xx) {
+    Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
+  })
+
+  counts <- Canek::CorrectBatches(counts, debug = debug, ...)
+
+  if (debug) {
+    info <- counts
+    info[["Batches Integrated"]] <- NULL
+    counts <- counts[["Batches Integrated"]]
+  }
+
+  integrated <- Seurat::CreateAssayObject(counts = counts)
+  #x <- Reduce(merge, x)
+
+  x[["Canek"]] <- integrated
+  Seurat::DefaultAssay(x) <- "Canek"
+
+  Seurat::VariableFeatures(x, assay = "Canek") <- features
+
+  if (debug) {
+    Seurat::Tool(x) <- info
+  }
+
+  Seurat::LogSeuratCommand(x)
 }
 
 #' @rdname RunCanek
@@ -44,45 +76,45 @@ RunCanek.list <- function(x, ...) {
   objtype <- unique(sapply(lapply(x, class), "[", x = 1))
   if (length(objtype) != 1) stop("Required list of identical object types.")
   switch(objtype,
-    "Seurat" = RunCanekSeurat(x, ...),
-    "SingleCellExperiment" = RunCanekSingleCellExperiment(x, ...),
+    #"Seurat" = RunCanekSeurat(x, ...),
+    #"SingleCellExperiment" = RunCanekSingleCellExperiment(x, ...),
     "matrix" = CorrectBatches(x, ...)
   )
 
 }
 
-RunCanekSeurat <- function(x, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, debug = FALSE, ...) {
-
-  if (is.null(features)) {
-    features <- Seurat::SelectIntegrationFeatures(x, nfeatures = nfeatures, fvf.nfeatures = fvf.nfeatures, selection.method = selection.method, verbose = FALSE)
-  }
-
-  counts <- lapply(x, function(xx) {
-    Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
-  })
-
-  counts <- Canek::CorrectBatches(counts, debug = debug, ...)
-
-  if (debug) {
-    info <- counts
-    info[["Batches Integrated"]] <- NULL
-    counts <- counts[["Batches Integrated"]]
-  }
-
-  integrated <- Seurat::CreateAssayObject(counts = counts)
-  x <- Reduce(merge, x)
-
-  x[["Canek"]] <- integrated
-  Seurat::DefaultAssay(x) <- "Canek"
-
-  Seurat::VariableFeatures(x, assay = "Canek") <- features
-
-  if (debug) {
-    Seurat::Tool(x) <- info
-  }
-
-  Seurat::LogSeuratCommand(x)
-}
+# RunCanekSeurat <- function(x, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, debug = FALSE, ...) {
+#
+#   if (is.null(features)) {
+#     features <- Seurat::SelectIntegrationFeatures(x, nfeatures = nfeatures, fvf.nfeatures = fvf.nfeatures, selection.method = selection.method, verbose = FALSE)
+#   }
+#
+#   counts <- lapply(x, function(xx) {
+#     Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
+#   })
+#
+#   counts <- Canek::CorrectBatches(counts, debug = debug, ...)
+#
+#   if (debug) {
+#     info <- counts
+#     info[["Batches Integrated"]] <- NULL
+#     counts <- counts[["Batches Integrated"]]
+#   }
+#
+#   integrated <- Seurat::CreateAssayObject(counts = counts)
+#   x <- Reduce(merge, x)
+#
+#   x[["Canek"]] <- integrated
+#   Seurat::DefaultAssay(x) <- "Canek"
+#
+#   Seurat::VariableFeatures(x, assay = "Canek") <- features
+#
+#   if (debug) {
+#     Seurat::Tool(x) <- info
+#   }
+#
+#   Seurat::LogSeuratCommand(x)
+# }
 
 RunCanekSingleCellExperiment <- function(x, assay = "logcounts", debug = FALSE, ...) {
   counts <- lapply(x, SummarizedExperiment::assay, i = assay)
