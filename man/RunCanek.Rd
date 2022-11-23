@@ -22,7 +22,7 @@ RunCanek(x, ...)
   ...
 )
 
-\method{RunCanek}{SingleCellExperiment}(x, batches = NULL, assay = "counts", debug = FALSE, ...)
+\method{RunCanek}{SingleCellExperiment}(x, batches = NULL, assay = "logcounts", debug = FALSE, ...)
 
 \method{RunCanek}{list}(x, ...)
 }

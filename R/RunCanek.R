@@ -63,13 +63,31 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", fea
 
 #' @rdname RunCanek
 #' @export
-RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "counts", debug = FALSE, ...) {
+RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "logcounts", debug = FALSE, ...) {
+  # batches <- split(colnames(x), x[[batches]])
+  # x <- lapply(batches, function(batch) {
+  #   x[, batch]
+  # })
+  #
+  # RunCanek(x, assay = assay, debug = debug, ...)
+
   batches <- split(colnames(x), x[[batches]])
-  x <- lapply(batches, function(batch) {
-    x[, batch]
+  obj <- lapply(batches, function(batch) {
+     x[, batch]
   })
 
-  RunCanek(x, assay = assay, debug = debug, ...)
+  counts <- lapply(obj, SummarizedExperiment::assay, i = assay)
+  counts <- Canek::CorrectBatches(counts, debug = debug, ...)
+
+  if (debug) {
+    info <- counts
+    info[["Batches Integrated"]] <- NULL
+    counts <- counts[["Batches Integrated"]]
+  }
+
+  #x <- Reduce(SummarizedExperiment::cbind, x)
+  SummarizedExperiment::assays(x, withDimnames = FALSE)[["Canek"]] <- counts
+  x
 }
 
 #' @rdname RunCanek
@@ -118,18 +136,18 @@ RunCanek.list <- function(x, ...) {
 #   Seurat::LogSeuratCommand(x)
 # }
 
-RunCanekSingleCellExperiment <- function(x, assay = "logcounts", debug = FALSE, ...) {
-  counts <- lapply(x, SummarizedExperiment::assay, i = assay)
-  counts <- Canek::CorrectBatches(counts, debug = debug, ...)
-
-  if (debug) {
-    info <- counts
-    info[["Batches Integrated"]] <- NULL
-    counts <- counts[["Batches Integrated"]]
-  }
-
-  x <- Reduce(SummarizedExperiment::cbind, x)
-  SummarizedExperiment::assays(x, withDimnames = FALSE)[["Canek"]] <- counts
-
-  x
-}
+# RunCanekSingleCellExperiment <- function(x, assay = "logcounts", debug = FALSE, ...) {
+#   counts <- lapply(x, SummarizedExperiment::assay, i = assay)
+#   counts <- Canek::CorrectBatches(counts, debug = debug, ...)
+#
+#   if (debug) {
+#     info <- counts
+#     info[["Batches Integrated"]] <- NULL
+#     counts <- counts[["Batches Integrated"]]
+#   }
+#
+#   x <- Reduce(SummarizedExperiment::cbind, x)
+#   SummarizedExperiment::assays(x, withDimnames = FALSE)[["Canek"]] <- counts
+#
+#   x
+# }
