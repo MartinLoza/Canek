@@ -36,7 +36,7 @@ As single-cell genomics technologies become mainstream, more laboratories will p
 
 ### The workflow
 
-Canek leverages information from mutual nearest neighbor to combine local linear corrections with cell-specific non-linear corrections within a fuzzy logic framework. 
+Canek leverages information from mutual nearest neighbors to combine local linear corrections with cell-specific non-linear corrections within a fuzzy logic framework. 
 
 <p align="center">
   <img src="man/figures/README-workflow.png" width="100%"/>

@@ -30,7 +30,7 @@ is essential.
 
 ### The workflow
 
-Canek leverages information from mutual nearest neighbor to combine
+Canek leverages information from mutual nearest neighbors to combine
 local linear corrections with cell-specific non-linear corrections
 within a fuzzy logic framework.
 
@@ -65,9 +65,9 @@ distortion to the structures of cells as compared with a gold standard.
 For more information about Canek check out our manuscript in **NAR
 Genomics and Bioinformatics**:
 
--   [Canek
-    manuscript](https://academic.oup.com/nargab/article/4/1/lqac022/6548822?login=true)
--   [PDF](https://academic.oup.com/nargab/article-pdf/4/1/lqac022/42899055/lqac022.pdf)
+- [Canek
+  manuscript](https://academic.oup.com/nargab/article/4/1/lqac022/6548822?login=true)
+- [PDF](https://academic.oup.com/nargab/article-pdf/4/1/lqac022/42899055/lqac022.pdf)
 
 ## Usage
 
@@ -75,15 +75,15 @@ You can use Canek directly with *normalized-count matrices*, *Seurat*
 objects or *SingleCellExperiment* objects. For more details, check out
 our GitHub page and vignettes:
 
--   [Canek website](https://martinloza.github.io/Canek/index.html)
--   [Run Canek on a toy example
-    vignette](https://martinloza.github.io/Canek/articles/toy_example.html)
--   [Run Canek on Seurat objects
-    vignette](https://martinloza.github.io/Canek/articles/seurat.html)
--   [Run Canek on SingleCellExperiment objects
-    vignette](https://martinloza.github.io/Canek/articles/SingleCellExperiment.html)
--   [Best practices on batch effects
-    correction](https://martinloza.github.io/Canek/articles/Best_practices_thymus.html)
+- [Canek website](https://martinloza.github.io/Canek/index.html)
+- [Run Canek on a toy example
+  vignette](https://martinloza.github.io/Canek/articles/toy_example.html)
+- [Run Canek on Seurat objects
+  vignette](https://martinloza.github.io/Canek/articles/seurat.html)
+- [Run Canek on SingleCellExperiment objects
+  vignette](https://martinloza.github.io/Canek/articles/SingleCellExperiment.html)
+- [Best practices on batch effects
+  correction](https://martinloza.github.io/Canek/articles/Best_practices_thymus.html)
 
 ## Installation
 
@@ -106,5 +106,5 @@ If you use Canek in your research please cite our work using:
 
 Loza M, Teraguchi S, Standley DM, Diez D (2022). “Unbiased integration
 of single cell transcriptome replicates.” *NAR Genomics and
-Bioinformatics*, *1*(4), lqac022. doi: 10.1093/nargab/lqac022 (URL:
-<https://doi.org/10.1093/nargab/lqac022>).
+Bioinformatics*, *1*(4), lqac022. <doi:10.1093/nargab/lqac022>
+<https://doi.org/10.1093/nargab/lqac022>.
