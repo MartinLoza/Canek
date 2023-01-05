@@ -83,7 +83,7 @@
 
       
 
-      </header><script src="toy_example_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run Canek on a toy example</h1>
@@ -97,7 +97,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://martinloza.github.io/Canek/">Canek</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Functions</span></span>
 <span><span class="co">## Function to plot the pca coordinates</span></span>
@@ -113,12 +113,16 @@
 <div class="section level2">
 <h2 id="load-the-data">Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"></a>
 </h2>
-<p>On this toy example we use the two simulated batches included in the <code>SimBatches</code> data from Canek’s package. <code>SimBatches</code> is a list containing:</p>
+<p>On this toy example we use the two simulated batches included in the
+<code>SimBatches</code> data from Canek’s package.
+<code>SimBatches</code> is a list containing:</p>
 <ul>
 <li>
-<code>batches</code>: Simulated scRNA-seq datasets with genes (rows) and cells (columns). Simulations were performed using <a href="https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html" class="external-link">Splatter</a>.</li>
+<code>batches</code>: Simulated scRNA-seq datasets with genes (rows)
+and cells (columns). Simulations were performed using <a href="https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html" class="external-link">Splatter</a>.</li>
 <li>
-<code>cell_type</code>: a factor containing the celltype labels of the batches</li>
+<code>cell_type</code>: a factor containing the celltype labels of
+the batches</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lsData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>B1 <span class="op">=</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, B2 <span class="op">=</span> <span class="va">SimBatches</span><span class="op">$</span><span class="va">batches</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
@@ -137,7 +141,9 @@
 <div class="section level2">
 <h2 id="pca-before-correction">PCA before correction<a class="anchor" aria-label="anchor" href="#pca-before-correction"></a>
 </h2>
-<p>We perform the Principal Component Analysis (PCA) of the joined datasets and scatter plot the first two PCs. The batch-effect causes cells to group by batch.</p>
+<p>We perform the Principal Component Analysis (PCA) of the joined
+datasets and scatter plot the first two PCs. The batch-effect causes
+cells to group by batch.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="va">cbind</span>, <span class="va">lsData</span><span class="op">)</span></span>
 <span><span class="va">pcaData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span>, scale. <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">x</span></span></code></pre></div>
@@ -151,7 +157,8 @@
 <div class="section level2">
 <h2 id="run-canek">Run Canek<a class="anchor" aria-label="anchor" href="#run-canek"></a>
 </h2>
-<p>We correct the toy batches using the function <em>RunCanek</em>. This function accepts:</p>
+<p>We correct the toy batches using the function <em>RunCanek</em>. This
+function accepts:</p>
 <ul>
 <li>List of matrices</li>
 <li>Seurat object</li>
@@ -166,7 +173,8 @@
 <div class="section level2">
 <h2 id="pca-after-correction">PCA after correction<a class="anchor" aria-label="anchor" href="#pca-after-correction"></a>
 </h2>
-<p>We perform PCA of the corrected datasets and plot the first two PCs. After correction, the cells group by their corresponding cell type.</p>
+<p>We perform PCA of the corrected datasets and plot the first two PCs.
+After correction, the cells group by their corresponding cell type.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pcaData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, center <span class="op">=</span> <span class="cn">TRUE</span>, scale. <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">x</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -183,11 +191,11 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.2.2 (2022-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 20.04.5 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.1 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0</span></span>
-<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0</span></span>
+<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
+<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
 <span><span class="co">#&gt;  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       </span></span>
@@ -202,27 +210,28 @@
 <span><span class="co">#&gt; [1] Canek_0.2.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] modeltools_0.2-23    xfun_0.35            bslib_0.4.1         </span></span>
-<span><span class="co">#&gt;  [4] kernlab_0.9-31       purrr_0.3.5          lattice_0.20-45     </span></span>
-<span><span class="co">#&gt;  [7] htmltools_0.5.3      stats4_4.2.2         yaml_2.3.6          </span></span>
-<span><span class="co">#&gt; [10] rlang_1.0.6          pkgdown_2.0.6        jquerylib_0.1.4     </span></span>
-<span><span class="co">#&gt; [13] prabclus_2.3-2       BiocParallel_1.30.4  BiocGenerics_0.42.0 </span></span>
-<span><span class="co">#&gt; [16] fpc_2.2-9            matrixStats_0.63.0   robustbase_0.95-0   </span></span>
-<span><span class="co">#&gt; [19] stringr_1.4.1        ragg_1.2.4           codetools_0.2-18    </span></span>
-<span><span class="co">#&gt; [22] memoise_2.0.1        evaluate_0.18        knitr_1.41          </span></span>
-<span><span class="co">#&gt; [25] fastmap_1.1.0        irlba_2.3.5.1        flexmix_2.3-18      </span></span>
-<span><span class="co">#&gt; [28] parallel_4.2.2       numbers_0.8-2        class_7.3-20        </span></span>
-<span><span class="co">#&gt; [31] highr_0.9            DEoptimR_1.0-11      BiocNeighbors_1.14.0</span></span>
-<span><span class="co">#&gt; [34] Rcpp_1.0.9           diptest_0.76-0       cachem_1.0.6        </span></span>
-<span><span class="co">#&gt; [37] S4Vectors_0.34.0     desc_1.4.2           jsonlite_1.8.3      </span></span>
-<span><span class="co">#&gt; [40] FNN_1.1.3.1          systemfonts_1.0.4    fs_1.5.2            </span></span>
-<span><span class="co">#&gt; [43] textshaping_0.3.6    digest_0.6.30        stringi_1.7.8       </span></span>
-<span><span class="co">#&gt; [46] bluster_1.6.0        grid_4.2.2           rprojroot_2.0.3     </span></span>
-<span><span class="co">#&gt; [49] cli_3.4.1            tools_4.2.2          magrittr_2.0.3      </span></span>
-<span><span class="co">#&gt; [52] sass_0.4.3           cluster_2.1.4        pkgconfig_2.0.3     </span></span>
-<span><span class="co">#&gt; [55] MASS_7.3-58.1        Matrix_1.5-3         rmarkdown_2.18      </span></span>
-<span><span class="co">#&gt; [58] R6_2.5.1             mclust_6.0.0         nnet_7.3-18         </span></span>
-<span><span class="co">#&gt; [61] igraph_1.3.5         compiler_4.2.2</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] modeltools_0.2-23    xfun_0.36            bslib_0.4.2         </span></span>
+<span><span class="co">#&gt;  [4] kernlab_0.9-31       purrr_1.0.0          lattice_0.20-45     </span></span>
+<span><span class="co">#&gt;  [7] vctrs_0.5.1          htmltools_0.5.4      stats4_4.2.2        </span></span>
+<span><span class="co">#&gt; [10] yaml_2.3.6           rlang_1.0.6          pkgdown_2.0.7       </span></span>
+<span><span class="co">#&gt; [13] jquerylib_0.1.4      glue_1.6.2           prabclus_2.3-2      </span></span>
+<span><span class="co">#&gt; [16] BiocParallel_1.30.4  BiocGenerics_0.42.0  fpc_2.2-9           </span></span>
+<span><span class="co">#&gt; [19] matrixStats_0.63.0   lifecycle_1.0.3      robustbase_0.95-0   </span></span>
+<span><span class="co">#&gt; [22] stringr_1.5.0        ragg_1.2.4           codetools_0.2-18    </span></span>
+<span><span class="co">#&gt; [25] memoise_2.0.1        evaluate_0.19        knitr_1.41          </span></span>
+<span><span class="co">#&gt; [28] fastmap_1.1.0        irlba_2.3.5.1        flexmix_2.3-18      </span></span>
+<span><span class="co">#&gt; [31] parallel_4.2.2       numbers_0.8-5        class_7.3-20        </span></span>
+<span><span class="co">#&gt; [34] highr_0.10           DEoptimR_1.0-11      BiocNeighbors_1.14.0</span></span>
+<span><span class="co">#&gt; [37] Rcpp_1.0.9           diptest_0.76-0       cachem_1.0.6        </span></span>
+<span><span class="co">#&gt; [40] desc_1.4.2           S4Vectors_0.34.0     jsonlite_1.8.4      </span></span>
+<span><span class="co">#&gt; [43] FNN_1.1.3.1          systemfonts_1.0.4    fs_1.5.2            </span></span>
+<span><span class="co">#&gt; [46] textshaping_0.3.6    digest_0.6.31        stringi_1.7.8       </span></span>
+<span><span class="co">#&gt; [49] bluster_1.6.0        grid_4.2.2           rprojroot_2.0.3     </span></span>
+<span><span class="co">#&gt; [52] cli_3.5.0            tools_4.2.2          magrittr_2.0.3      </span></span>
+<span><span class="co">#&gt; [55] sass_0.4.4           cluster_2.1.4        pkgconfig_2.0.3     </span></span>
+<span><span class="co">#&gt; [58] MASS_7.3-58.1        Matrix_1.5-1         rmarkdown_2.19      </span></span>
+<span><span class="co">#&gt; [61] R6_2.5.1             mclust_6.0.0         nnet_7.3-18         </span></span>
+<span><span class="co">#&gt; [64] igraph_1.3.5         compiler_4.2.2</span></span></code></pre></div>
 </div>
   </div>
 
@@ -243,7 +252,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

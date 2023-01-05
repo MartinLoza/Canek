@@ -83,7 +83,7 @@
 
       
 
-      </header><script src="Best_practices_thymus_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Best practices on batch effects correction</h1>
@@ -99,21 +99,40 @@
 <div class="section level2">
 <h2 id="motivation-to-develop-this-vignette-">Motivation to develop this vignette.<a class="anchor" aria-label="anchor" href="#motivation-to-develop-this-vignette-"></a>
 </h2>
-<p>Correcting batch effects is an important step in every multi-batch scRNA-seq data analysis of <em>biological replicates</em>, where we would like to preserve the within-differences of batches while reducing technical differences. We acknowledge that batch effects correction is just a single step in a complete analysis, and we wouldn’t like to spend so much time on it. However, we think that it is important to pay special attention to correct batch effects because <em>an incorrect analysis could completely change the conclusions</em> of downstream analyses and we might end up <em>wasting a significant amount of research-time</em>.</p>
-<p>After experiencing diverse problems and difficulties correcting batch effects, we decided to make this vignette to help you to perform this task as smoothly as possible. Our tips to share with you are the next:</p>
+<p>Correcting batch effects is an important step in every multi-batch
+scRNA-seq data analysis of <em>biological replicates</em>, where we
+would like to preserve the within-differences of batches while reducing
+technical differences. We acknowledge that batch effects correction is
+just a single step in a complete analysis, and we wouldn’t like to spend
+so much time on it. However, we think that it is important to pay
+special attention to correct batch effects because <em>an incorrect
+analysis could completely change the conclusions</em> of downstream
+analyses and we might end up <em>wasting a significant amount of
+research-time</em>.</p>
+<p>After experiencing diverse problems and difficulties correcting batch
+effects, we decided to make this vignette to help you to perform this
+task as smoothly as possible. Our tips to share with you are the
+next:</p>
 <ul>
 <li>
-<strong>Tip 1</strong>. Double-check the labels you use to correct batch effects.</li>
+<strong>Tip 1</strong>. Double-check the labels you use to correct
+batch effects.</li>
 <li>
-<strong>Tip 2</strong>. Always confirm the assay used on each step</li>
+<strong>Tip 2</strong>. Always confirm the assay used on each
+step</li>
 <li>
-<strong>Tip 3</strong>. Pay special attention to the variable features used to correct batch effects.</li>
+<strong>Tip 3</strong>. Pay special attention to the variable
+features used to correct batch effects.</li>
 <li>
-<strong>Tip 4</strong>. Confirm that you are using the correct variable features</li>
+<strong>Tip 4</strong>. Confirm that you are using the correct
+variable features</li>
 <li>
-<strong>Tip 5</strong>. Confirm the number of PCs after correcting batch effects</li>
+<strong>Tip 5</strong>. Confirm the number of PCs after correcting
+batch effects</li>
 </ul>
-<p>In this vignette, we will explain further these tips with a guided batch correction example using two <em>thymus</em> data sets from <a href="https://tabula-muris.ds.czbiohub.org/#:~:text=Tabula%20Muris%20is%20a%20compendium,from%2020%20organs%20and%20tissues." class="external-link">Tabula Muris</a>:</p>
+<p>In this vignette, we will explain further these tips with a guided
+batch correction example using two <em>thymus</em> data sets from <a href="https://tabula-muris.ds.czbiohub.org/#:~:text=Tabula%20Muris%20is%20a%20compendium,from%2020%20organs%20and%20tissues." class="external-link">Tabula
+Muris</a>:</p>
 <ul>
 <li><a href="https://figshare.com/ndownloader/files/13090580" class="external-link">droplets</a></li>
 <li><a href="https://figshare.com/ndownloader/files/13092398" class="external-link">facs</a></li>
@@ -123,7 +142,7 @@
 <h2 id="init">Init<a class="anchor" aria-label="anchor" href="#init"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://martinloza.github.io/Canek/">Canek</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
@@ -204,7 +223,9 @@
 <div class="section level2">
 <h2 id="load-seurat-objects">Load seurat objects<a class="anchor" aria-label="anchor" href="#load-seurat-objects"></a>
 </h2>
-<p>Let’s load the two data sets using their URLs. Alternatively, you can first download the data sets and load them from your <em>Downloads</em> folder.</p>
+<p>Let’s load the two data sets using their URLs. Alternatively, you can
+first download the data sets and load them from your <em>Downloads</em>
+folder.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">thymus_ls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -218,15 +239,29 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="st">"https://figshare.com/ndownloader/files/13092398"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">thymus_ls</span><span class="op">[[</span><span class="st">"facs"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">tiss</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">tiss</span><span class="op">)</span></span></code></pre></div>
-<p>The data sets downloaded from Tabula Muris are Seurat objects, but they are in an old format. Then, we need to update them using the <code>UpdateSeuratObject</code> function.</p>
+<p>The data sets downloaded from Tabula Muris are Seurat objects, but
+they are in an old format. Then, we need to update them using the
+<code>UpdateSeuratObject</code> function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">thymus_ls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">thymus_ls</span>, FUN <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="va"><a href="https://mojaveazure.github.io/seurat-object/reference/UpdateSeuratObject.html" class="external-link">UpdateSeuratObject</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="tip-1--double-check-the-label-you-will-use-to-correct-batch-effects-">Tip 1. Double-check the label you will use to correct batch effects.<a class="anchor" aria-label="anchor" href="#tip-1--double-check-the-label-you-will-use-to-correct-batch-effects-"></a>
+<h2 id="tip-1--double-check-the-label-you-will-use-to-correct-batch-effects-">Tip 1. Double-check the label you will use to correct batch
+effects.<a class="anchor" aria-label="anchor" href="#tip-1--double-check-the-label-you-will-use-to-correct-batch-effects-"></a>
 </h2>
-<p>All batch effect correction methods require a batch <code>label</code> to distinguish data sets. In this case, because the data sets were prepared using different technologies (droplets and facs), we would like to correct the technical differences related to <em>technology</em>. If your data sets were prepared with the same technology but sequenced in different samples, you might like to correct the differences related to <em>samples</em>. It would be the same for <em>biological</em> or <em>technical</em> replicates, you might like to correct technical differences using the <em>replicate</em> label.</p>
-<p>As we said before, in this example we would like to reduce the technical differences between the technologies used to prepare the cells. Because we don’t have a common label related to the technology, let’s create one for each data set.</p>
+<p>All batch effect correction methods require a batch
+<code>label</code> to distinguish data sets. In this case, because the
+data sets were prepared using different technologies (droplets and
+facs), we would like to correct the technical differences related to
+<em>technology</em>. If your data sets were prepared with the same
+technology but sequenced in different samples, you might like to correct
+the differences related to <em>samples</em>. It would be the same for
+<em>biological</em> or <em>technical</em> replicates, you might like to
+correct technical differences using the <em>replicate</em> label.</p>
+<p>As we said before, in this example we would like to reduce the
+technical differences between the technologies used to prepare the
+cells. Because we don’t have a common label related to the technology,
+let’s create one for each data set.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">thymus_ls</span><span class="op">$</span><span class="va">droplets</span><span class="op">[[</span><span class="st">"tech"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"droplets"</span></span>
 <span><span class="va">thymus_ls</span><span class="op">$</span><span class="va">facs</span><span class="op">[[</span><span class="st">"tech"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"facs"</span></span></code></pre></div>
@@ -234,15 +269,32 @@
 <div class="section level2">
 <h2 id="tip-2--always-confirm-the-assay-used-on-each-step">Tip 2. Always confirm the assay used on each step<a class="anchor" aria-label="anchor" href="#tip-2--always-confirm-the-assay-used-on-each-step"></a>
 </h2>
-<p>In a typical batch effect correction workflow we would be switching between <code>assays</code> on different steps, e.g. <code>RNA</code>, <code>integrated</code> or <code>Canek</code>, etc. Then, we would recommend you to explicitly write the assay used on each step, so you are sure of using the correct one.</p>
-<p>On this vignette, we follow the <em>standard preprocessing</em> workflow from <a href="https://cran.r-project.org/web/packages/Seurat/index.html" class="external-link">Seurat</a> R package (see <em>Seurat-Guided Clustering Tutorial</em> <a href="https://satijalab.org/seurat/articles/pbmc3k_tutorial.html" class="external-link">vignette</a>) to normalize the <code>RNA</code> assay of the batches.</p>
+<p>In a typical batch effect correction workflow we would be switching
+between <code>assays</code> on different steps, e.g. <code>RNA</code>,
+<code>integrated</code> or <code>Canek</code>, etc. Then, we would
+recommend you to explicitly write the assay used on each step, so you
+are sure of using the correct one.</p>
+<p>On this vignette, we follow the <em>standard preprocessing</em>
+workflow from <a href="https://cran.r-project.org/web/packages/Seurat/index.html" class="external-link">Seurat</a>
+R package (see <em>Seurat-Guided Clustering Tutorial</em> <a href="https://satijalab.org/seurat/articles/pbmc3k_tutorial.html" class="external-link">vignette</a>)
+to normalize the <code>RNA</code> assay of the batches.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">thymus_ls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">thymus_ls</span>, FUN <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="va"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span>, assay <span class="op">=</span> <span class="st">"RNA"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="tip-3--pay-special-attention-to-the-variable-features-used-to-correct-batch-effects-">Tip 3. Pay special attention to the variable features used to correct batch effects.<a class="anchor" aria-label="anchor" href="#tip-3--pay-special-attention-to-the-variable-features-used-to-correct-batch-effects-"></a>
+<h2 id="tip-3--pay-special-attention-to-the-variable-features-used-to-correct-batch-effects-">Tip 3. Pay special attention to the variable features used to
+correct batch effects.<a class="anchor" aria-label="anchor" href="#tip-3--pay-special-attention-to-the-variable-features-used-to-correct-batch-effects-"></a>
 </h2>
-<p>One important step for batch correction is the selection of <em>highly variable genes</em>, also known as <em>variable features</em> (VF), that properly capture the heterogeneity of batches without <em>over-fitting</em> or adding <em>noisy</em> signals. The simplest way to do this is to obtain <em>independent</em> VFs for each batch and then find their <em>intersection</em>. In this way, the number of independent VFs serves as a <em>trade-off</em> between reducing or preserving the within-batch differences. Let’s check this trade-off using UMAP representations of the <code>uncorrected</code> data with an increasing number of VF (1k, 5k, and 10k independent VFs).</p>
+<p>One important step for batch correction is the selection of
+<em>highly variable genes</em>, also known as <em>variable features</em>
+(VF), that properly capture the heterogeneity of batches without
+<em>over-fitting</em> or adding <em>noisy</em> signals. The simplest way
+to do this is to obtain <em>independent</em> VFs for each batch and then
+find their <em>intersection</em>. In this way, the number of independent
+VFs serves as a <em>trade-off</em> between reducing or preserving the
+within-batch differences. Let’s check this trade-off using UMAP
+representations of the <code>uncorrected</code> data with an increasing
+number of VF (1k, 5k, and 10k independent VFs).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#set the number of VFs to use</span></span>
 <span><span class="va">n_VF</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">5000</span>, <span class="fl">10000</span><span class="op">)</span></span>
@@ -279,16 +331,28 @@
 <p><img src="Best_practices_thymus_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>As you can observe,</p>
 <ul>
-<li>If we used a small number of VFs (left plot; VFs before intersection: 1k, VFs after intersection: 206), we get subtle differences between the data sets, but the structures of cells are not well defined.</li>
-<li>If we use a large number of VFs (right plot; VFs before intersection: 10k, VFs after intersection: 4992), we capture a more complex structure of the cells, but the differences between batches increased significantly.</li>
+<li>If we used a small number of VFs (left plot; VFs before
+intersection: 1k, VFs after intersection: 206), we get subtle
+differences between the data sets, but the structures of cells are not
+well defined.</li>
+<li>If we use a large number of VFs (right plot; VFs before
+intersection: 10k, VFs after intersection: 4992), we capture a more
+complex structure of the cells, but the differences between batches
+increased significantly.</li>
 </ul>
-<p>Therefore, we would prefer to use a midpoint set of VFs that captures the heterogeneity of cells without over-increasing the batch differences, e.g. the UMAP in the center.</p>
-<p>To ease the selection of <em>integration VFs</em>, we provide the function <code>FindIntegrationHVF</code> to find and average the number of intersected VFs within a given range. Let’s use this function to find 1500 (+/- 100) intersected VFs.</p>
+<p>Therefore, we would prefer to use a midpoint set of VFs that captures
+the heterogeneity of cells without over-increasing the batch
+differences, e.g. the UMAP in the center.</p>
+<p>To ease the selection of <em>integration VFs</em>, we provide the
+function <code>FindIntegrationHVF</code> to find and average the number
+of intersected VFs within a given range. Let’s use this function to find
+1500 (+/- 100) intersected VFs.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">integration_features</span> <span class="op">&lt;-</span> <span class="fu">FindIntegrationHVF</span><span class="op">(</span>object_ls <span class="op">=</span> <span class="va">thymus_ls</span>, n_features <span class="op">=</span> <span class="fl">1500</span>, range <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Number of independent VF:  4800 </span></span>
 <span><span class="co">#&gt; Number of VF after intersection:  1414</span></span></code></pre></div>
-<p>Let’s visualize the <em>uncorrected</em> data using the variable features we just found.</p>
+<p>Let’s visualize the <em>uncorrected</em> data using the variable
+features we just found.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">uncorrected</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">integration_features</span></span>
 <span><span class="va">uncorrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">uncorrected</span>, assay <span class="op">=</span> <span class="st">"RNA"</span>, features <span class="op">=</span> <span class="va">integration_features</span>,verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -297,44 +361,63 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">MyElbowPlot</span><span class="op">(</span>seurat_object <span class="op">=</span> <span class="va">uncorrected</span>, n_components <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Best_practices_thymus_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>The variance stabilizes after 7 PCs. In this test, we will use 10 PCs to calculate the UMAP visualization, but feel free to try other numbers.</p>
+<p>The variance stabilizes after 7 PCs. In this test, we will use 10 PCs
+to calculate the UMAP visualization, but feel free to try other
+numbers.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">777</span><span class="op">)</span></span>
 <span><span class="va">uncorrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">uncorrected</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>Let’s visualize the uncorrected data by <em>technology</em> and <em>cell-type</em>. NOTE: Tabula Muris provide the annotated cell types in the label <code>cell_ontology_class</code>.</p>
+<p>Let’s visualize the uncorrected data by <em>technology</em> and
+<em>cell-type</em>. NOTE: Tabula Muris provide the annotated cell types
+in the label <code>cell_ontology_class</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">uncorrected</span>, group.by <span class="op">=</span> <span class="st">"tech"</span>, pt.size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">uncorrected</span>, group.by <span class="op">=</span> <span class="st">"cell_ontology_class"</span>, pt.size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html" class="external-link">NoAxes</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="va">myTheme</span></span></code></pre></div>
 <p><img src="Best_practices_thymus_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>We can observe that the technical differences between technologies caused the <em>immature T cells</em> to cluster by technology. We would like to correct these differences using <code>Canek</code>.</p>
+<p>We can observe that the technical differences between technologies
+caused the <em>immature T cells</em> to cluster by technology. We would
+like to correct these differences using <code>Canek</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="tip-4--confirm-that-you-are-using-the-correct-variable-features-">Tip 4. Confirm that you are using the correct variable features.<a class="anchor" aria-label="anchor" href="#tip-4--confirm-that-you-are-using-the-correct-variable-features-"></a>
+<h2 id="tip-4--confirm-that-you-are-using-the-correct-variable-features-">Tip 4. Confirm that you are using the correct variable
+features.<a class="anchor" aria-label="anchor" href="#tip-4--confirm-that-you-are-using-the-correct-variable-features-"></a>
 </h2>
-<p>To correct batch effects, Canek accepts either a list of objects or single objects with a <code>batch</code> identifier. Don’t forget to pass the set of VFs we previously found.</p>
+<p>To correct batch effects, Canek accepts either a list of objects or
+single objects with a <code>batch</code> identifier. Don’t forget to
+pass the set of VFs we previously found.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#RunCanek in a list of SingleCellExperiment objects</span></span>
 <span><span class="co">#corrected &lt;- Canek::RunCanek(x = sce, features = integration_features)</span></span>
 <span><span class="co">#RunCanek in a single object with a batch identifier</span></span>
 <span><span class="va">corrected</span> <span class="op">&lt;-</span> <span class="fu">Canek</span><span class="fu">::</span><span class="fu"><a href="../reference/RunCanek.html">RunCanek</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">uncorrected</span>, batches <span class="op">=</span> <span class="st">"tech"</span>, features <span class="op">=</span> <span class="va">integration_features</span><span class="op">)</span></span></code></pre></div>
-<p>To perform PCA it’s important to use the <code>corrected log counts</code>. These are saved in the assay <code>Canek</code> in the <code>SingleCellExperiment</code> object and can be specified by changing the <code>exprs_values</code> parameter.</p>
+<p>To perform PCA it’s important to use the
+<code>corrected log counts</code>. These are saved in the assay
+<code>Canek</code> in the <code>SingleCellExperiment</code> object and
+can be specified by changing the <code>exprs_values</code>
+parameter.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">corrected</span>, features <span class="op">=</span> <span class="va">integration_features</span>, assay <span class="op">=</span> <span class="st">"Canek"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">corrected</span>, assay <span class="op">=</span> <span class="st">"Canek"</span>, features <span class="op">=</span> <span class="va">integration_features</span>, npcs <span class="op">=</span> <span class="fl">50</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="tip-5--confirm-the-number-of-pcs-after-correcting-batch-effects-">Tip 5. Confirm the number of PCs after correcting batch effects.<a class="anchor" aria-label="anchor" href="#tip-5--confirm-the-number-of-pcs-after-correcting-batch-effects-"></a>
+<h2 id="tip-5--confirm-the-number-of-pcs-after-correcting-batch-effects-">Tip 5. Confirm the number of PCs after correcting batch
+effects.<a class="anchor" aria-label="anchor" href="#tip-5--confirm-the-number-of-pcs-after-correcting-batch-effects-"></a>
 </h2>
 <p>Let’s check out the elbow plot after correction.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">MyElbowPlot</span><span class="op">(</span>seurat_object <span class="op">=</span> <span class="va">corrected</span>, n_components <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Best_practices_thymus_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>After correction, the elbow plot presents small changes as compared with the one we found using the <code>uncorrected</code> data set. Then, we will continue using 10 PCs (feel free to try other numbers).</p>
+<p>After correction, the elbow plot presents small changes as compared
+with the one we found using the <code>uncorrected</code> data set. Then,
+we will continue using 10 PCs (feel free to try other numbers).</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">777</span><span class="op">)</span></span>
 <span><span class="va">corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">corrected</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>Finally, we can now visualize the <code>corrected</code> data by <code>tech</code> and <code>cell_ontology_class</code> (cell type) labels. We can observe that after batch correction with Canek, we minimize the batch difference in <em>immature T cells</em>.</p>
+<p>Finally, we can now visualize the <code>corrected</code> data by
+<code>tech</code> and <code>cell_ontology_class</code> (cell type)
+labels. We can observe that after batch correction with Canek, we
+minimize the batch difference in <em>immature T cells</em>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">corrected</span>, group.by <span class="op">=</span> <span class="st">"tech"</span>, pt.size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">corrected</span>, group.by <span class="op">=</span> <span class="st">"cell_ontology_class"</span>, pt.size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">&amp;</span></span>
@@ -348,11 +431,11 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.2.2 (2022-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 20.04.5 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.1 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0</span></span>
-<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0</span></span>
+<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
+<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
 <span><span class="co">#&gt;  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       </span></span>
@@ -370,50 +453,50 @@
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] systemfonts_1.0.4      plyr_1.8.8             igraph_1.3.5          </span></span>
 <span><span class="co">#&gt;   [4] lazyeval_0.2.2         sp_1.5-1               splines_4.2.2         </span></span>
-<span><span class="co">#&gt;   [7] BiocParallel_1.30.4    listenv_0.8.0          scattermore_0.8       </span></span>
-<span><span class="co">#&gt;  [10] digest_0.6.30          htmltools_0.5.3        fansi_1.0.3           </span></span>
+<span><span class="co">#&gt;   [7] BiocParallel_1.30.4    listenv_0.9.0          scattermore_0.8       </span></span>
+<span><span class="co">#&gt;  [10] digest_0.6.31          htmltools_0.5.4        fansi_1.0.3           </span></span>
 <span><span class="co">#&gt;  [13] magrittr_2.0.3         memoise_2.0.1          tensor_1.5            </span></span>
 <span><span class="co">#&gt;  [16] cluster_2.1.4          ROCR_1.0-11            globals_0.16.2        </span></span>
-<span><span class="co">#&gt;  [19] matrixStats_0.63.0     pkgdown_2.0.6          spatstat.sparse_3.0-0 </span></span>
+<span><span class="co">#&gt;  [19] matrixStats_0.63.0     pkgdown_2.0.7          spatstat.sparse_3.0-0 </span></span>
 <span><span class="co">#&gt;  [22] colorspace_2.0-3       ggrepel_0.9.2          textshaping_0.3.6     </span></span>
-<span><span class="co">#&gt;  [25] xfun_0.35              dplyr_1.0.10           jsonlite_1.8.3        </span></span>
-<span><span class="co">#&gt;  [28] progressr_0.11.0       spatstat.data_3.0-0    survival_3.4-0        </span></span>
+<span><span class="co">#&gt;  [25] xfun_0.36              dplyr_1.0.10           jsonlite_1.8.4        </span></span>
+<span><span class="co">#&gt;  [28] progressr_0.12.0       spatstat.data_3.0-0    survival_3.4-0        </span></span>
 <span><span class="co">#&gt;  [31] zoo_1.8-11             glue_1.6.2             polyclip_1.10-4       </span></span>
 <span><span class="co">#&gt;  [34] gtable_0.3.1           leiden_0.4.3           kernlab_0.9-31        </span></span>
 <span><span class="co">#&gt;  [37] future.apply_1.10.0    prabclus_2.3-2         BiocGenerics_0.42.0   </span></span>
 <span><span class="co">#&gt;  [40] DEoptimR_1.0-11        abind_1.4-5            scales_1.2.1          </span></span>
 <span><span class="co">#&gt;  [43] spatstat.random_3.0-1  miniUI_0.1.1.1         Rcpp_1.0.9            </span></span>
 <span><span class="co">#&gt;  [46] viridisLite_0.4.1      xtable_1.8-4           reticulate_1.26       </span></span>
-<span><span class="co">#&gt;  [49] mclust_6.0.0           stats4_4.2.2           htmlwidgets_1.5.4     </span></span>
-<span><span class="co">#&gt;  [52] httr_1.4.4             numbers_0.8-2          FNN_1.1.3.1           </span></span>
+<span><span class="co">#&gt;  [49] mclust_6.0.0           stats4_4.2.2           htmlwidgets_1.6.0     </span></span>
+<span><span class="co">#&gt;  [52] httr_1.4.4             numbers_0.8-5          FNN_1.1.3.1           </span></span>
 <span><span class="co">#&gt;  [55] RColorBrewer_1.1-3     fpc_2.2-9              modeltools_0.2-23     </span></span>
 <span><span class="co">#&gt;  [58] ellipsis_0.3.2         ica_1.0-3              farver_2.1.1          </span></span>
 <span><span class="co">#&gt;  [61] pkgconfig_2.0.3        flexmix_2.3-18         uwot_0.1.14           </span></span>
-<span><span class="co">#&gt;  [64] nnet_7.3-18            sass_0.4.3             deldir_1.0-6          </span></span>
+<span><span class="co">#&gt;  [64] nnet_7.3-18            sass_0.4.4             deldir_1.0-6          </span></span>
 <span><span class="co">#&gt;  [67] utf8_1.2.2             labeling_0.4.2         tidyselect_1.2.0      </span></span>
 <span><span class="co">#&gt;  [70] rlang_1.0.6            reshape2_1.4.4         later_1.3.0           </span></span>
 <span><span class="co">#&gt;  [73] munsell_0.5.0          tools_4.2.2            cachem_1.0.6          </span></span>
-<span><span class="co">#&gt;  [76] cli_3.4.1              generics_0.1.3         ggridges_0.5.4        </span></span>
-<span><span class="co">#&gt;  [79] evaluate_0.18          stringr_1.4.1          fastmap_1.1.0         </span></span>
+<span><span class="co">#&gt;  [76] cli_3.5.0              generics_0.1.3         ggridges_0.5.4        </span></span>
+<span><span class="co">#&gt;  [79] evaluate_0.19          stringr_1.5.0          fastmap_1.1.0         </span></span>
 <span><span class="co">#&gt;  [82] goftest_1.2-3          yaml_2.3.6             ragg_1.2.4            </span></span>
 <span><span class="co">#&gt;  [85] knitr_1.41             fs_1.5.2               fitdistrplus_1.1-8    </span></span>
-<span><span class="co">#&gt;  [88] robustbase_0.95-0      purrr_0.3.5            RANN_2.6.1            </span></span>
-<span><span class="co">#&gt;  [91] nlme_3.1-160           pbapply_1.6-0          future_1.29.0         </span></span>
+<span><span class="co">#&gt;  [88] robustbase_0.95-0      purrr_1.0.0            RANN_2.6.1            </span></span>
+<span><span class="co">#&gt;  [91] nlme_3.1-160           pbapply_1.6-0          future_1.30.0         </span></span>
 <span><span class="co">#&gt;  [94] mime_0.12              compiler_4.2.2         plotly_4.10.1         </span></span>
-<span><span class="co">#&gt;  [97] png_0.1-7              spatstat.utils_3.0-1   tibble_3.1.8          </span></span>
-<span><span class="co">#&gt; [100] bslib_0.4.1            stringi_1.7.8          highr_0.9             </span></span>
+<span><span class="co">#&gt;  [97] png_0.1-8              spatstat.utils_3.0-1   tibble_3.1.8          </span></span>
+<span><span class="co">#&gt; [100] bslib_0.4.2            stringi_1.7.8          highr_0.10            </span></span>
 <span><span class="co">#&gt; [103] desc_1.4.2             lattice_0.20-45        bluster_1.6.0         </span></span>
-<span><span class="co">#&gt; [106] Matrix_1.5-3           vctrs_0.5.1            pillar_1.8.1          </span></span>
+<span><span class="co">#&gt; [106] Matrix_1.5-1           vctrs_0.5.1            pillar_1.8.1          </span></span>
 <span><span class="co">#&gt; [109] lifecycle_1.0.3        spatstat.geom_3.0-3    lmtest_0.9-40         </span></span>
 <span><span class="co">#&gt; [112] jquerylib_0.1.4        RcppAnnoy_0.0.20       BiocNeighbors_1.14.0  </span></span>
 <span><span class="co">#&gt; [115] data.table_1.14.6      cowplot_1.1.1          irlba_2.3.5.1         </span></span>
-<span><span class="co">#&gt; [118] httpuv_1.6.6           R6_2.5.1               promises_1.2.0.1      </span></span>
-<span><span class="co">#&gt; [121] KernSmooth_2.23-20     gridExtra_2.3          parallelly_1.32.1     </span></span>
+<span><span class="co">#&gt; [118] httpuv_1.6.7           R6_2.5.1               promises_1.2.0.1      </span></span>
+<span><span class="co">#&gt; [121] KernSmooth_2.23-20     gridExtra_2.3          parallelly_1.33.0     </span></span>
 <span><span class="co">#&gt; [124] codetools_0.2-18       MASS_7.3-58.1          rprojroot_2.0.3       </span></span>
 <span><span class="co">#&gt; [127] withr_2.5.0            sctransform_0.3.5      S4Vectors_0.34.0      </span></span>
 <span><span class="co">#&gt; [130] diptest_0.76-0         parallel_4.2.2         grid_4.2.2            </span></span>
-<span><span class="co">#&gt; [133] tidyr_1.2.1            class_7.3-20           rmarkdown_2.18        </span></span>
-<span><span class="co">#&gt; [136] Rtsne_0.16             spatstat.explore_3.0-5 shiny_1.7.3</span></span></code></pre></div>
+<span><span class="co">#&gt; [133] tidyr_1.2.1            class_7.3-20           rmarkdown_2.19        </span></span>
+<span><span class="co">#&gt; [136] Rtsne_0.16             spatstat.explore_3.0-5 shiny_1.7.4</span></span></code></pre></div>
 </div>
   </div>
 
@@ -434,7 +517,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

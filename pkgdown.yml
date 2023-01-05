@@ -1,13 +1,13 @@
-pandoc: 2.7.3
-pkgdown: 2.0.6
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   Best_practices_thymus: Best_practices_thymus.html
   SingleCellExperiment: SingleCellExperiment.html
   seurat: seurat.html
   toy_example: toy_example.html
-last_built: 2022-11-23T05:49Z
+last_built: 2023-01-05T10:23Z
 urls:
-  reference: https://MartinLoza.github.io/Canek/reference
-  article: https://MartinLoza.github.io/Canek/articles
+  reference: https://martinloza.github.io/Canek/reference
+  article: https://martinloza.github.io/Canek/articles
 

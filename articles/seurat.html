@@ -83,7 +83,7 @@
 
       
 
-      </header><script src="seurat_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run Canek on Seurat objects</h1>
@@ -97,7 +97,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Canek</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://martinloza.github.io/Canek/">Canek</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Attaching SeuratObject</span></span></code></pre></div>
 <div class="section level2">
@@ -152,12 +152,12 @@
 <span><span class="co">#&gt;     Gene473, Gene209, Gene326, Gene304, Gene261, Gene89, Gene474, Gene342, Gene187, Gene460 </span></span>
 <span><span class="co">#&gt;     Gene50, Gene18, Gene4, Gene396, Gene61, Gene213, Gene147, Gene361, Gene422, Gene381 </span></span>
 <span><span class="co">#&gt; PC_ 4 </span></span>
-<span><span class="co">#&gt; Positive:  Gene183, Gene401, Gene224, Gene471, Gene327, Gene361, Gene311, Gene50, Gene373, Gene65 </span></span>
-<span><span class="co">#&gt;     Gene378, Gene422, Gene4, Gene322, Gene223, Gene74, Gene487, Gene207, Gene220, Gene213 </span></span>
-<span><span class="co">#&gt;     Gene497, Gene375, Gene18, Gene78, Gene453, Gene243, Gene410, Gene304, Gene473, Gene492 </span></span>
-<span><span class="co">#&gt; Negative:  Gene61, Gene449, Gene261, Gene239, Gene461, Gene162, Gene209, Gene141, Gene342, Gene195 </span></span>
+<span><span class="co">#&gt; Positive:  Gene61, Gene449, Gene261, Gene239, Gene461, Gene162, Gene209, Gene141, Gene342, Gene195 </span></span>
 <span><span class="co">#&gt;     Gene5, Gene439, Gene31, Gene250, Gene24, Gene136, Gene54, Gene94, Gene64, Gene298 </span></span>
 <span><span class="co">#&gt;     Gene22, Gene323, Gene14, Gene147, Gene366, Gene381, Gene211, Gene474, Gene140, Gene359 </span></span>
+<span><span class="co">#&gt; Negative:  Gene183, Gene401, Gene224, Gene471, Gene327, Gene361, Gene311, Gene50, Gene373, Gene65 </span></span>
+<span><span class="co">#&gt;     Gene378, Gene422, Gene4, Gene322, Gene223, Gene74, Gene487, Gene207, Gene220, Gene213 </span></span>
+<span><span class="co">#&gt;     Gene497, Gene375, Gene18, Gene78, Gene453, Gene243, Gene410, Gene304, Gene473, Gene492 </span></span>
 <span><span class="co">#&gt; PC_ 5 </span></span>
 <span><span class="co">#&gt; Positive:  Gene94, Gene207, Gene449, Gene461, Gene75, Gene4, Gene410, Gene304, Gene261, Gene65 </span></span>
 <span><span class="co">#&gt;     Gene354, Gene327, Gene366, Gene136, Gene54, Gene492, Gene473, Gene74, Gene18, Gene31 </span></span>
@@ -218,12 +218,12 @@
 <span><span class="co">#&gt;     Gene378, Gene410, Gene50, Gene422, Gene207, Gene487, Gene4, Gene492, Gene223, Gene453 </span></span>
 <span><span class="co">#&gt;     Gene74, Gene370, Gene375, Gene497, Gene220, Gene18, Gene78, Gene213, Gene354, Gene243 </span></span>
 <span><span class="co">#&gt; PC_ 4 </span></span>
-<span><span class="co">#&gt; Positive:  Gene422, Gene195, Gene147, Gene89, Gene209, Gene250, Gene359, Gene22, Gene432, Gene342 </span></span>
-<span><span class="co">#&gt;     Gene396, Gene78, Gene140, Gene243, Gene453, Gene220, Gene77, Gene50, Gene326, Gene425 </span></span>
-<span><span class="co">#&gt;     Gene474, Gene14, Gene439, Gene322, Gene298, Gene438, Gene24, Gene183, Gene162, Gene460 </span></span>
-<span><span class="co">#&gt; Negative:  Gene410, Gene449, Gene94, Gene65, Gene207, Gene461, Gene366, Gene4, Gene304, Gene75 </span></span>
+<span><span class="co">#&gt; Positive:  Gene410, Gene449, Gene94, Gene65, Gene207, Gene461, Gene366, Gene4, Gene304, Gene75 </span></span>
 <span><span class="co">#&gt;     Gene261, Gene136, Gene327, Gene354, Gene54, Gene74, Gene492, Gene18, Gene473, Gene323 </span></span>
 <span><span class="co">#&gt;     Gene341, Gene31, Gene311, Gene348, Gene172, Gene213, Gene239, Gene61, Gene451, Gene64 </span></span>
+<span><span class="co">#&gt; Negative:  Gene422, Gene195, Gene147, Gene89, Gene209, Gene250, Gene359, Gene22, Gene432, Gene342 </span></span>
+<span><span class="co">#&gt;     Gene396, Gene78, Gene140, Gene243, Gene453, Gene220, Gene77, Gene50, Gene326, Gene425 </span></span>
+<span><span class="co">#&gt;     Gene474, Gene14, Gene439, Gene322, Gene298, Gene438, Gene24, Gene183, Gene162, Gene460 </span></span>
 <span><span class="co">#&gt; PC_ 5 </span></span>
 <span><span class="co">#&gt; Positive:  Gene224, Gene94, Gene425, Gene187, Gene451, Gene147, Gene497, Gene396, Gene326, Gene24 </span></span>
 <span><span class="co">#&gt;     Gene328, Gene487, Gene77, Gene162, Gene438, Gene378, Gene223, Gene75, Gene213, Gene473 </span></span>
@@ -261,7 +261,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
