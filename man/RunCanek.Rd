@@ -16,12 +16,13 @@ RunCanek(x, ...)
   assay = "RNA",
   features = NULL,
   selection.method = "vst",
+  nfeatures = 2000,
   fvf.nfeatures = 2000,
   debug = FALSE,
   ...
 )
 
-\method{RunCanek}{SingleCellExperiment}(x, batches = NULL, assay = "counts", debug = FALSE, ...)
+\method{RunCanek}{SingleCellExperiment}(x, batches = NULL, assay = "logcounts", debug = FALSE, ...)
 
 \method{RunCanek}{list}(x, ...)
 }
@@ -40,7 +41,9 @@ RunCanek(x, ...)
 
 \item{selection.method}{method used for FindVariableFeatures on Seurat objects when features is NULL.}
 
-\item{fvf.nfeatures}{function used to collapse variable features from different batches. Default is intersect.}
+\item{nfeatures}{number of features returned by SelectIntegrationFeatures.}
+
+\item{fvf.nfeatures}{number of features returned by FindVariableFeatures.}
 
 \item{debug}{whether to store information about correction vector.}
 }

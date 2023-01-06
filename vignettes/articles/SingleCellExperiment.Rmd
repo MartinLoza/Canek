@@ -127,7 +127,7 @@ We can observe that the cells labeled as *Cell Type 1* got divided into two grou
 
 ## Correcting batch effects with Canek
 
-Canek accepts either a list of `SingleCellExperiments` objects or single objects with a `batch` identifier. We can pass a vector of variable features to use in the integration.
+Canek accepts a `SingleCellExperiments` object with a `batch` identifier. We can pass a vector of variable features to use in the integration.
 
 ```{r}
 features <- rownames(uncorrected)[combined_features]
