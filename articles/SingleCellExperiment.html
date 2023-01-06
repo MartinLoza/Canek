@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
@@ -216,9 +216,9 @@ minimize this batch differences with Canek.</p>
 <div class="section level2">
 <h2 id="correcting-batch-effects-with-canek">Correcting batch effects with Canek<a class="anchor" aria-label="anchor" href="#correcting-batch-effects-with-canek"></a>
 </h2>
-<p>Canek accepts either a list of <code>SingleCellExperiments</code>
-objects or single objects with a <code>batch</code> identifier. We can
-pass a vector of variable features to use in the integration.</p>
+<p>Canek accepts a <code>SingleCellExperiments</code> object with a
+<code>batch</code> identifier. We can pass a vector of variable features
+to use in the integration.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">uncorrected</span><span class="op">)</span><span class="op">[</span><span class="va">combined_features</span><span class="op">]</span></span>
 <span><span class="co">#RunCanek in a list of SingleCellExperiment objects</span></span>
@@ -284,7 +284,7 @@ preserving the other cell types.</p>
 <span><span class="co">#&gt; [11] GenomeInfoDb_1.32.4         IRanges_2.30.1             </span></span>
 <span><span class="co">#&gt; [13] S4Vectors_0.34.0            BiocGenerics_0.42.0        </span></span>
 <span><span class="co">#&gt; [15] MatrixGenerics_1.8.1        matrixStats_0.63.0         </span></span>
-<span><span class="co">#&gt; [17] Canek_0.2.1                </span></span>
+<span><span class="co">#&gt; [17] Canek_0.2.2                </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] ggbeeswarm_0.7.1          colorspace_2.0-3         </span></span>
