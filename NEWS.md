@@ -1,4 +1,4 @@
-# Canek 0.2.2
+# Canek 0.2.2 (Unreleased)
 
 ## Changes
 
