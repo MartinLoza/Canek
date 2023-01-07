@@ -2,7 +2,9 @@
 
 ## Changes
 
-- Refactor Seurat and SingleCellExperiment interfaces to preserve original objects.
+- Refactor `RunCanek()` Seurat and SingleCellExperiment interfaces to preserve original objects.
+
+- Added integration.name argument to `RunCanek()` to customize the name of the integrated assay.
 
 # Canek 0.2.1
 

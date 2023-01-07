@@ -10,6 +10,7 @@
 #' @param selection.method method used for FindVariableFeatures on Seurat objects when features is NULL.
 #' @param nfeatures  number of features returned by SelectIntegrationFeatures.
 #' @param fvf.nfeatures number of features returned by FindVariableFeatures.
+#' @param integration.name name for the integrated assay.
 #' @param debug whether to store information about correction vector.
 #' @param ... additional arguments passed down to methods.
 #'
@@ -23,8 +24,7 @@ RunCanek <- function(x, ...) {
 
 #' @rdname RunCanek
 #' @export
-RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, debug = FALSE, ...) {
-  obj <- Seurat::DietSeurat(x, counts = TRUE, data = TRUE, scale.data = FALSE, assays = assay)
+RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, ...) {
   Seurat::DefaultAssay(x) <- assay
   obj <- Seurat::DietSeurat(x, counts = TRUE, data = TRUE, scale.data = FALSE, assays = assay, misc = FALSE)
   obj <- Seurat::SplitObject(obj, split.by = batches)
@@ -47,10 +47,10 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", fea
 
   integrated <- Seurat::CreateAssayObject(counts = counts)
 
-  x[["Canek"]] <- integrated
-  Seurat::DefaultAssay(x) <- "Canek"
+  x[[integration.name]] <- integrated
+  Seurat::DefaultAssay(x) <- integration.name
 
-  Seurat::VariableFeatures(x, assay = "Canek") <- features
+  Seurat::VariableFeatures(x, assay = integration.name) <- features
 
   if (debug) {
     Seurat::Tool(x) <- info
@@ -61,7 +61,7 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", fea
 
 #' @rdname RunCanek
 #' @export
-RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "logcounts", debug = FALSE, ...) {
+RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "logcounts", integration.name = "Canek", debug = FALSE, ...) {
   batches <- split(colnames(x), x[[batches]])
   obj <- lapply(batches, function(batch) {
      x[, batch]
@@ -76,7 +76,7 @@ RunCanek.SingleCellExperiment <- function(x, batches = NULL, assay = "logcounts"
     counts <- counts[["Batches Integrated"]]
   }
 
-  SummarizedExperiment::assays(x, withDimnames = FALSE)[["Canek"]] <- counts
+  SummarizedExperiment::assays(x, withDimnames = FALSE)[[integration.name]] <- counts
   x
 }
 

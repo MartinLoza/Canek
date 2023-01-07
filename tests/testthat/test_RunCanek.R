@@ -37,3 +37,10 @@ test_that("RunCanek works on lists", {
   expect_equal(colnames(z$`Batches Integrated`), cellnames)
   expect_error(CorrectBatches(list(B1 = SimBatches$batches$B1, B2 = SimBatches$batches$B1)))
 })
+
+x <- RunCanek(x, "orig.ident", integration.name = "CanekRNA")
+y <- RunCanek(y, "orig.ident", integration.name = "CanekRNA")
+test_that("Setting RunCanek integration.name argument works", {
+  expect_true("CanekRNA" %in% names(x))
+  expect_true("CanekRNA" %in% names(SummarizedExperiment::assays(y)))
+})

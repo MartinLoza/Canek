@@ -18,11 +18,19 @@ RunCanek(x, ...)
   selection.method = "vst",
   nfeatures = 2000,
   fvf.nfeatures = 2000,
+  integration.name = "Canek",
   debug = FALSE,
   ...
 )
 
-\method{RunCanek}{SingleCellExperiment}(x, batches = NULL, assay = "logcounts", debug = FALSE, ...)
+\method{RunCanek}{SingleCellExperiment}(
+  x,
+  batches = NULL,
+  assay = "logcounts",
+  integration.name = "Canek",
+  debug = FALSE,
+  ...
+)
 
 \method{RunCanek}{list}(x, ...)
 }
@@ -44,6 +52,8 @@ RunCanek(x, ...)
 \item{nfeatures}{number of features returned by SelectIntegrationFeatures.}
 
 \item{fvf.nfeatures}{number of features returned by FindVariableFeatures.}
+
+\item{integration.name}{name for the integrated assay.}
 
 \item{debug}{whether to store information about correction vector.}
 }

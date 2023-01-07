@@ -8,6 +8,13 @@
 \description{
 Non-linear/linear hybrid method for batch-effect correction that uses Mutual Nearest Neighbors (MNNs) to identify similar cells between datasets. Reference: Loza M. et al. (NAR Genomics and Bioinformatics, 2020) \doi{10.1093/nargab/lqac022}.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://martinloza.github.io/Canek/}
+}
+
+}
 \author{
 \strong{Maintainer}: Martin Loza \email{martin.loza.lopez@gmail.com} (\href{https://orcid.org/0000-0002-3342-2643}{ORCID})
 
