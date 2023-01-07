@@ -25,6 +25,7 @@ RunCanek <- function(x, ...) {
 #' @export
 RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, debug = FALSE, ...) {
   obj <- Seurat::DietSeurat(x, counts = TRUE, data = TRUE, scale.data = FALSE, assays = assay)
+  Seurat::DefaultAssay(x) <- assay
   obj <- Seurat::SplitObject(obj, split.by = batches)
 
   if (is.null(features)) {
