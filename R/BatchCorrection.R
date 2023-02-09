@@ -89,6 +89,36 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   #Check input batches as matrices
   lsBatches <- lapply(lsBatches, as.matrix)
 
+  ### TEST TEST TEST
+  #for now, if the correction is on the embeddings, we deactive the hierarchical mode and transform the data to the embedding space
+  if(correctEmbeddings == TRUE){
+    #deactivate hierarchical
+    hierarchical <- FALSE
+
+    #to calculate the embedding we need to merge the data first
+    tmp_merged <- Reduce(f = cbind, x = lsBatches)
+    #get the embedding space
+    pcaBatches <- prcomp_irlba(x = t(tmp_merged), n = pcaDim, center = TRUE, scale. = TRUE)
+    #assign the cell names
+    rownames(pcaBatches$x) <- colnames(tmp_merged)
+    #remove temporal batch to save memory
+    rm(tmp_merged)
+    gc()
+
+    #get the current batch order
+    currentNames <- names(lsBatches)
+    #subset the embedded cells from each batch
+    lsBatches <- lapply(X = currentNames, FUN = function(name){
+      tmp <- t(pcaBatches$x[inCellNames_ls[[name]],]) #transpose to match workflow
+      return(tmp)
+    })
+    #recover the batch names
+    names(lsBatches) <- currentNames
+    #remove pcaBatches to reduce memory usage
+    rm(pcaBatches, currentNames)
+    gc()
+  }
+
   # First batch is the one with highest number of cells
   nCells <- sapply(lsBatches, ncol)
   lsBatches <- lsBatches[order(nCells, decreasing = TRUE)]
