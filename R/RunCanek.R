@@ -24,7 +24,8 @@ RunCanek <- function(x, ...) {
 
 #' @rdname RunCanek
 #' @export
-RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, ...) {
+RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, correctEmbeddings = FALSE, ...) {
+
   Seurat::DefaultAssay(x) <- assay
   obj <- Seurat::DietSeurat(x, counts = TRUE, data = TRUE, scale.data = FALSE, assays = assay, misc = FALSE)
   obj <- Seurat::SplitObject(obj, split.by = batches)
@@ -37,7 +38,7 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", fea
     Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
   })
 
-  counts <- Canek::CorrectBatches(counts, debug = debug, ...)
+  counts <- Canek::CorrectBatches(counts, debug = debug, correctEmbeddings = correctEmbeddings, ...)
 
   if (debug) {
     info <- counts
