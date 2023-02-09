@@ -12,6 +12,7 @@
 #' @param fvf.nfeatures number of features returned by FindVariableFeatures.
 #' @param integration.name name for the integrated assay.
 #' @param debug whether to store information about correction vector.
+#' @param correctEmbeddings whether to perform the correction on PCA embeddings instead of gene expression (Seurat objects only).
 #' @param ... additional arguments passed down to methods.
 #'
 #' @return An object of the appropriate type.
@@ -24,7 +25,7 @@ RunCanek <- function(x, ...) {
 
 #' @rdname RunCanek
 #' @export
-RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, ...) {
+RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, correctEmbeddings = FALSE, ...) {
 
   #if not assay is selected, we used the default one
   if(is.null(assay)){
@@ -47,7 +48,7 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, feat
       Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
   })
 
-  counts <- Canek::CorrectBatches(counts, debug = debug, ...)
+  counts <- Canek::CorrectBatches(counts, debug = debug, correctEmbeddings = correctEmbeddings, ...)
 
   if (debug) {
     info <- counts
