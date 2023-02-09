@@ -62,7 +62,9 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            fuzzy = TRUE, fuzzyPCA = 10,
                            estMethod = "Median", clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
-                           debug = FALSE, verbose = FALSE, ... ){
+                           debug = FALSE,
+                           correctEmbeddings = FALSE,
+                           verbose = FALSE, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -72,8 +74,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   namesInBatches <- names(lsBatches)
   numBatches <- length(lsBatches)
   lsCorrection <- list()
-  inCellNames <- lapply(lsBatches, colnames)
-  inCellNames <- Reduce(c,inCellNames) #input cell names
+  inCellNames_ls <- lapply(lsBatches, colnames)
+  inCellNames <- Reduce(c,inCellNames_ls) #input cell names
 
   ## Check batches names
   if(is.null(namesInBatches)){
@@ -189,7 +191,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       # We select the first element, in case there are two datasets with the same number of pairs
       Query <- which.max(nPairs) + 1
 
-    } else {  #If the integration is not hierarchical
+    }else {  #If the integration is not hierarchical
       Query <- 2
     }
 
@@ -205,6 +207,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                sampling = sampling, numSamples = numSamples,
                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
                                doCosNorm = doCosNorm, clusterMethod = clusterMethod,
+                               correctEmbeddings = correctEmbeddings,
                                verbose = verbose)
 
     # new ref at the beginning
@@ -315,11 +318,18 @@ CorrectBatch <- function(refBatch, queBatch,
                          fuzzy = TRUE, fuzzyPCA = 10,
                          estMethod = "Median", clusterMethod = "louvain",
                          pairsFilter = FALSE, doCosNorm = FALSE,
+                         correctEmbeddings = FALSE, #new parameter to indicate that the corrections should be perform on the embeddings
                          verbose = FALSE) {
 
   tBatch <- Sys.time()
 
   debugData <- list(info = list(), membership = list())
+
+  #TEST TEST TEST
+  #for now, if correct embeddings, we can't pass external pairs
+  if(correctEmbeddings == TRUE){
+    pairs <- NULL
+  }
 
   memPairs <- NULL
   memCorrData <- list()
@@ -367,7 +377,6 @@ CorrectBatch <- function(refBatch, queBatch,
 
     pairs <- pairs$Pairs
   }else{
-
     pcaQue <- prcomp_irlba(t(queBatch),n = 10)
     pcaQue <- pcaQue$x
   }
@@ -550,7 +559,7 @@ CorrectBatch <- function(refBatch, queBatch,
  debugData$info$pairsFilter <- pairsFilter
  debugData$info$pcaQue <- pcaQue
  debugData$info$pcaRef <- pcaRef
-
+ debugData$info$pcaRef <- correctEmbeddings
 
  if(verbose)
    cat(paste0('\nBatch correction time: ', tBatch, " seconds"))
