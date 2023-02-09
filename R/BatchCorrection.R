@@ -344,12 +344,19 @@ CorrectBatch <- function(refBatch, queBatch,
       cnQue <- queBatch
     }
 
-    pcaBatches <- prcomp_irlba(t(cbind(cnRef, cnQue)), n = pcaDim)
+    #TEST TEST TEST
+    #if the correction is not the embedding space, we calculate PCA. Otherwise, we already calculated it
+    if(correctEmbeddings == FALSE){
+      pcaBatches <- prcomp_irlba(t(cbind(cnRef, cnQue)), n = pcaDim)
+      #subset the pca coordinates of the current reference and query batch
+      pcaRef <- pcaBatches$x[1:nCellsRef,]
+      pcaQue <- pcaBatches$x[(nCellsRef+1):nCells,]
 
-    pcaRef <- pcaBatches$x[1:nCellsRef,]
-    pcaQue <- pcaBatches$x[(nCellsRef+1):nCells,]
-
-    rm(pcaBatches)
+      rm(pcaBatches)
+    }else{
+      pcaRef <- t(refBatch) #we transpose to match the current workflow
+      pcaQue <- t(queBatch) #ew transpose to match the current workflow
+    }
 
     if(verbose)
       cat(paste("\n\nFinding mutual nearest neighbors from", kNN,"nearest neighbors"))
@@ -424,6 +431,13 @@ CorrectBatch <- function(refBatch, queBatch,
    norNumPairs <- (ceiling(nrow(memPairs)/kNN))/(numCellMem)
 
    if (norNumPairs > perCellMNN){
+
+     #if the corrections should be perform on the embedding space
+     if(correctEmbeddings){
+       refBatch <- t(pcaRef)
+       queBatch <- t(pcaQue)
+     }
+
      if(estMethod == "EKF"){
        if(verbose)
          cat("\n\n\tEXTENDED KALMAN FILTER")
