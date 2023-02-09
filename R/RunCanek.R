@@ -45,12 +45,20 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", fea
     counts <- counts[["Batches Integrated"]]
   }
 
-  integrated <- Seurat::CreateAssayObject(counts = counts)
+  ### TEST TEST TEST
+  #if correct embeddings, we create an embedding objects
+  if(correctEmbeddings == TRUE){
+    integrated <-  Seurat::CreateDimReducObject(embeddings = t(counts), assay = "RNA", key = "Canek_" )
+    x[[tolower(integration.name)]] <- integrated
+    Seurat::DefaultAssay(x) <- assay
+    Seurat::VariableFeatures(x, assay = assay) <- features
 
-  x[[integration.name]] <- integrated
-  Seurat::DefaultAssay(x) <- integration.name
-
-  Seurat::VariableFeatures(x, assay = integration.name) <- features
+  }else{
+    integrated <- Seurat::CreateAssayObject(counts = counts)
+    x[[integration.name]] <- integrated
+    Seurat::DefaultAssay(x) <- integration.name
+    Seurat::VariableFeatures(x, assay = integration.name) <- features
+  }
 
   if (debug) {
     Seurat::Tool(x) <- info
