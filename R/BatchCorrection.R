@@ -164,18 +164,21 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
       # Test. Sampling in hierarchical mode
       pcaBatches <- lapply(names(cnBatches)[-1], function(n){
-        if (exists("sampIdx")) {
-          m <- t(cbind(cnBatches[[1]][, sampIdx[[1]]],
-                  cnBatches[[n]][, sampIdx[[n]]]))
-        } else {
-          m <- t(cbind(cnBatches[[1]], cnBatches[[n]]))
-        }
-        prcomp_irlba(m)
-      })
+          if (exists("sampIdx")) {
+            #reference is the first batch
+            m <- t(cbind(cnBatches[[1]][, sampIdx[[1]]],
+                         cnBatches[[n]][, sampIdx[[n]]]))
+          } else {
+            m <- t(cbind(cnBatches[[1]], cnBatches[[n]]))
+          }
+          pca <- prcomp_irlba(m)
+          return(pca$x)
+        })
 
+      #Calculate the MNN pairs in the PCA space
       nPairs <- lapply(pcaBatches, function(x){
-        pairs <- GetMnnPairs(refBatch = t(x$x[1:nCellsRef, ]),
-                             queBatch = t(x$x[(nCellsRef+1):nrow(x$x), ]),
+        pairs <- GetMnnPairs(refBatch = t(x[1:nCellsRef, ]),
+                             queBatch = t(x[(nCellsRef+1):nrow(x$x), ]),
                              kNN = 30)$Pairs
         return(nrow(pairs))
       })
