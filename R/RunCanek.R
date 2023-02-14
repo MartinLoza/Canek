@@ -86,6 +86,7 @@ RunCanek.list <- function(x, ...) {
   objtype <- unique(sapply(lapply(x, class), "[", x = 1))
   if (length(objtype) != 1) stop("Required list of identical object types.")
   switch(objtype,
-    "matrix" = CorrectBatches(x, ...)
+    "matrix" = CorrectBatches(x, ...),
+    stop("When input is a list, it should be a list of matrix objects.")
   )
 }
