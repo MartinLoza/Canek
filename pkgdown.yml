@@ -6,7 +6,7 @@ articles:
   SingleCellExperiment: SingleCellExperiment.html
   seurat: seurat.html
   toy_example: toy_example.html
-last_built: 2023-01-07T10:35Z
+last_built: 2023-02-15T06:11Z
 urls:
   reference: https://martinloza.github.io/Canek/reference
   article: https://martinloza.github.io/Canek/articles

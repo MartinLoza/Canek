@@ -181,57 +181,52 @@
 </h2>
 <p>We pass the column containing the batch information.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RunCanek.html">RunCanek</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"orig.ident"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in (function (A, nv = 5, nu = nv, maxit = 1000, work = nv + 7, reorth =</span></span>
-<span><span class="co">#&gt; TRUE, : You're computing too large a percentage of total singular values, use a</span></span>
-<span><span class="co">#&gt; standard svd instead.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RunCanek.html">RunCanek</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"orig.ident"</span><span class="op">)</span></span></code></pre></div>
 <p>The features selected during integration are assigned as variable
 features.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, assay<span class="op">=</span><span class="st">"Canek"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Gene461" "Gene348" "Gene322" "Gene57"  "Gene61"  "Gene183"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "Gene348" "Gene322" "Gene57"  "Gene461" "Gene61"  "Gene145"</span></span></code></pre></div>
 <p>We scale features and run PCA.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Centering and scaling data matrix</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in irlba(A = t(x = object), nv = npcs, ...): You're computing too large</span></span>
-<span><span class="co">#&gt; a percentage of total singular values, use a standard svd instead.</span></span>
 <span><span class="co">#&gt; PC_ 1 </span></span>
-<span><span class="co">#&gt; Positive:  Gene358, Gene229, Gene17, Gene4, Gene65, Gene484, Gene473, Gene74, Gene296, Gene285 </span></span>
-<span><span class="co">#&gt;     Gene213, Gene386, Gene376, Gene226, Gene94, Gene369, Gene274, Gene327, Gene366, Gene165 </span></span>
-<span><span class="co">#&gt;     Gene50, Gene130, Gene185, Gene78, Gene36, Gene401, Gene28, Gene281, Gene373, Gene145 </span></span>
-<span><span class="co">#&gt; Negative:  Gene461, Gene31, Gene322, Gene341, Gene297, Gene498, Gene472, Gene228, Gene9, Gene223 </span></span>
-<span><span class="co">#&gt;     Gene234, Gene174, Gene176, Gene178, Gene239, Gene303, Gene489, Gene160, Gene298, Gene220 </span></span>
-<span><span class="co">#&gt;     Gene57, Gene477, Gene162, Gene427, Gene61, Gene481, Gene354, Gene30, Gene22, Gene492 </span></span>
+<span><span class="co">#&gt; Positive:  Gene358, Gene150, Gene229, Gene488, Gene17, Gene484, Gene65, Gene169, Gene4, Gene392 </span></span>
+<span><span class="co">#&gt;     Gene60, Gene387, Gene374, Gene299, Gene274, Gene180, Gene386, Gene167, Gene388, Gene96 </span></span>
+<span><span class="co">#&gt;     Gene473, Gene454, Gene74, Gene338, Gene417, Gene285, Gene394, Gene94, Gene476, Gene205 </span></span>
+<span><span class="co">#&gt; Negative:  Gene322, Gene461, Gene31, Gene202, Gene211, Gene472, Gene9, Gene341, Gene210, Gene118 </span></span>
+<span><span class="co">#&gt;     Gene498, Gene297, Gene280, Gene122, Gene12, Gene325, Gene58, Gene2, Gene198, Gene111 </span></span>
+<span><span class="co">#&gt;     Gene377, Gene64, Gene393, Gene168, Gene173, Gene480, Gene197, Gene456, Gene223, Gene300 </span></span>
 <span><span class="co">#&gt; PC_ 2 </span></span>
-<span><span class="co">#&gt; Positive:  Gene311, Gene492, Gene165, Gene366, Gene389, Gene183, Gene136, Gene461, Gene127, Gene5 </span></span>
-<span><span class="co">#&gt;     Gene401, Gene296, Gene471, Gene362, Gene193, Gene185, Gene239, Gene178, Gene9, Gene427 </span></span>
-<span><span class="co">#&gt;     Gene370, Gene17, Gene416, Gene30, Gene57, Gene303, Gene354, Gene4, Gene229, Gene472 </span></span>
-<span><span class="co">#&gt; Negative:  Gene449, Gene274, Gene327, Gene373, Gene481, Gene285, Gene174, Gene223, Gene281, Gene61 </span></span>
-<span><span class="co">#&gt;     Gene382, Gene130, Gene489, Gene395, Gene36, Gene160, Gene50, Gene498, Gene255, Gene94 </span></span>
-<span><span class="co">#&gt;     Gene342, Gene228, Gene410, Gene220, Gene305, Gene234, Gene473, Gene145, Gene162, Gene341 </span></span>
+<span><span class="co">#&gt; Positive:  Gene164, Gene265, Gene366, Gene273, Gene17, Gene14, Gene4, Gene422, Gene237, Gene277 </span></span>
+<span><span class="co">#&gt;     Gene213, Gene78, Gene126, Gene165, Gene399, Gene299, Gene374, Gene488, Gene156, Gene21 </span></span>
+<span><span class="co">#&gt;     Gene85, Gene438, Gene286, Gene5, Gene147, Gene10, Gene319, Gene315, Gene40, Gene250 </span></span>
+<span><span class="co">#&gt; Negative:  Gene274, Gene391, Gene476, Gene60, Gene76, Gene333, Gene295, Gene491, Gene339, Gene157 </span></span>
+<span><span class="co">#&gt;     Gene88, Gene386, Gene490, Gene341, Gene31, Gene2, Gene228, Gene217, Gene223, Gene410 </span></span>
+<span><span class="co">#&gt;     Gene322, Gene69, Gene459, Gene297, Gene472, Gene287, Gene449, Gene327, Gene133, Gene461 </span></span>
 <span><span class="co">#&gt; PC_ 3 </span></span>
-<span><span class="co">#&gt; Positive:  Gene178, Gene290, Gene303, Gene255, Gene481, Gene489, Gene449, Gene239, Gene160, Gene366 </span></span>
-<span><span class="co">#&gt;     Gene136, Gene94, Gene285, Gene61, Gene461, Gene162, Gene416, Gene5, Gene213, Gene369 </span></span>
-<span><span class="co">#&gt;     Gene17, Gene4, Gene342, Gene24, Gene74, Gene229, Gene362, Gene226, Gene65, Gene473 </span></span>
-<span><span class="co">#&gt; Negative:  Gene183, Gene484, Gene472, Gene322, Gene471, Gene327, Gene401, Gene382, Gene373, Gene296 </span></span>
-<span><span class="co">#&gt;     Gene223, Gene193, Gene386, Gene274, Gene174, Gene185, Gene281, Gene427, Gene3, Gene130 </span></span>
-<span><span class="co">#&gt;     Gene341, Gene305, Gene220, Gene477, Gene498, Gene31, Gene207, Gene36, Gene410, Gene50 </span></span>
+<span><span class="co">#&gt; Positive:  Gene178, Gene102, Gene290, Gene490, Gene356, Gene449, Gene481, Gene303, Gene461, Gene394 </span></span>
+<span><span class="co">#&gt;     Gene489, Gene262, Gene133, Gene67, Gene255, Gene345, Gene459, Gene307, Gene180, Gene446 </span></span>
+<span><span class="co">#&gt;     Gene377, Gene142, Gene397, Gene189, Gene113, Gene239, Gene33, Gene73, Gene61, Gene118 </span></span>
+<span><span class="co">#&gt; Negative:  Gene183, Gene391, Gene484, Gene179, Gene8, Gene1, Gene224, Gene401, Gene296, Gene471 </span></span>
+<span><span class="co">#&gt;     Gene112, Gene312, Gene411, Gene476, Gene373, Gene327, Gene361, Gene382, Gene427, Gene107 </span></span>
+<span><span class="co">#&gt;     Gene400, Gene437, Gene188, Gene472, Gene322, Gene193, Gene15, Gene87, Gene217, Gene132 </span></span>
 <span><span class="co">#&gt; PC_ 4 </span></span>
-<span><span class="co">#&gt; Positive:  Gene427, Gene477, Gene57, Gene281, Gene322, Gene50, Gene474, Gene342, Gene22, Gene352 </span></span>
-<span><span class="co">#&gt;     Gene191, Gene285, Gene30, Gene160, Gene432, Gene24, Gene28, Gene183, Gene298, Gene373 </span></span>
-<span><span class="co">#&gt;     Gene3, Gene255, Gene220, Gene213, Gene78, Gene326, Gene416, Gene305, Gene369, Gene382 </span></span>
-<span><span class="co">#&gt; Negative:  Gene386, Gene178, Gene274, Gene461, Gene228, Gene94, Gene410, Gene297, Gene484, Gene395 </span></span>
-<span><span class="co">#&gt;     Gene145, Gene341, Gene31, Gene185, Gene472, Gene389, Gene376, Gene207, Gene362, Gene481 </span></span>
-<span><span class="co">#&gt;     Gene492, Gene471, Gene468, Gene303, Gene323, Gene449, Gene498, Gene172, Gene130, Gene290 </span></span>
+<span><span class="co">#&gt; Positive:  Gene461, Gene459, Gene492, Gene311, Gene178, Gene113, Gene386, Gene118, Gene389, Gene165 </span></span>
+<span><span class="co">#&gt;     Gene132, Gene73, Gene133, Gene377, Gene183, Gene307, Gene198, Gene245, Gene164, Gene136 </span></span>
+<span><span class="co">#&gt;     Gene335, Gene400, Gene366, Gene185, Gene411, Gene296, Gene484, Gene401, Gene471, Gene177 </span></span>
+<span><span class="co">#&gt; Negative:  Gene449, Gene285, Gene60, Gene107, Gene373, Gene327, Gene189, Gene102, Gene402, Gene360 </span></span>
+<span><span class="co">#&gt;     Gene274, Gene101, Gene345, Gene481, Gene489, Gene89, Gene174, Gene142, Gene160, Gene224 </span></span>
+<span><span class="co">#&gt;     Gene281, Gene387, Gene342, Gene61, Gene67, Gene446, Gene223, Gene50, Gene49, Gene382 </span></span>
 <span><span class="co">#&gt; PC_ 5 </span></span>
-<span><span class="co">#&gt; Positive:  Gene473, Gene228, Gene94, Gene386, Gene495, Gene78, Gene395, Gene191, Gene223, Gene432 </span></span>
-<span><span class="co">#&gt;     Gene328, Gene30, Gene61, Gene298, Gene342, Gene292, Gene172, Gene352, Gene416, Gene401 </span></span>
-<span><span class="co">#&gt;     Gene50, Gene24, Gene127, Gene162, Gene474, Gene472, Gene9, Gene220, Gene296, Gene326 </span></span>
-<span><span class="co">#&gt; Negative:  Gene427, Gene477, Gene281, Gene322, Gene178, Gene358, Gene449, Gene145, Gene183, Gene410 </span></span>
-<span><span class="co">#&gt;     Gene481, Gene290, Gene57, Gene376, Gene354, Gene489, Gene484, Gene461, Gene311, Gene255 </span></span>
-<span><span class="co">#&gt;     Gene65, Gene323, Gene285, Gene207, Gene31, Gene389, Gene303, Gene234, Gene468, Gene136</span></span></code></pre></div>
+<span><span class="co">#&gt; Positive:  Gene427, Gene112, Gene33, Gene322, Gene281, Gene198, Gene477, Gene15, Gene358, Gene8 </span></span>
+<span><span class="co">#&gt;     Gene108, Gene485, Gene183, Gene57, Gene394, Gene449, Gene490, Gene111, Gene481, Gene102 </span></span>
+<span><span class="co">#&gt;     Gene180, Gene250, Gene290, Gene489, Gene406, Gene434, Gene411, Gene178, Gene455, Gene140 </span></span>
+<span><span class="co">#&gt; Negative:  Gene386, Gene306, Gene228, Gene94, Gene190, Gene20, Gene157, Gene224, Gene60, Gene473 </span></span>
+<span><span class="co">#&gt;     Gene333, Gene356, Gene383, Gene274, Gene338, Gene302, Gene395, Gene156, Gene175, Gene223 </span></span>
+<span><span class="co">#&gt;     Gene270, Gene137, Gene321, Gene19, Gene456, Gene45, Gene78, Gene79, Gene181, Gene472</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="pca-plot-after-correction">PCA plot after correction<a class="anchor" aria-label="anchor" href="#pca-plot-after-correction"></a>
 </h3>
