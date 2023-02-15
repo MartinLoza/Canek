@@ -27,6 +27,7 @@ RunCanek <- function(x, ...) {
 RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, ...) {
   Seurat::DefaultAssay(x) <- assay
   obj <- Seurat::DietSeurat(x, counts = TRUE, data = TRUE, scale.data = FALSE, assays = assay, misc = FALSE)
+  Seurat::VariableFeatures(obj) <- NULL
   obj <- Seurat::SplitObject(obj, split.by = batches)
 
   if (is.null(features)) {
@@ -86,6 +87,7 @@ RunCanek.list <- function(x, ...) {
   objtype <- unique(sapply(lapply(x, class), "[", x = 1))
   if (length(objtype) != 1) stop("Required list of identical object types.")
   switch(objtype,
-    "matrix" = CorrectBatches(x, ...)
+    "matrix" = CorrectBatches(x, ...),
+    stop("When input is a list, it should be a list of matrix objects.")
   )
 }
