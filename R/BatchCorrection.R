@@ -180,7 +180,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       #Calculate the MNN pairs in the PCA space
       nPairs <- lapply(pcaBatches, function(x){
         pairs <- GetMnnPairs(refBatch = t(x[1:nCellsRef, ]),
-                             queBatch = t(x[(nCellsRef+1):nrow(x$x), ]),
+                             queBatch = t(x[(nCellsRef+1):nrow(x), ]),
                              kNN = 30)$Pairs
         return(nrow(pairs))
       })
