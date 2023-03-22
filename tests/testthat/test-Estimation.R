@@ -26,7 +26,7 @@ test_that("Median Method", {
   expect_false(is.null(y$`Correction Vector`))
   expect_true(length(y$`Correction Vector`) == nrow(Batches$B1))
   expect_equal(length(which(is.finite(y$`Correction Vector`))),length(y$`Correction Vector`))
-  expect_equal(y$`Correction Vector`[1],0.00523153, tolerance = 1e-4 )
+  expect_equal(unname(y$`Correction Vector`[1]), 0.00523153, tolerance = 1e-4 )
 
   expect_equal(y$`Sampled Pairs`, NULL)
 })
