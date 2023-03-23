@@ -39,3 +39,4 @@ LazyData: true
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 URL: https://martinloza.github.io/Canek/
+BugReports: https://github.com/MartinLoza/Canek/issues
