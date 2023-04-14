@@ -12,6 +12,7 @@ Non-linear/linear hybrid method for batch-effect correction that uses Mutual Nea
 Useful links:
 \itemize{
   \item \url{https://martinloza.github.io/Canek/}
+  \item Report bugs at \url{https://github.com/MartinLoza/Canek/issues}
 }
 
 }

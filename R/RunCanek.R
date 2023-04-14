@@ -5,7 +5,7 @@
 #' @param x object with expression counts or list of matrices.
 #' @param batches for S4 objects the column containing batch information.
 #' @param slot slot used for Seurat objects (default: data).
-#' @param assay assay used for Seurat objects (default: RNA).
+#' @param assay assay used for Seurat objects.
 #' @param features optional vector of features to use for correction.
 #' @param selection.method method used for FindVariableFeatures on Seurat objects when features is NULL.
 #' @param nfeatures  number of features returned by SelectIntegrationFeatures.
@@ -24,7 +24,13 @@ RunCanek <- function(x, ...) {
 
 #' @rdname RunCanek
 #' @export
-RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = "RNA", features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, ...) {
+RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, ...) {
+
+  #if not assay is selected, we used the default one
+  if(is.null(assay)){
+    assay <- Seurat::DefaultAssay(x)
+  }
+
   Seurat::DefaultAssay(x) <- assay
   obj <- Seurat::DietSeurat(x, counts = TRUE, data = TRUE, scale.data = FALSE, assays = assay, misc = FALSE)
   Seurat::VariableFeatures(obj) <- NULL
