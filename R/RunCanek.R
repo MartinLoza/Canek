@@ -5,7 +5,7 @@
 #' @param x object with expression counts or list of matrices.
 #' @param batches for S4 objects the column containing batch information.
 #' @param slot slot used for Seurat objects (default: data).
-#' @param assay assay used for Seurat objects (default: RNA).
+#' @param assay assay used for Seurat objects.
 #' @param features optional vector of features to use for correction.
 #' @param selection.method method used for FindVariableFeatures on Seurat objects when features is NULL.
 #' @param nfeatures  number of features returned by SelectIntegrationFeatures.
