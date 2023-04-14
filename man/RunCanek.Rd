@@ -13,7 +13,7 @@ RunCanek(x, ...)
   x,
   batches = NULL,
   slot = "data",
-  assay = "RNA",
+  assay = NULL,
   features = NULL,
   selection.method = "vst",
   nfeatures = 2000,
@@ -43,7 +43,7 @@ RunCanek(x, ...)
 
 \item{slot}{slot used for Seurat objects (default: data).}
 
-\item{assay}{assay used for Seurat objects (default: RNA).}
+\item{assay}{assay used for Seurat objects.}
 
 \item{features}{optional vector of features to use for correction.}
 
