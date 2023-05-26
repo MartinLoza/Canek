@@ -1,6 +1,13 @@
-# Canek 0.2.2 (Unreleased)
+# Canek 0.2.2
 
 ## Changes
+
+- Fix bug when using SCTransform.
+([#14](https://github.com/MartinLoza/Canek/issues/14))
+
+- Add BugReports and URL.([#13](https://github.com/MartinLoza/Canek/pull/13))
+
+- Relaxing tests to no consider the names attribute.([#12](https://github.com/MartinLoza/Canek/issues/12))
 
 - Refactor `RunCanek()` Seurat and SingleCellExperiment interfaces to preserve original objects.
 
