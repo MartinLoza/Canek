@@ -5,7 +5,7 @@ bibentry(
   title= "Unbiased integration of single cell transcriptome replicates",
   author= c(person("Martin","Loza"),
             person("Shunsuke", "Teraguchi"),
-            person("Daron", "Standley", "M."),
+            person("Daron M.", "Standley"),
             person("Diego", "Diez")),
   journal= "NAR Genomics and Bioinformatics",
   volume="4",
