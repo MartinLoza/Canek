@@ -62,12 +62,8 @@ Canek was the highest scored method in tests specifically designed to
 assess **over-correction**, where Canek corrected batch effects without
 distortion to the structures of cells as compared with a gold standard.
 
-For more information about Canek check out our manuscript in **NAR
-Genomics and Bioinformatics**:
-
-- [Canek
-  manuscript](https://academic.oup.com/nargab/article/4/1/lqac022/6548822?login=true)
-- [PDF](https://academic.oup.com/nargab/article-pdf/4/1/lqac022/42899055/lqac022.pdf)
+For more information about Canek check out our manuscript in [NAR
+Genomics and Bioinformatics](https://doi.org/10.1093/nargab/lqac022).
 
 ## Usage
 
@@ -104,7 +100,8 @@ remotes::install_github("MartinLoza/Canek")
 
 If you use Canek in your research please cite our work using:
 
-Loza M, Teraguchi S, Standley DM, Diez D (2022). “Unbiased integration
-of single cell transcriptome replicates.” *NAR Genomics and
-Bioinformatics*, *1*(4), lqac022. <doi:10.1093/nargab/lqac022>
-<https://doi.org/10.1093/nargab/lqac022>.
+Loza M, Teraguchi S, Standley D, Diez D (2022). “Unbiased integration of
+single cell transcriptome replicates.” *NAR Genomics and
+Bioinformatics*, *4*(1), lqac022. doi: 10.1093/nargab/lqac022 (URL:
+<https://doi.org/10.1093/nargab/lqac022>), \<URL:
+<https://martinloza.github.io/Canek/>\>.
