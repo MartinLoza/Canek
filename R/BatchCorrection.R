@@ -62,7 +62,9 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            fuzzy = TRUE, fuzzyPCA = 10,
                            estMethod = "Median", clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
-                           debug = FALSE, verbose = FALSE, ... ){
+                           debug = FALSE,
+                           correctEmbeddings = FALSE,
+                           verbose = FALSE, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -72,8 +74,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   namesInBatches <- names(lsBatches)
   numBatches <- length(lsBatches)
   lsCorrection <- list()
-  inCellNames <- lapply(lsBatches, colnames)
-  inCellNames <- Reduce(c,inCellNames) #input cell names
+  inCellNames_ls <- lapply(lsBatches, colnames)
+  inCellNames <- Reduce(c,inCellNames_ls) #input cell names
 
   ## Check batches names
   if(is.null(namesInBatches)){
@@ -88,6 +90,36 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
   #Check input batches as matrices
   lsBatches <- lapply(lsBatches, as.matrix)
+
+  ### TEST TEST TEST
+  #for now, if the correction is on the embeddings, we deactive the hierarchical mode and transform the data to the embedding space
+  if(correctEmbeddings == TRUE){
+    #deactivate hierarchical
+    hierarchical <- FALSE
+
+    #to calculate the embedding we need to merge the data first
+    tmp_merged <- Reduce(f = cbind, x = lsBatches)
+    #get the embedding space
+    pcaBatches <- prcomp_irlba(x = t(tmp_merged), n = pcaDim, center = TRUE, scale. = TRUE)
+    #assign the cell names
+    rownames(pcaBatches$x) <- colnames(tmp_merged)
+    #remove temporal batch to save memory
+    rm(tmp_merged)
+    gc()
+
+    #get the current batch order
+    currentNames <- names(lsBatches)
+    #subset the embedded cells from each batch
+    lsBatches <- lapply(X = currentNames, FUN = function(name){
+      tmp <- t(pcaBatches$x[inCellNames_ls[[name]],]) #transpose to match workflow
+      return(tmp)
+    })
+    #recover the batch names
+    names(lsBatches) <- currentNames
+    #remove pcaBatches to reduce memory usage
+    rm(pcaBatches, currentNames)
+    gc()
+  }
 
   # First batch is the one with highest number of cells
   nCells <- sapply(lsBatches, ncol)
@@ -135,17 +167,20 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       # Test. Sampling in hierarchical mode
       pcaBatches <- lapply(names(cnBatches)[-1], function(n){
         if (exists("sampIdx")) {
+          #reference is the first batch
           m <- t(cbind(cnBatches[[1]][, sampIdx[[1]]],
-                  cnBatches[[n]][, sampIdx[[n]]]))
+                       cnBatches[[n]][, sampIdx[[n]]]))
         } else {
           m <- t(cbind(cnBatches[[1]], cnBatches[[n]]))
         }
-        prcomp_irlba(m)
+        pca <- prcomp_irlba(m)
+        return(pca$x)
       })
 
+      #Calculate the MNN pairs in the PCA space
       nPairs <- lapply(pcaBatches, function(x){
-        pairs <- GetMnnPairs(refBatch = t(x$x[1:nCellsRef, ]),
-                             queBatch = t(x$x[(nCellsRef+1):nrow(x$x), ]),
+        pairs <- GetMnnPairs(refBatch = t(x[1:nCellsRef, ]),
+                             queBatch = t(x[(nCellsRef+1):nrow(x), ]),
                              kNN = 30)$Pairs
         return(nrow(pairs))
       })
@@ -172,6 +207,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                sampling = sampling, numSamples = numSamples,
                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
                                doCosNorm = doCosNorm, clusterMethod = clusterMethod,
+                               correctEmbeddings = correctEmbeddings,
                                verbose = verbose)
 
     # new ref at the beginning
