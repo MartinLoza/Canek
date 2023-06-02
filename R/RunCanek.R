@@ -24,7 +24,7 @@ RunCanek <- function(x, ...) {
 
 #' @rdname RunCanek
 #' @export
-RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, ...) {
+RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, correctEmbeddings = FALSE, ...) {
 
   #if not assay is selected, we used the default one
   if(is.null(assay)){
@@ -44,7 +44,7 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, feat
     Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
   })
 
-  counts <- Canek::CorrectBatches(counts, debug = debug, ...)
+  counts <- Canek::CorrectBatches(counts, debug = debug, correctEmbeddings = correctEmbeddings, ...)
 
   if (debug) {
     info <- counts
@@ -52,12 +52,20 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, feat
     counts <- counts[["Batches Integrated"]]
   }
 
-  integrated <- Seurat::CreateAssayObject(counts = counts)
+  ### TEST TEST TEST
+  #if correct embeddings, we create an embedding objects
+  if(correctEmbeddings == TRUE){
+    integrated <-  Seurat::CreateDimReducObject(embeddings = t(counts), assay = assay, key = "Canek_" )
+    x[[tolower(integration.name)]] <- integrated
+    Seurat::DefaultAssay(x) <- assay
+    Seurat::VariableFeatures(x, assay = assay) <- features
 
-  x[[integration.name]] <- integrated
-  Seurat::DefaultAssay(x) <- integration.name
-
-  Seurat::VariableFeatures(x, assay = integration.name) <- features
+  }else{
+    integrated <- Seurat::CreateAssayObject(counts = counts)
+    x[[integration.name]] <- integrated
+    Seurat::DefaultAssay(x) <- integration.name
+    Seurat::VariableFeatures(x, assay = integration.name) <- features
+  }
 
   if (debug) {
     Seurat::Tool(x) <- info
