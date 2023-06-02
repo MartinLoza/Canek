@@ -325,6 +325,12 @@ CorrectBatch <- function(refBatch, queBatch,
 
   debugData <- list(info = list(), membership = list())
 
+  #TEST TEST TEST
+  #for now, if correct embeddings, we can't pass external pairs
+  if(correctEmbeddings == TRUE){
+    pairs <- NULL
+  }
+
   memPairs <- NULL
   memCorrData <- list()
   corGene <- NULL
