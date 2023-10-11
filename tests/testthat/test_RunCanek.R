@@ -1,17 +1,32 @@
+# Get matrices for each batch.
+m1 <- SimBatches$batches[[1]]
+m2 <- SimBatches$batches[[2]]
+
+# Fix column (cells) names.
+colnames(m1) <- paste0("B1_", colnames(m1))
+colnames(m2) <- paste0("B2_", colnames(m2))
+
+# Initialize batch information.
+b1 <- rep("B1", ncol(m1))
+b2 <- rep("B2", ncol(m2))
+
+# Combine batches.
+b <- c(b1, b2)
+m <- cbind(m1, m2)
+cellnames <- colnames(m)
+
 # Create Seurat object.
-x <- lapply(names(SimBatches$batches), function(batch) {
-  Seurat::CreateSeuratObject(SimBatches$batches[[batch]], project = batch)
-})
-x <- merge(x[[1]], x[[2]])
-cellnames <- colnames(x)
+x <- Seurat::CreateSeuratObject(Seurat::as.sparse(m))
+x$batch <- b
 
 # Create SingleCellExperiment object.
-y <- Seurat::as.SingleCellExperiment(x)
+y <- SingleCellExperiment::SingleCellExperiment(list(counts=m, logcounts=m))
+y$batch <- b
 
 # RunCanek.
-x <- RunCanek(x, "orig.ident")
-y <- RunCanek(y, "orig.ident")
-z <- RunCanek(SimBatches$batches, debug = TRUE)
+x <- RunCanek(x, "batch")
+y <- RunCanek(y, "batch")
+z <- RunCanek(list(B1=m1, B2=m2), debug = TRUE)
 
 test_that("RunCanek works on Seurat objects", {
   expect_false(is.null(x))
@@ -38,8 +53,9 @@ test_that("RunCanek works on lists", {
   expect_error(CorrectBatches(list(B1 = SimBatches$batches$B1, B2 = SimBatches$batches$B1)))
 })
 
-x <- RunCanek(x, "orig.ident", integration.name = "CanekRNA")
-y <- RunCanek(y, "orig.ident", integration.name = "CanekRNA")
+x <- RunCanek(x, "batch", integration.name = "CanekRNA")
+y <- RunCanek(y, "batch", integration.name = "CanekRNA")
+
 test_that("Setting RunCanek integration.name argument works", {
   expect_true("CanekRNA" %in% names(x))
   expect_true("CanekRNA" %in% names(SummarizedExperiment::assays(y)))
