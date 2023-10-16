@@ -9,7 +9,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/MartinLoza/Canek/workflows/R-CMD-check/badge.svg)](https://github.com/MartinLoza/Canek/actions)
+[![R-CMD-check](https://github.com/MartinLoza/Canek/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MartinLoza/Canek/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/Canek)](https://cran.r-project.org/package=Canek)
 [![CRAN
 Downloads](https://cranlogs.r-pkg.org/badges/Canek)](https://cran.r-project.org/package=Canek)
@@ -102,6 +102,6 @@ If you use Canek in your research please cite our work using:
 
 Loza M, Teraguchi S, Standley D, Diez D (2022). “Unbiased integration of
 single cell transcriptome replicates.” *NAR Genomics and
-Bioinformatics*, *4*(1), lqac022. doi: 10.1093/nargab/lqac022 (URL:
-<https://doi.org/10.1093/nargab/lqac022>), \<URL:
-<https://martinloza.github.io/Canek/>\>.
+Bioinformatics*, *4*(1), lqac022. <doi:10.1093/nargab/lqac022>
+<https://doi.org/10.1093/nargab/lqac022>,
+<https://martinloza.github.io/Canek/>.
