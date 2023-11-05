@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -250,7 +250,13 @@ folder.</p>
 they are in an old format. Then, we need to update them using the
 <code>UpdateSeuratObject</code> function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">thymus_ls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">thymus_ls</span>, FUN <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="va"><a href="https://mojaveazure.github.io/seurat-object/reference/UpdateSeuratObject.html" class="external-link">UpdateSeuratObject</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">thymus_ls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">thymus_ls</span>, FUN <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="va"><a href="https://mojaveazure.github.io/seurat-object/reference/UpdateSeuratObject.html" class="external-link">UpdateSeuratObject</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Not validating Assay objects</span></span>
+<span><span class="co">#&gt; Warning: Not validating DimReduc objects</span></span>
+<span><span class="co">#&gt; Not validating DimReduc objects</span></span>
+<span><span class="co">#&gt; Warning: Not validating Assay objects</span></span>
+<span><span class="co">#&gt; Warning: Not validating DimReduc objects</span></span>
+<span><span class="co">#&gt; Not validating DimReduc objects</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="tip-1--double-check-the-label-you-will-use-to-correct-batch-effects-">Tip 1. Double-check the label you will use to correct batch
@@ -331,6 +337,18 @@ number of VF (1k, 5k, and 10k independent VFs).</p>
 <span><span class="co">#&gt; Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric</span></span>
 <span><span class="co">#&gt; To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'</span></span>
 <span><span class="co">#&gt; This message will be shown once per session</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">intersected_VFs</span>, <span class="va">n_VF</span>, <span class="va">n</span><span class="op">)</span></span></code></pre></div>
 <p>Let’s check the UMAP plots using different sets of VFs.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -363,7 +381,8 @@ features we just found.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">uncorrected</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">integration_features</span></span>
 <span><span class="va">uncorrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">uncorrected</span>, assay <span class="op">=</span> <span class="st">"RNA"</span>, features <span class="op">=</span> <span class="va">integration_features</span>,verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">uncorrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">uncorrected</span>, assay <span class="op">=</span> <span class="st">"RNA"</span>, features <span class="op">=</span> <span class="va">integration_features</span>, npcs <span class="op">=</span> <span class="fl">50</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">uncorrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">uncorrected</span>, assay <span class="op">=</span> <span class="st">"RNA"</span>, features <span class="op">=</span> <span class="va">integration_features</span>, npcs <span class="op">=</span> <span class="fl">50</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Number of dimensions changing from 15 to 50</span></span></code></pre></div>
 <p>Let’s check out the elbow plot of the PCs.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">MyElbowPlot</span><span class="op">(</span>seurat_object <span class="op">=</span> <span class="va">uncorrected</span>, n_components <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
@@ -373,7 +392,11 @@ to calculate the UMAP visualization, but feel free to try other
 numbers.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">777</span><span class="op">)</span></span>
-<span><span class="va">uncorrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">uncorrected</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">uncorrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">uncorrected</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span></code></pre></div>
 <p>Let’s visualize the uncorrected data by <em>technology</em> and
 <em>cell-type</em>. NOTE: Tabula Muris provide the annotated cell types
 in the label <code>cell_ontology_class</code>.</p>
@@ -420,7 +443,11 @@ with the one we found using the <code>uncorrected</code> data set. Then,
 we will continue using 10 PCs (feel free to try other numbers).</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">777</span><span class="op">)</span></span>
-<span><span class="va">corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">corrected</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">corrected</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span>
+<span><span class="co">#&gt; Found more than one class "dist" in cache; using the first, from namespace 'BiocGenerics'</span></span>
+<span><span class="co">#&gt; Also defined by 'spam'</span></span></code></pre></div>
 <p>Finally, we can now visualize the <code>corrected</code> data by
 <code>tech</code> and <code>cell_ontology_class</code> (cell type)
 labels. We can observe that after batch correction with Canek, we
@@ -436,7 +463,7 @@ minimize the batch difference in <em>immature T cells</em>.</p>
 </h2>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.3.1 (2023-06-16)</span></span>
+<span><span class="co">#&gt; R version 4.3.2 (2023-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
 <span><span class="co">#&gt; Running under: Ubuntu 22.04.3 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -457,19 +484,19 @@ minimize the batch difference in <em>immature T cells</em>.</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] here_1.0.1         patchwork_1.1.3    ggplot2_3.4.4      SeuratObject_4.1.4</span></span>
-<span><span class="co">#&gt; [5] Seurat_4.4.0       Canek_0.2.3       </span></span>
+<span><span class="co">#&gt; [1] here_1.0.1         patchwork_1.1.3    ggplot2_3.4.4      SeuratObject_5.0.0</span></span>
+<span><span class="co">#&gt; [5] Seurat_4.4.0       Canek_0.2.4       </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] RColorBrewer_1.1-3     jsonlite_1.8.7         magrittr_2.0.3        </span></span>
-<span><span class="co">#&gt;   [4] spatstat.utils_3.0-3   modeltools_0.2-23      farver_2.1.1          </span></span>
+<span><span class="co">#&gt;   [4] spatstat.utils_3.0-4   modeltools_0.2-23      farver_2.1.1          </span></span>
 <span><span class="co">#&gt;   [7] rmarkdown_2.25         fs_1.6.3               ragg_1.2.6            </span></span>
 <span><span class="co">#&gt;  [10] vctrs_0.6.4            ROCR_1.0-11            memoise_2.0.1         </span></span>
-<span><span class="co">#&gt;  [13] spatstat.explore_3.2-3 htmltools_0.5.6.1      BiocNeighbors_1.18.0  </span></span>
-<span><span class="co">#&gt;  [16] sass_0.4.7             sctransform_0.4.0      parallelly_1.36.0     </span></span>
-<span><span class="co">#&gt;  [19] KernSmooth_2.23-21     bslib_0.5.1            htmlwidgets_1.6.2     </span></span>
+<span><span class="co">#&gt;  [13] spatstat.explore_3.2-5 htmltools_0.5.6.1      BiocNeighbors_1.18.0  </span></span>
+<span><span class="co">#&gt;  [16] sass_0.4.7             sctransform_0.4.1      parallelly_1.36.0     </span></span>
+<span><span class="co">#&gt;  [19] KernSmooth_2.23-22     bslib_0.5.1            htmlwidgets_1.6.2     </span></span>
 <span><span class="co">#&gt;  [22] desc_1.4.2             ica_1.0-3              plyr_1.8.9            </span></span>
-<span><span class="co">#&gt;  [25] plotly_4.10.2          zoo_1.8-12             cachem_1.0.8          </span></span>
+<span><span class="co">#&gt;  [25] plotly_4.10.3          zoo_1.8-12             cachem_1.0.8          </span></span>
 <span><span class="co">#&gt;  [28] igraph_1.5.1           mime_0.12              lifecycle_1.0.3       </span></span>
 <span><span class="co">#&gt;  [31] pkgconfig_2.0.3        Matrix_1.6-1.1         R6_2.5.1              </span></span>
 <span><span class="co">#&gt;  [34] fastmap_1.1.1          fitdistrplus_1.1-11    future_1.33.0         </span></span>
@@ -477,36 +504,37 @@ minimize the batch difference in <em>immature T cells</em>.</p>
 <span><span class="co">#&gt;  [40] S4Vectors_0.38.2       numbers_0.8-5          rprojroot_2.0.3       </span></span>
 <span><span class="co">#&gt;  [43] tensor_1.5             irlba_2.3.5.1          textshaping_0.3.7     </span></span>
 <span><span class="co">#&gt;  [46] labeling_0.4.3         progressr_0.14.0       fansi_1.0.5           </span></span>
-<span><span class="co">#&gt;  [49] spatstat.sparse_3.0-2  httr_1.4.7             polyclip_1.10-6       </span></span>
-<span><span class="co">#&gt;  [52] abind_1.4-5            compiler_4.3.1         withr_2.5.1           </span></span>
-<span><span class="co">#&gt;  [55] BiocParallel_1.34.2    MASS_7.3-60            bluster_1.10.0        </span></span>
-<span><span class="co">#&gt;  [58] tools_4.3.1            lmtest_0.9-40          prabclus_2.3-2        </span></span>
-<span><span class="co">#&gt;  [61] httpuv_1.6.11          future.apply_1.11.0    goftest_1.2-3         </span></span>
-<span><span class="co">#&gt;  [64] nnet_7.3-19            glue_1.6.2             nlme_3.1-162          </span></span>
-<span><span class="co">#&gt;  [67] promises_1.2.1         grid_4.3.1             Rtsne_0.16            </span></span>
-<span><span class="co">#&gt;  [70] cluster_2.1.4          reshape2_1.4.4         generics_0.1.3        </span></span>
-<span><span class="co">#&gt;  [73] gtable_0.3.4           spatstat.data_3.0-1    class_7.3-22          </span></span>
-<span><span class="co">#&gt;  [76] tidyr_1.3.0            data.table_1.14.8      sp_2.1-1              </span></span>
-<span><span class="co">#&gt;  [79] utf8_1.2.3             flexmix_2.3-19         BiocGenerics_0.46.0   </span></span>
-<span><span class="co">#&gt;  [82] spatstat.geom_3.2-5    RcppAnnoy_0.0.21       ggrepel_0.9.4         </span></span>
-<span><span class="co">#&gt;  [85] RANN_2.6.1             pillar_1.9.0           stringr_1.5.0         </span></span>
-<span><span class="co">#&gt;  [88] later_1.3.1            robustbase_0.99-0      splines_4.3.1         </span></span>
-<span><span class="co">#&gt;  [91] dplyr_1.1.3            lattice_0.21-8         deldir_1.0-9          </span></span>
-<span><span class="co">#&gt;  [94] survival_3.5-5         FNN_1.1.3.2            tidyselect_1.2.0      </span></span>
-<span><span class="co">#&gt;  [97] miniUI_0.1.1.1         pbapply_1.7-2          knitr_1.44            </span></span>
-<span><span class="co">#&gt; [100] gridExtra_2.3          scattermore_1.2        stats4_4.3.1          </span></span>
-<span><span class="co">#&gt; [103] xfun_0.40              diptest_0.76-0         matrixStats_1.0.0     </span></span>
-<span><span class="co">#&gt; [106] DEoptimR_1.1-3         stringi_1.7.12         lazyeval_0.2.2        </span></span>
-<span><span class="co">#&gt; [109] yaml_2.3.7             evaluate_0.22          codetools_0.2-19      </span></span>
-<span><span class="co">#&gt; [112] kernlab_0.9-32         tibble_3.2.1           cli_3.6.1             </span></span>
-<span><span class="co">#&gt; [115] uwot_0.1.16            xtable_1.8-4           reticulate_1.34.0     </span></span>
-<span><span class="co">#&gt; [118] systemfonts_1.0.5      munsell_0.5.0          jquerylib_0.1.4       </span></span>
-<span><span class="co">#&gt; [121] Rcpp_1.0.11            spatstat.random_3.1-6  globals_0.16.2        </span></span>
-<span><span class="co">#&gt; [124] png_0.1-8              parallel_4.3.1         ellipsis_0.3.2        </span></span>
-<span><span class="co">#&gt; [127] pkgdown_2.0.7          mclust_6.0.0           listenv_0.9.0         </span></span>
-<span><span class="co">#&gt; [130] viridisLite_0.4.2      scales_1.2.1           ggridges_0.5.4        </span></span>
-<span><span class="co">#&gt; [133] leiden_0.4.3           purrr_1.0.2            fpc_2.2-10            </span></span>
-<span><span class="co">#&gt; [136] rlang_1.1.1            cowplot_1.1.1</span></span></code></pre></div>
+<span><span class="co">#&gt;  [49] spatstat.sparse_3.0-3  httr_1.4.7             polyclip_1.10-6       </span></span>
+<span><span class="co">#&gt;  [52] abind_1.4-5            compiler_4.3.2         withr_2.5.2           </span></span>
+<span><span class="co">#&gt;  [55] BiocParallel_1.34.2    highr_0.10             MASS_7.3-60           </span></span>
+<span><span class="co">#&gt;  [58] bluster_1.10.0         tools_4.3.2            lmtest_0.9-40         </span></span>
+<span><span class="co">#&gt;  [61] prabclus_2.3-3         httpuv_1.6.12          future.apply_1.11.0   </span></span>
+<span><span class="co">#&gt;  [64] goftest_1.2-3          nnet_7.3-19            glue_1.6.2            </span></span>
+<span><span class="co">#&gt;  [67] nlme_3.1-163           promises_1.2.1         grid_4.3.2            </span></span>
+<span><span class="co">#&gt;  [70] Rtsne_0.16             cluster_2.1.4          reshape2_1.4.4        </span></span>
+<span><span class="co">#&gt;  [73] generics_0.1.3         gtable_0.3.4           spatstat.data_3.0-3   </span></span>
+<span><span class="co">#&gt;  [76] class_7.3-22           tidyr_1.3.0            data.table_1.14.8     </span></span>
+<span><span class="co">#&gt;  [79] sp_2.1-1               utf8_1.2.4             flexmix_2.3-19        </span></span>
+<span><span class="co">#&gt;  [82] BiocGenerics_0.46.0    spatstat.geom_3.2-7    RcppAnnoy_0.0.21      </span></span>
+<span><span class="co">#&gt;  [85] ggrepel_0.9.4          RANN_2.6.1             pillar_1.9.0          </span></span>
+<span><span class="co">#&gt;  [88] stringr_1.5.0          spam_2.10-0            later_1.3.1           </span></span>
+<span><span class="co">#&gt;  [91] robustbase_0.99-0      splines_4.3.2          dplyr_1.1.3           </span></span>
+<span><span class="co">#&gt;  [94] lattice_0.21-9         deldir_1.0-9           survival_3.5-7        </span></span>
+<span><span class="co">#&gt;  [97] FNN_1.1.3.2            tidyselect_1.2.0       miniUI_0.1.1.1        </span></span>
+<span><span class="co">#&gt; [100] pbapply_1.7-2          knitr_1.45             gridExtra_2.3         </span></span>
+<span><span class="co">#&gt; [103] scattermore_1.2        stats4_4.3.2           xfun_0.41             </span></span>
+<span><span class="co">#&gt; [106] diptest_0.76-0         matrixStats_1.0.0      DEoptimR_1.1-3        </span></span>
+<span><span class="co">#&gt; [109] stringi_1.7.12         lazyeval_0.2.2         yaml_2.3.7            </span></span>
+<span><span class="co">#&gt; [112] evaluate_0.23          codetools_0.2-19       kernlab_0.9-32        </span></span>
+<span><span class="co">#&gt; [115] tibble_3.2.1           cli_3.6.1              uwot_0.1.16           </span></span>
+<span><span class="co">#&gt; [118] xtable_1.8-4           reticulate_1.34.0      systemfonts_1.0.5     </span></span>
+<span><span class="co">#&gt; [121] munsell_0.5.0          jquerylib_0.1.4        Rcpp_1.0.11           </span></span>
+<span><span class="co">#&gt; [124] spatstat.random_3.2-1  globals_0.16.2         png_0.1-8             </span></span>
+<span><span class="co">#&gt; [127] parallel_4.3.2         ellipsis_0.3.2         pkgdown_2.0.7         </span></span>
+<span><span class="co">#&gt; [130] dotCall64_1.1-0        mclust_6.0.0           listenv_0.9.0         </span></span>
+<span><span class="co">#&gt; [133] viridisLite_0.4.2      scales_1.2.1           ggridges_0.5.4        </span></span>
+<span><span class="co">#&gt; [136] leiden_0.4.3           purrr_1.0.2            fpc_2.2-10            </span></span>
+<span><span class="co">#&gt; [139] rlang_1.1.1            cowplot_1.1.1</span></span></code></pre></div>
 </div>
   </div>
 
