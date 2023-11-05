@@ -5,6 +5,7 @@
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
 #' @import numbers
+#' @importFrom utils packageVersion
 #' @importFrom stats dist kmeans sd quantile
 #' @importFrom igraph cluster_louvain membership mst graph_from_adjacency_matrix as_edgelist
 #' @importFrom bluster makeSNNGraph

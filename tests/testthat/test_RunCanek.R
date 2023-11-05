@@ -24,7 +24,7 @@ y <- SingleCellExperiment::SingleCellExperiment(list(counts=m, logcounts=m))
 y$batch <- b
 
 # RunCanek.
-x <- RunCanek(x, "batch")
+x <- RunCanek(x, "batch", slot="counts")
 y <- RunCanek(y, "batch")
 z <- RunCanek(list(B1=m1, B2=m2), debug = TRUE)
 

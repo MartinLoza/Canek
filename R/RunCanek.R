@@ -41,7 +41,10 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, feat
   }
 
   counts <- lapply(obj, function(xx) {
-    Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
+    if (packageVersion("Seurat") >= "5.0.0")
+      Seurat::GetAssayData(xx, layer = slot, assay = assay)[features, ]
+    else
+      Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
   })
 
   counts <- Canek::CorrectBatches(counts, debug = debug, ...)
