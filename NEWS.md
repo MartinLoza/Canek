@@ -1,3 +1,9 @@
+# Canek 0.2.4
+
+## Changes
+
+- Update Canek for compatibility with Seurat v5 ([#20](https://github.com/MartinLoza/Canek/issues/20))
+
 # Canek 0.2.3
 
 ## Changes
