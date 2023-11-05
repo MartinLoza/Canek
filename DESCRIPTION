@@ -20,7 +20,8 @@ Imports:
     fpc,
     bluster,
     igraph,
-    matrixStats
+    matrixStats,
+    utils
 Suggests:
     testthat (>= 2.1.0),
     Seurat,
