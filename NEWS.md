@@ -1,3 +1,9 @@
+# Canek 0.2.5
+
+## Changes
+
+- Update unit tests for compatibility with changes in igraph ([#24](https://github.com/MartinLoza/Canek/issues/24)).
+
 # Canek 0.2.4
 
 ## Changes
