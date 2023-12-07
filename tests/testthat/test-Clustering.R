@@ -9,7 +9,7 @@ dataLouvain <- y$`B2/B1`$`Correction Data`$Clusters
 test_that("Clustering with kmeans works", {
   expect_false(is.null(dataKmeans))
   expect_equal(names(dataKmeans), c("cluster", "centers"))
-  expect_equal(as.integer(table(dataKmeans$cluster)), 631)
+  expect_equal(length(dataKmeans$cluster), 631)
   expect_equal(dim(dataKmeans$centers), c(1, 10))
 })
 
