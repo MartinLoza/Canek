@@ -102,3 +102,45 @@ test_that("RunCanek respects an explicitly passed pcaDim over inference and the 
 
   expect_equal(ncol(Seurat::Embeddings(xe, "canek")), 5)
 })
+
+test_that("CorrectBatches sets maxLoop to 1 with a warning when correctEmbeddings = FALSE", {
+  expect_warning(
+    z <- CorrectBatches(list(B1 = m1, B2 = m2), maxLoop = 5),
+    "maxLoop > 1 is only supported for correctEmbeddings = TRUE"
+  )
+  expect_equal(dim(z), dim(m))
+})
+
+test_that("CorrectBatches iterates the correction and records the correction magnitude when correctEmbeddings = TRUE", {
+  z <- CorrectBatches(list(B1 = m1, B2 = m2), correctEmbeddings = TRUE, pcaDim = 10,
+                       maxLoop = 4, loopTol = 1e-8, debug = TRUE)
+  info <- z$`B2/B1`$debug$info
+
+  expect_equal(info$loops, 4)
+  expect_length(info$loopMagnitude, 4)
+  # each pass should keep refining the correction, i.e. shrinking its magnitude
+  expect_true(all(diff(info$loopMagnitude) < 0))
+})
+
+test_that("CorrectBatches stops iterating early once the correction magnitude stops improving", {
+  z <- CorrectBatches(list(B1 = m1, B2 = m2), correctEmbeddings = TRUE, pcaDim = 10,
+                       maxLoop = 10, loopTol = 0.4, debug = TRUE)
+  info <- z$`B2/B1`$debug$info
+
+  expect_true(info$loops < 10)
+  expect_length(info$loopMagnitude, info$loops)
+})
+
+test_that("RunCanek forwards maxLoop/loopTol to CorrectBatches through ...", {
+  xe <- Seurat::CreateSeuratObject(Seurat::as.sparse(m))
+  xe$batch <- b
+  xe <- Seurat::NormalizeData(xe, verbose = FALSE)
+  xe <- Seurat::FindVariableFeatures(xe, nfeatures = 100, verbose = FALSE)
+  xe <- Seurat::ScaleData(xe, verbose = FALSE)
+  xe <- Seurat::RunPCA(xe, npcs = 10, verbose = FALSE)
+
+  xe <- RunCanek(xe, "batch", maxLoop = 3, loopTol = 1e-8, debug = TRUE)
+  info <- xe@tools$RunCanek[[1]]$debug$info
+
+  expect_equal(info$loops, 3)
+})
