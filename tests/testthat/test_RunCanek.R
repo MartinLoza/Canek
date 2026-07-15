@@ -24,7 +24,7 @@ y <- SingleCellExperiment::SingleCellExperiment(list(counts=m, logcounts=m))
 y$batch <- b
 
 # RunCanek.
-x <- RunCanek(x, "batch", slot="counts")
+x <- RunCanek(x, "batch", slot="counts", correctEmbeddings = FALSE)
 y <- RunCanek(y, "batch")
 z <- RunCanek(list(B1=m1, B2=m2), debug = TRUE)
 
@@ -53,10 +53,52 @@ test_that("RunCanek works on lists", {
   expect_error(CorrectBatches(list(B1 = SimBatches$batches$B1, B2 = SimBatches$batches$B1)))
 })
 
-x <- RunCanek(x, "batch", integration.name = "CanekRNA")
+x <- RunCanek(x, "batch", integration.name = "CanekRNA", correctEmbeddings = FALSE)
 y <- RunCanek(y, "batch", integration.name = "CanekRNA")
 
 test_that("Setting RunCanek integration.name argument works", {
   expect_true("CanekRNA" %in% names(x))
   expect_true("CanekRNA" %in% names(SummarizedExperiment::assays(y)))
+})
+
+test_that("RunCanek defaults to correctEmbeddings and falls back to pcaDim=30 with a warning when no PCA reduction exists", {
+  xe <- Seurat::CreateSeuratObject(Seurat::as.sparse(m))
+  xe$batch <- b
+
+  expect_warning(
+    xe <- RunCanek(xe, "batch", slot = "counts"),
+    "No existing 'pca' reduction"
+  )
+
+  expect_true("canek" %in% Seurat::Reductions(xe))
+  expect_equal(Seurat::Assays(xe), "RNA")
+  expect_equal(ncol(Seurat::Embeddings(xe, "canek")), 30)
+})
+
+test_that("RunCanek infers pcaDim from an existing PCA reduction", {
+  xe <- Seurat::CreateSeuratObject(Seurat::as.sparse(m))
+  xe$batch <- b
+  xe <- Seurat::NormalizeData(xe, verbose = FALSE)
+  xe <- Seurat::FindVariableFeatures(xe, nfeatures = 100, verbose = FALSE)
+  xe <- Seurat::ScaleData(xe, verbose = FALSE)
+  xe <- Seurat::RunPCA(xe, npcs = 15, verbose = FALSE)
+
+  expect_warning(
+    xe <- RunCanek(xe, "batch"),
+    NA
+  )
+
+  expect_equal(ncol(Seurat::Embeddings(xe, "canek")), 15)
+})
+
+test_that("RunCanek respects an explicitly passed pcaDim over inference and the default", {
+  xe <- Seurat::CreateSeuratObject(Seurat::as.sparse(m))
+  xe$batch <- b
+
+  expect_warning(
+    xe <- RunCanek(xe, "batch", slot = "counts", pcaDim = 5),
+    NA
+  )
+
+  expect_equal(ncol(Seurat::Embeddings(xe, "canek")), 5)
 })
