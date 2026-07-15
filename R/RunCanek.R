@@ -13,6 +13,9 @@
 #' @param integration.name name for the integrated assay.
 #' @param debug whether to store information about correction vector.
 #' @param correctEmbeddings whether to perform the correction on PCA embeddings instead of gene expression (Seurat objects only).
+#' @param pcaDim number of PCA dimensions to use when correctEmbeddings is TRUE. If NULL (default),
+#' it is inferred from the object's existing "pca" reduction; if none is found, it falls back to 30
+#' with a warning.
 #' @param ... additional arguments passed down to methods.
 #'
 #' @return An object of the appropriate type.
@@ -25,11 +28,21 @@ RunCanek <- function(x, ...) {
 
 #' @rdname RunCanek
 #' @export
-RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, correctEmbeddings = FALSE, ...) {
+RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, correctEmbeddings = TRUE, pcaDim = NULL, ...) {
 
   #if not assay is selected, we used the default one
   if(is.null(assay)){
     assay <- Seurat::DefaultAssay(x)
+  }
+
+  #if correcting on embeddings, infer pcaDim from an existing PCA reduction unless the user passed one directly
+  if(correctEmbeddings && is.null(pcaDim)){
+    if("pca" %in% Seurat::Reductions(x)){
+      pcaDim <- ncol(Seurat::Embeddings(x, reduction = "pca"))
+    } else {
+      pcaDim <- 30
+      warning("No existing 'pca' reduction found on the object; defaulting pcaDim to 30 for correctEmbeddings. Pass pcaDim explicitly to override.", call. = FALSE)
+    }
   }
 
   Seurat::DefaultAssay(x) <- assay
@@ -48,7 +61,11 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, feat
       Seurat::GetAssayData(xx, slot = slot, assay = assay)[features, ]
   })
 
-  counts <- Canek::CorrectBatches(counts, debug = debug, correctEmbeddings = correctEmbeddings, ...)
+  if(correctEmbeddings){
+    counts <- Canek::CorrectBatches(counts, debug = debug, correctEmbeddings = TRUE, pcaDim = pcaDim, ...)
+  } else {
+    counts <- Canek::CorrectBatches(counts, debug = debug, correctEmbeddings = FALSE, ...)
+  }
 
   if (debug) {
     info <- counts
