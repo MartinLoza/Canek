@@ -14,8 +14,7 @@
 #' @param debug whether to store information about correction vector.
 #' @param correctEmbeddings whether to perform the correction on PCA embeddings instead of gene expression (Seurat objects only).
 #' @param pcaDim number of PCA dimensions to use when correctEmbeddings is TRUE. If NULL (default),
-#' it is inferred from the object's existing "pca" reduction; if none is found, it falls back to 30
-#' with a warning.
+#' it is inferred from the object's existing "pca" reduction; if none is found, used 30 as default with a warning.
 #' @param ... additional arguments passed down to methods.
 #'
 #' @return An object of the appropriate type.
