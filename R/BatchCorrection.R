@@ -559,7 +559,7 @@ CorrectBatch <- function(refBatch, queBatch,
  debugData$info$pairsFilter <- pairsFilter
  debugData$info$pcaQue <- pcaQue
  debugData$info$pcaRef <- pcaRef
- debugData$info$pcaRef <- correctEmbeddings
+ debugData$info$correctEmbeddings <- correctEmbeddings
 
  if(verbose)
    cat(paste0('\nBatch correction time: ', tBatch, " seconds"))
