@@ -20,6 +20,10 @@ RunCanek(x, ...)
   fvf.nfeatures = 2000,
   integration.name = "Canek",
   debug = FALSE,
+  correctEmbeddings = TRUE,
+  pcaDim = NULL,
+  maxLoop = 5,
+  loopTol = 0.001,
   ...
 )
 
@@ -56,6 +60,18 @@ RunCanek(x, ...)
 \item{integration.name}{name for the integrated assay.}
 
 \item{debug}{whether to store information about correction vector.}
+
+\item{correctEmbeddings}{whether to perform the correction on PCA embeddings instead of gene expression (Seurat objects only).}
+
+\item{pcaDim}{number of PCA dimensions to use when correctEmbeddings is TRUE. If NULL (default),
+it is inferred from the object's existing "pca" reduction; if none is found, used 30 as default with a warning.}
+
+\item{maxLoop}{number of times to repeat the correction (Seurat objects with correctEmbeddings = TRUE
+only), using each pass's corrected result as the input to the next. Defaults to 5: correction quality
+keeps improving noticeably for several passes, at the cost of a few times the runtime of a single pass.}
+
+\item{loopTol}{used to stop repeating early. Once a new pass changes the correction, on average per
+cell, by less than this fraction of the previous pass, looping stops.}
 }
 \value{
 An object of the appropriate type.

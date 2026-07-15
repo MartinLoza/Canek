@@ -25,6 +25,9 @@ CorrectBatch(
   clusterMethod = "louvain",
   pairsFilter = FALSE,
   doCosNorm = FALSE,
+  correctEmbeddings = FALSE,
+  maxLoop = 1,
+  loopTol = 0.001,
   verbose = FALSE
 )
 }
@@ -80,6 +83,13 @@ not calculated for this membership.}
 the pairs are filtered from outliers using an interquartile range method.}
 
 \item{doCosNorm}{Whether to do cosine normalization.}
+
+\item{maxLoop}{Number of times to repeat the correction, using each pass's corrected query batch as
+the input to the next. Only used when correctEmbeddings = TRUE; ignored (with a warning) otherwise,
+since each pass would need to recompute the PCA over gene expression.}
+
+\item{loopTol}{Used to stop repeating early. Once a new pass changes the correction, on average per
+cell, by less than this fraction of the previous pass, looping stops.}
 
 \item{verbose}{Print output.}
 }

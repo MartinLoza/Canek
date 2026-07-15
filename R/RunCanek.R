@@ -15,6 +15,9 @@
 #' @param correctEmbeddings whether to perform the correction on PCA embeddings instead of gene expression (Seurat objects only).
 #' @param pcaDim number of PCA dimensions to use when correctEmbeddings is TRUE. If NULL (default),
 #' it is inferred from the object's existing "pca" reduction; if none is found, used 30 as default with a warning.
+#' @param maxLoop number of times to iterate the correction (correctEmbeddings = TRUE
+#' only), using each iteration's corrected result as the input to the next. Defaults to 5.
+#' @param loopTol average change in median correction magnitude used to stop iterating early. Defaults to 1e-3. Ignored if maxLoop = 1.
 #' @param ... additional arguments passed down to methods.
 #'
 #' @return An object of the appropriate type.
@@ -27,7 +30,7 @@ RunCanek <- function(x, ...) {
 
 #' @rdname RunCanek
 #' @export
-RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, correctEmbeddings = TRUE, pcaDim = NULL, ...) {
+RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, features = NULL, selection.method = "vst", nfeatures = 2000, fvf.nfeatures = 2000, integration.name = "Canek", debug = FALSE, correctEmbeddings = TRUE, pcaDim = NULL, maxLoop = 5, loopTol = 1e-3, ...) {
 
   #if not assay is selected, we used the default one
   if(is.null(assay)){
@@ -61,7 +64,7 @@ RunCanek.Seurat <- function(x, batches = NULL, slot = "data", assay = NULL, feat
   })
 
   if(correctEmbeddings){
-    counts <- Canek::CorrectBatches(counts, debug = debug, correctEmbeddings = TRUE, pcaDim = pcaDim, ...)
+    counts <- Canek::CorrectBatches(counts, debug = debug, correctEmbeddings = TRUE, pcaDim = pcaDim, maxLoop = maxLoop, loopTol = loopTol, ...)
   } else {
     counts <- Canek::CorrectBatches(counts, debug = debug, correctEmbeddings = FALSE, ...)
   }
