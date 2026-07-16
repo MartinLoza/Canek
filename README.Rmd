@@ -42,9 +42,6 @@ Canek leverages information from mutual nearest neighbors to combine local linea
   <img src="man/figures/README-workflow.png" width="100%"/>
 </p>
 
-<style type="text/css">
-    ol { list-style-type: upper-alpha; }
-</style>
 <font size="2">
 
 > A. Canek starts with a reference batch and query batch, assuming a predominantly linear batch effect.
@@ -61,15 +58,26 @@ Canek was the highest scored method in tests specifically designed to assess **o
 
 For more information about Canek check out our manuscript in [NAR Genomics and Bioinformatics](https://doi.org/10.1093/nargab/lqac022).
 
+## What's new in 0.3.0
+
+- **Latest updates**: `RunCanek()` on Seurat objects now defaults to `correctEmbeddings = TRUE` — correction happens in PCA-embedding space instead of on gene expression directly, and the result is a new `"canek"` reduction rather than a `"Canek"` assay. Pass `correctEmbeddings = FALSE` to keep the previous behavior.
+- `pcaDim` is inferred automatically from an existing `"pca"` reduction when present, and reused directly instead of being recomputed.
+- Added SCTransform support, including automatic reconciliation checks for batches normalized separately.
+- Added a repeat-correction loop (`maxLoop`/`loopTol`) that refines the correction across multiple passes.
+
+See the [full changelog](https://martinloza.github.io/Canek/news/index.html) for details.
+
 ## Usage
 
-You can use Canek directly with *normalized-count matrices*, *Seurat* objects or *SingleCellExperiment* objects. For more details, check out our GitHub page and vignettes:
+You can use Canek directly with *normalized-count matrices*, *Seurat* objects or *SingleCellExperiment* objects. As of Canek 0.3.0, correcting Seurat objects defaults to PCA-embedding space (`correctEmbeddings = TRUE`) rather than gene expression directly, and both log-normalized and SCTransform-normalized data are supported. For more details, check out our GitHub page and vignettes:
 
 - [Canek website](https://martinloza.github.io/Canek/index.html)
 - [Run Canek on a toy example vignette](https://martinloza.github.io/Canek/articles/toy_example.html)
-- [Run Canek on Seurat objects vignette](https://martinloza.github.io/Canek/articles/seurat.html)
+- [Correct log-normalized Seurat data](https://martinloza.github.io/Canek/articles/seurat.html)
+- [Correct SCTransform-normalized Seurat data](https://martinloza.github.io/Canek/articles/SCTransform.html)
 - [Run Canek on SingleCellExperiment objects vignette](https://martinloza.github.io/Canek/articles/SingleCellExperiment.html)
-- [Best practices on batch effects correction](https://martinloza.github.io/Canek/articles/Best_practices_thymus.html)
+
+For vignettes related to the previous `v0.2.x` version, see [Previous versions](https://martinloza.github.io/Canek/articles/legacy.html).
 
 ## Installation
 
