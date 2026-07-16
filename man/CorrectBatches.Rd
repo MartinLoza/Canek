@@ -33,8 +33,11 @@ CorrectBatches(
 \arguments{
 \item{lsBatches}{List of batches to integrate. Batches should contain the same number of genes as rows.}
 
-\item{hierarchical}{Use hierarchical integration scheme when correcting more than two batches.
-If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.}
+\item{hierarchical}{Use hierarchical integration scheme when correcting more than two batches: at
+each step, pick the remaining batch most similar to the current reference (by MNN pair count). If set to FALSE, the input batches are sorted by
+number of cells and integrated on descending order. When correctEmbeddings is TRUE, scoring
+candidates reuses the already-computed embedding coordinates instead of recomputing a PCA. For gene-expression-space correction it recomputes a PCA per candidate per
+step.}
 
 \item{queNumCelltypes}{Number of cell types in the query batch. By default Canek searches the number of
 cell types using an heuristic algorithm. Change this parameter if you know the number of cell types in advanced.}

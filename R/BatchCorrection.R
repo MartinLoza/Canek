@@ -13,8 +13,13 @@
 #' @param maxMem Maximum number of memberships from the query batch. This parameter is used on the heuristic algorithm to find the number of cell types.
 #' @param fuzzy Use fuzzy logic to join the local correction vectors.
 #' @param fuzzyPCA Number of PCs to use in the fuzzy process.
-#' @param hierarchical Use hierarchical integration scheme when correcting more than two batches.
-#' If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.
+#' @param hierarchical Use hierarchical integration scheme when correcting more than two batches: at
+#' each step, pick the remaining batch most similar to the current reference (by MNN pair count)
+#' instead of always taking the next-largest one. If set to FALSE, the input batches are sorted by
+#' number of cells and integrated on descending order. When correctEmbeddings is TRUE, scoring
+#' candidates reuses the already-computed embedding coordinates instead of recomputing a PCA, so this
+#' stays affordable there; for gene-expression-space correction it recomputes a PCA per candidate per
+#' step, which is more expensive.
 #' @param verbose Print output.
 #' @param estMethod Method to use when estimating the correction vectors:
 #' \itemize{
@@ -103,10 +108,10 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   lsBatches <- lapply(lsBatches, as.matrix)
 
   ### TEST TEST TEST
-  #for now, if the correction is on the embeddings, we deactive the hierarchical mode and transform the data to the embedding space
+  #for now, if the correction is on the embeddings, we transform the data to the embedding space.
+  #hierarchical selection stays available here (unlike before): the batches are already embedded by
+  #the time it runs, so scoring candidates just reuses those coordinates instead of recomputing a PCA.
   if(correctEmbeddings == TRUE){
-    #deactivate hierarchical
-    hierarchical <- FALSE
 
     if(precomputedEmbeddings){
       #lsBatches are already embedded (e.g. an existing PCA reduction split per batch)
@@ -187,6 +192,13 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                          cnBatches[[n]][, sampIdx[[n]]]))
           } else {
             m <- t(cbind(cnBatches[[1]], cnBatches[[n]]))
+          }
+          #if correcting on embeddings, cnBatches are already embedded (pcaDim x cells); scoring
+          #candidates for hierarchical selection can reuse those coordinates directly instead of
+          #recomputing a PCA on top of them, which is what makes hierarchical selection affordable
+          #here even though it's expensive for the raw gene-expression case below
+          if (correctEmbeddings) {
+            return(m)
           }
           pca <- prcomp_irlba(m)
           return(pca$x)
