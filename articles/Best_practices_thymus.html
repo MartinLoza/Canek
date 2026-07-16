@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -54,17 +54,32 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
+<li class="divider">
+    </li>
+<li class="dropdown-header">Articles</li>
+    <li>
+      <a href="../articles/toy_example.html">Run Canek on a toy example</a>
     </li>
     <li>
-      <a href="../articles/seurat.html">Run Canek on Seurat objects</a>
+      <a href="../articles/seurat.html">Correct log-normalized Seurat data</a>
+    </li>
+    <li>
+      <a href="../articles/SCTransform.html">Correct SCTransform-normalized Seurat data</a>
     </li>
     <li>
       <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Archive (v0.2.x)</li>
     <li>
-      <a href="../articles/toy_example.html">Run Canek on a toy example</a>
+      <a href="../articles/legacy.html">Previous versions (v0.2.x)</a>
+    </li>
+    <li>
+      <a href="../articles/seurat_gene_expression.html">Run Canek on Seurat objects (gene-expression-space correction)</a>
+    </li>
+    <li>
+      <a href="../articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
     </li>
   </ul>
 </li>
@@ -102,6 +117,19 @@
 
     
     
+<blockquote>
+<p>This vignette predates the <code>correctEmbeddings</code> default
+added to <code><a href="../reference/RunCanek.html">RunCanek()</a></code> in 0.3.0, so the one
+<code><a href="../reference/RunCanek.html">RunCanek()</a></code> call below has been pinned to
+<code>correctEmbeddings = FALSE</code> to keep it runnable, matching
+what it originally did by default. Several of the careful manual steps
+this vignette walks through — double-checking the assay at each step,
+tuning the variable-feature intersection, confirming PC counts after
+correction — are less critical with 0.3.0’s defaults (embedding reuse
+from an existing <code>"pca"</code> reduction, automatic
+<code>pcaDim</code> inference), though the underlying advice about batch
+labels and variable features is still generally sound.</p>
+</blockquote>
 <div class="section level2">
 <h2 id="motivation-to-develop-this-vignette-">Motivation to develop this vignette.<a class="anchor" aria-label="anchor" href="#motivation-to-develop-this-vignette-"></a>
 </h2>
@@ -414,7 +442,7 @@ pass the set of VFs we previously found.</p>
 <code class="sourceCode R"><span><span class="co">#RunCanek in a list of SingleCellExperiment objects</span></span>
 <span><span class="co">#corrected &lt;- Canek::RunCanek(x = sce, features = integration_features)</span></span>
 <span><span class="co">#RunCanek in a single object with a batch identifier</span></span>
-<span><span class="va">corrected</span> <span class="op">&lt;-</span> <span class="fu">Canek</span><span class="fu">::</span><span class="fu"><a href="../reference/RunCanek.html">RunCanek</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">uncorrected</span>, batches <span class="op">=</span> <span class="st">"tech"</span>, features <span class="op">=</span> <span class="va">integration_features</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">corrected</span> <span class="op">&lt;-</span> <span class="fu">Canek</span><span class="fu">::</span><span class="fu"><a href="../reference/RunCanek.html">RunCanek</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">uncorrected</span>, batches <span class="op">=</span> <span class="st">"tech"</span>, features <span class="op">=</span> <span class="va">integration_features</span>, correctEmbeddings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>To perform PCA it’s important to use the
 <code>corrected log counts</code>. These are saved in the assay
 <code>Canek</code> in the <code>SingleCellExperiment</code> object and
@@ -475,7 +503,7 @@ minimize the batch difference in <em>immature T cells</em>.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt; [1] here_1.0.2         patchwork_1.3.2    ggplot2_4.0.3      Seurat_5.5.1      </span></span>
-<span><span class="co">#&gt; [5] SeuratObject_5.4.0 sp_2.2-1           Canek_0.2.5       </span></span>
+<span><span class="co">#&gt; [5] SeuratObject_5.4.0 sp_2.2-1           Canek_0.3.0       </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] RColorBrewer_1.1-3     jsonlite_2.0.0         magrittr_2.0.5        </span></span>

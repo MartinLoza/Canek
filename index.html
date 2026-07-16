@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -55,17 +55,32 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
+<li class="divider">
+    </li>
+<li class="dropdown-header">Articles</li>
+    <li>
+      <a href="articles/toy_example.html">Run Canek on a toy example</a>
     </li>
     <li>
-      <a href="articles/seurat.html">Run Canek on Seurat objects</a>
+      <a href="articles/seurat.html">Correct log-normalized Seurat data</a>
+    </li>
+    <li>
+      <a href="articles/SCTransform.html">Correct SCTransform-normalized Seurat data</a>
     </li>
     <li>
       <a href="articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Archive (v0.2.x)</li>
     <li>
-      <a href="articles/toy_example.html">Run Canek on a toy example</a>
+      <a href="articles/legacy.html">Previous versions (v0.2.x)</a>
+    </li>
+    <li>
+      <a href="articles/seurat_gene_expression.html">Run Canek on Seurat objects (gene-expression-space correction)</a>
+    </li>
+    <li>
+      <a href="articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
     </li>
   </ul>
 </li>
@@ -112,9 +127,6 @@
 <p>Canek leverages information from mutual nearest neighbors to combine local linear corrections with cell-specific non-linear corrections within a fuzzy logic framework.</p>
 <p align="center">
 <img src="reference/figures/README-workflow.png" width="100%"></p>
-<style type="text/css">
-    ol { list-style-type: upper-alpha; }
-</style>
 <p><font size="2"></font></p>
 <blockquote>
 <p>A. Canek starts with a reference batch and query batch, assuming a predominantly linear batch effect.</p>
@@ -130,16 +142,30 @@
 <p>For more information about Canek check out our manuscript in <a href="https://doi.org/10.1093/nargab/lqac022" class="external-link">NAR Genomics and Bioinformatics</a>.</p>
 </div>
 <div class="section level2">
+<h2 id="whats-new-in-030">What’s new in 0.3.0<a class="anchor" aria-label="anchor" href="#whats-new-in-030"></a>
+</h2>
+<ul>
+<li>
+<strong>Latest updates</strong>: <code><a href="reference/RunCanek.html">RunCanek()</a></code> on Seurat objects now defaults to <code>correctEmbeddings = TRUE</code> — correction happens in PCA-embedding space instead of on gene expression directly, and the result is a new <code>"canek"</code> reduction rather than a <code>"Canek"</code> assay. Pass <code>correctEmbeddings = FALSE</code> to keep the previous behavior.</li>
+<li>
+<code>pcaDim</code> is inferred automatically from an existing <code>"pca"</code> reduction when present, and reused directly instead of being recomputed.</li>
+<li>Added SCTransform support, including automatic reconciliation checks for batches normalized separately.</li>
+<li>Added a repeat-correction loop (<code>maxLoop</code>/<code>loopTol</code>) that refines the correction across multiple passes.</li>
+</ul>
+<p>See the <a href="https://martinloza.github.io/Canek/news/index.html">full changelog</a> for details.</p>
+</div>
+<div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>You can use Canek directly with <em>normalized-count matrices</em>, <em>Seurat</em> objects or <em>SingleCellExperiment</em> objects. For more details, check out our GitHub page and vignettes:</p>
+<p>You can use Canek directly with <em>normalized-count matrices</em>, <em>Seurat</em> objects or <em>SingleCellExperiment</em> objects. As of Canek 0.3.0, correcting Seurat objects defaults to PCA-embedding space (<code>correctEmbeddings = TRUE</code>) rather than gene expression directly, and both log-normalized and SCTransform-normalized data are supported. For more details, check out our GitHub page and vignettes:</p>
 <ul>
 <li><a href="https://martinloza.github.io/Canek/index.html">Canek website</a></li>
 <li><a href="https://martinloza.github.io/Canek/articles/toy_example.html">Run Canek on a toy example vignette</a></li>
-<li><a href="https://martinloza.github.io/Canek/articles/seurat.html">Run Canek on Seurat objects vignette</a></li>
+<li><a href="https://martinloza.github.io/Canek/articles/seurat.html">Correct log-normalized Seurat data</a></li>
+<li><a href="https://martinloza.github.io/Canek/articles/SCTransform.html">Correct SCTransform-normalized Seurat data</a></li>
 <li><a href="https://martinloza.github.io/Canek/articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects vignette</a></li>
-<li><a href="https://martinloza.github.io/Canek/articles/Best_practices_thymus.html">Best practices on batch effects correction</a></li>
 </ul>
+<p>For vignettes related to the previous <code>v0.2.x</code> version, see <a href="https://martinloza.github.io/Canek/articles/legacy.html">Previous versions</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>

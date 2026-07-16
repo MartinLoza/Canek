@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -37,17 +37,30 @@
 
     <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
+  <ul class="dropdown-menu" role="menu"><li class="divider">
+    <li class="dropdown-header">Articles</li>
+    <li>
+      <a href="../articles/toy_example.html">Run Canek on a toy example</a>
     </li>
     <li>
-      <a href="../articles/seurat.html">Run Canek on Seurat objects</a>
+      <a href="../articles/seurat.html">Correct log-normalized Seurat data</a>
+    </li>
+    <li>
+      <a href="../articles/SCTransform.html">Correct SCTransform-normalized Seurat data</a>
     </li>
     <li>
       <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Archive (v0.2.x)</li>
     <li>
-      <a href="../articles/toy_example.html">Run Canek on a toy example</a>
+      <a href="../articles/legacy.html">Previous versions (v0.2.x)</a>
+    </li>
+    <li>
+      <a href="../articles/seurat_gene_expression.html">Run Canek on Seurat objects (gene-expression-space correction)</a>
+    </li>
+    <li>
+      <a href="../articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
     </li>
   </ul></li>
 <li>
@@ -72,6 +85,23 @@
       <small>Source: <a href="https://github.com/MartinLoza/Canek/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.3.0" id="canek-030">Canek 0.3.0<a class="anchor" aria-label="anchor" href="#canek-030"></a></h2>
+<div class="section level3">
+<h3 id="latests-updates-0-3-0">Latests updates<a class="anchor" aria-label="anchor" href="#latests-updates-0-3-0"></a></h3>
+<ul><li>
+<code><a href="../reference/RunCanek.html">RunCanek()</a></code> on Seurat objects now defaults to <code>correctEmbeddings = TRUE</code>: correction happens in PCA-embedding space instead of on gene expression directly, and the result is stored as a new <code>"canek"</code> dimensionality reduction rather than a new <code>"Canek"</code> assay. Code that reads <code>assay = "Canek"</code> after <code><a href="../reference/RunCanek.html">RunCanek()</a></code> needs updating — use <code>Embeddings(x, "canek")</code> instead, or pass <code>correctEmbeddings = FALSE</code> to keep the original assay-based behavior.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-0-3-0">Changes<a class="anchor" aria-label="anchor" href="#changes-0-3-0"></a></h3>
+<ul><li><p><code>pcaDim</code> is now inferred automatically from an existing <code>"pca"</code> reduction on the object when not specified, instead of always defaulting to 50; falls back to 30 with a warning if no <code>"pca"</code> reduction exists.</p></li>
+<li><p>When <code>correctEmbeddings = TRUE</code> and a <code>"pca"</code> reduction already exists, <code><a href="../reference/RunCanek.html">RunCanek()</a></code> reuses it directly instead of recomputing one internally (new <code>precomputedEmbeddings</code> parameter on <code><a href="../reference/CorrectBatches.html">CorrectBatches()</a></code>/ <code><a href="../reference/CorrectBatch.html">CorrectBatch()</a></code>).</p></li>
+<li><p>Added SCTransform support: <code><a href="../reference/RunCanek.html">RunCanek()</a></code> auto-detects an existing <code>"SCT"</code> assay, and for <code>correctEmbeddings = TRUE</code> requires an existing <code>"pca"</code> reduction computed on properly reconciled data (see SCTransform documentation). Errors with guidance towards the reconciliation steps (<code><a href="https://satijalab.org/seurat/reference/SelectIntegrationFeatures.html" class="external-link">SelectIntegrationFeatures()</a></code> + <code><a href="https://satijalab.org/seurat/reference/PrepSCTIntegration.html" class="external-link">PrepSCTIntegration()</a></code>) are thrown.</p></li>
+<li><p>Added a iterative-correction loop for <code>correctEmbeddings = TRUE</code>: new <code>maxLoop</code>/<code>loopTol</code> parameters (<code><a href="../reference/RunCanek.html">RunCanek()</a></code> on Seurat objects defaults to <code>maxLoop = 5</code>) iterate the correction, feeding each pass’s result into the next, and stop early once further passes stop improving the correction.</p></li>
+<li><p>Fixed a bug where clustering and the fuzzy logic step would error (<code>subscript out of bounds</code>) whenever <code>correctEmbeddings = TRUE</code> was used with <code>pcaDim</code> below 10.</p></li>
+<li><p>Rewrote the Seurat vignette and added a new SCTransform vignette demonstrating the current default workflow for each normalization method. Pre-0.3.0 vignettes are archived under <a href="https://martinloza.github.io/Canek/articles/legacy.html">Previous versions</a>.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.5" id="canek-025">Canek 0.2.5<small>2023-12-08</small><a class="anchor" aria-label="anchor" href="#canek-025"></a></h2>
 <div class="section level3">

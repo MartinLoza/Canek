@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -37,17 +37,30 @@
 
     <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
+  <ul class="dropdown-menu" role="menu"><li class="divider">
+    <li class="dropdown-header">Articles</li>
+    <li>
+      <a href="../articles/toy_example.html">Run Canek on a toy example</a>
     </li>
     <li>
-      <a href="../articles/seurat.html">Run Canek on Seurat objects</a>
+      <a href="../articles/seurat.html">Correct log-normalized Seurat data</a>
+    </li>
+    <li>
+      <a href="../articles/SCTransform.html">Correct SCTransform-normalized Seurat data</a>
     </li>
     <li>
       <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Archive (v0.2.x)</li>
     <li>
-      <a href="../articles/toy_example.html">Run Canek on a toy example</a>
+      <a href="../articles/legacy.html">Previous versions (v0.2.x)</a>
+    </li>
+    <li>
+      <a href="../articles/seurat_gene_expression.html">Run Canek on Seurat objects (gene-expression-space correction)</a>
+    </li>
+    <li>
+      <a href="../articles/Best_practices_thymus.html">Best practices on batch effects correction</a>
     </li>
   </ul></li>
 <li>
@@ -96,6 +109,10 @@
 <span>  doCosNorm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  fracSampling <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  correctEmbeddings <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  precomputedEmbeddings <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  maxLoop <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  loopTol <span class="op">=</span> <span class="fl">0.001</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -110,8 +127,11 @@
 
 
 <dt id="arg-hierarchical">hierarchical<a class="anchor" aria-label="anchor" href="#arg-hierarchical"></a></dt>
-<dd><p>Use hierarchical integration scheme when correcting more than two batches.
-If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.</p></dd>
+<dd><p>Use hierarchical integration scheme when correcting more than two batches: at
+each step, pick the remaining batch most similar to the current reference (by MNN pair count). If set to FALSE, the input batches are sorted by
+number of cells and integrated on descending order. When correctEmbeddings is TRUE, scoring
+candidates reuses the already-computed embedding coordinates instead of recomputing a PCA. For gene-expression-space correction it recomputes a PCA per candidate per
+step.</p></dd>
 
 
 <dt id="arg-quenumcelltypes">queNumCelltypes<a class="anchor" aria-label="anchor" href="#arg-quenumcelltypes"></a></dt>
@@ -179,6 +199,31 @@ not calculated for this membership.</p></dd>
 
 <dt id="arg-debug">debug<a class="anchor" aria-label="anchor" href="#arg-debug"></a></dt>
 <dd><p>Return correction's information</p></dd>
+
+
+<dt id="arg-correctembeddings">correctEmbeddings<a class="anchor" aria-label="anchor" href="#arg-correctembeddings"></a></dt>
+<dd><p>Whether to perform the correction on PCA embeddings instead of gene
+expression. When TRUE, batches are transformed to embedding space before correcting (see
+precomputedEmbeddings), and hierarchical batch selection reuses those coordinates instead of
+recomputing a PCA per candidate.</p></dd>
+
+
+<dt id="arg-precomputedembeddings">precomputedEmbeddings<a class="anchor" aria-label="anchor" href="#arg-precomputedembeddings"></a></dt>
+<dd><p>Whether to use precomputed PCA embeddings.
+Set this to TRUE if lsBatches are already embeddings (e.g. PCA
+coordinates) rather than gene expression, so Canek uses them instead of computing its own
+PCA. Only used when correctEmbeddings = TRUE.</p></dd>
+
+
+<dt id="arg-maxloop">maxLoop<a class="anchor" aria-label="anchor" href="#arg-maxloop"></a></dt>
+<dd><p>Number of times to repeat the correction of a batch pair, using each pass's corrected
+query batch as the input to the next. Only used when correctEmbeddings = TRUE; ignored (with a
+warning) otherwise, since each pass would need to recompute the PCA over gene expression.</p></dd>
+
+
+<dt id="arg-looptol">loopTol<a class="anchor" aria-label="anchor" href="#arg-looptol"></a></dt>
+<dd><p>Used to stop repeating early. Once a new pass changes the correction, on average per
+cell, by less than this fraction of the previous pass, looping stops.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
