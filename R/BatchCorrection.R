@@ -13,8 +13,11 @@
 #' @param maxMem Maximum number of memberships from the query batch. This parameter is used on the heuristic algorithm to find the number of cell types.
 #' @param fuzzy Use fuzzy logic to join the local correction vectors.
 #' @param fuzzyPCA Number of PCs to use in the fuzzy process.
-#' @param hierarchical Use hierarchical integration scheme when correcting more than two batches.
-#' If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.
+#' @param hierarchical Use hierarchical integration scheme when correcting more than two batches: at
+#' each step, pick the remaining batch most similar to the current reference (by MNN pair count). If set to FALSE, the input batches are sorted by
+#' number of cells and integrated on descending order. When correctEmbeddings is TRUE, scoring
+#' candidates reuses the already-computed embedding coordinates instead of recomputing a PCA. For gene-expression-space correction it recomputes a PCA per candidate per
+#' step.
 #' @param verbose Print output.
 #' @param estMethod Method to use when estimating the correction vectors:
 #' \itemize{
@@ -31,6 +34,19 @@
 #' @param fracSampling Fraction of cells to sample in the hierarchical selection (default is NULL, no sampling).
 #' @param clusterMethod Method used to identify memberships.
 #' @param debug Return correction's information
+#' @param correctEmbeddings Whether to perform the correction on PCA embeddings instead of gene
+#' expression. When TRUE, batches are transformed to embedding space before correcting (see
+#' precomputedEmbeddings), and hierarchical batch selection reuses those coordinates instead of
+#' recomputing a PCA per candidate.
+#' @param precomputedEmbeddings Whether to use precomputed PCA embeddings.
+#' Set this to TRUE if lsBatches are already embeddings (e.g. PCA
+#' coordinates) rather than gene expression, so Canek uses them instead of computing its own
+#' PCA. Only used when correctEmbeddings = TRUE.
+#' @param maxLoop Number of times to repeat the correction of a batch pair, using each pass's corrected
+#' query batch as the input to the next. Only used when correctEmbeddings = TRUE; ignored (with a
+#' warning) otherwise, since each pass would need to recompute the PCA over gene expression.
+#' @param loopTol Used to stop repeating early. Once a new pass changes the correction, on average per
+#' cell, by less than this fraction of the previous pass, looping stops.
 #' @param ... Pass down methods from RunCanek().
 #'
 #' @details CorrectBatches is a method to correct batch-effect from two or more single-cell batches.
@@ -62,7 +78,11 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            fuzzy = TRUE, fuzzyPCA = 10,
                            estMethod = "Median", clusterMethod = "louvain",
                            doCosNorm = FALSE, fracSampling = NULL,
-                           debug = FALSE, verbose = FALSE, ... ){
+                           debug = FALSE,
+                           correctEmbeddings = FALSE,
+                           precomputedEmbeddings = FALSE,
+                           maxLoop = 1, loopTol = 1e-3,
+                           verbose = FALSE, ... ){
 
   if(debug || verbose){
     tTotal <- Sys.time()
@@ -72,8 +92,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
   namesInBatches <- names(lsBatches)
   numBatches <- length(lsBatches)
   lsCorrection <- list()
-  inCellNames <- lapply(lsBatches, colnames)
-  inCellNames <- Reduce(c,inCellNames) #input cell names
+  inCellNames_ls <- lapply(lsBatches, colnames)
+  inCellNames <- Reduce(c,inCellNames_ls) #input cell names
 
   ## Check batches names
   if(is.null(namesInBatches)){
@@ -88,6 +108,40 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
   #Check input batches as matrices
   lsBatches <- lapply(lsBatches, as.matrix)
+
+  ### TEST TEST TEST
+  #for now, if the correction is on the embeddings, we transform the data to the embedding space.
+  #hierarchical selection stays available here (unlike before): the batches are already embedded by
+  #the time it runs, so scoring candidates just reuses those coordinates instead of recomputing a PCA.
+  if(correctEmbeddings == TRUE){
+
+    if(precomputedEmbeddings){
+      #lsBatches are already embedded (e.g. an existing PCA reduction split per batch)
+    } else {
+      #to calculate the embedding we need to merge the data first
+      tmp_merged <- Reduce(f = cbind, x = lsBatches)
+      #get the embedding space
+      pcaBatches <- prcomp_irlba(x = t(tmp_merged), n = pcaDim, center = TRUE, scale. = TRUE)
+      #assign the cell names
+      rownames(pcaBatches$x) <- colnames(tmp_merged)
+      #remove temporal batch to save memory
+      rm(tmp_merged)
+      gc()
+
+      #get the current batch order
+      currentNames <- names(lsBatches)
+      #subset the embedded cells from each batch
+      lsBatches <- lapply(X = currentNames, FUN = function(name){
+        tmp <- t(pcaBatches$x[inCellNames_ls[[name]],]) #transpose to match workflow
+        return(tmp)
+      })
+      #recover the batch names
+      names(lsBatches) <- currentNames
+      #remove pcaBatches to reduce memory usage
+      rm(pcaBatches, currentNames)
+      gc()
+    }
+  }
 
   # First batch is the one with highest number of cells
   nCells <- sapply(lsBatches, ncol)
@@ -134,18 +188,28 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
       # Test. Sampling in hierarchical mode
       pcaBatches <- lapply(names(cnBatches)[-1], function(n){
-        if (exists("sampIdx")) {
-          m <- t(cbind(cnBatches[[1]][, sampIdx[[1]]],
-                  cnBatches[[n]][, sampIdx[[n]]]))
-        } else {
-          m <- t(cbind(cnBatches[[1]], cnBatches[[n]]))
-        }
-        prcomp_irlba(m)
-      })
+          if (exists("sampIdx")) {
+            #reference is the first batch
+            m <- t(cbind(cnBatches[[1]][, sampIdx[[1]]],
+                         cnBatches[[n]][, sampIdx[[n]]]))
+          } else {
+            m <- t(cbind(cnBatches[[1]], cnBatches[[n]]))
+          }
+          #if correcting on embeddings, cnBatches are already embedded (pcaDim x cells); scoring
+          #candidates for hierarchical selection can reuse those coordinates directly instead of
+          #recomputing a PCA on top of them, which is what makes hierarchical selection affordable
+          #here even though it's expensive for the raw gene-expression case below
+          if (correctEmbeddings) {
+            return(m)
+          }
+          pca <- prcomp_irlba(m)
+          return(pca$x)
+        })
 
+      #Calculate the MNN pairs in the PCA space
       nPairs <- lapply(pcaBatches, function(x){
-        pairs <- GetMnnPairs(refBatch = t(x$x[1:nCellsRef, ]),
-                             queBatch = t(x$x[(nCellsRef+1):nrow(x$x), ]),
+        pairs <- GetMnnPairs(refBatch = t(x[1:nCellsRef, ]),
+                             queBatch = t(x[(nCellsRef+1):nrow(x), ]),
                              kNN = 30)$Pairs
         return(nrow(pairs))
       })
@@ -156,7 +220,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       # We select the first element, in case there are two datasets with the same number of pairs
       Query <- which.max(nPairs) + 1
 
-    } else {  #If the integration is not hierarchical
+    }else {  #If the integration is not hierarchical
       Query <- 2
     }
 
@@ -172,6 +236,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                                sampling = sampling, numSamples = numSamples,
                                cnRef = cnBatches[[1]], cnQue = cnBatches[[Query]],
                                doCosNorm = doCosNorm, clusterMethod = clusterMethod,
+                               correctEmbeddings = correctEmbeddings,
+                               maxLoop = maxLoop, loopTol = loopTol,
                                verbose = verbose)
 
     # new ref at the beginning
@@ -247,6 +313,13 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 #' @param cnRef Cosine normalization of the reference batch.
 #' @param cnQue Cosine normalization of the query batch.
 #' @param clusterMethod Method used to identify memberships.
+#' @param correctEmbeddings Whether to perform the correction on PCA embeddings instead of gene
+#' expression.
+#' @param maxLoop Number of times to repeat the correction, using each pass's corrected query batch as
+#' the input to the next. Only used when correctEmbeddings = TRUE; ignored (with a warning) otherwise,
+#' since each pass would need to recompute the PCA over gene expression.
+#' @param loopTol Used to stop repeating early. Once a new pass changes the correction, on average per
+#' cell, by less than this fraction of the previous pass, looping stops.
 #'
 #'
 #' @details CorrectBatch is a method to correct batch-effect from two single-cell batches.
@@ -282,17 +355,25 @@ CorrectBatch <- function(refBatch, queBatch,
                          fuzzy = TRUE, fuzzyPCA = 10,
                          estMethod = "Median", clusterMethod = "louvain",
                          pairsFilter = FALSE, doCosNorm = FALSE,
+                         correctEmbeddings = FALSE, #new parameter to indicate that the corrections should be perform on the embeddings
+                         maxLoop = 1, loopTol = 1e-3,
                          verbose = FALSE) {
 
   tBatch <- Sys.time()
 
-  debugData <- list(info = list(), membership = list())
+  # Iterative corrections is worth on the embedding space. In the full gene set it's very expensive
+  if(maxLoop > 1 && !correctEmbeddings){
+    warning("maxLoop > 1 is only supported for correctEmbeddings = TRUE; running a single pass.", call. = FALSE)
+    maxLoop <- 1
+  }
 
-  memPairs <- NULL
-  memCorrData <- list()
-  corGene <- NULL
+  #TEST TEST TEST
+  #for now, if correct embeddings, we can't pass external pairs
+  if(correctEmbeddings == TRUE){
+    pairs <- NULL
+  }
+
   nMem <- NULL
-
   if(!is.null(queNumCelltypes)){
     nMem <- queNumCelltypes
   }
@@ -300,6 +381,15 @@ CorrectBatch <- function(refBatch, queBatch,
   nCellsRef <- ncol(refBatch)
   nCellsQue <- ncol(queBatch)
   nCells <- nCellsRef + nCellsQue
+
+  # mean per-cell correction magnitude of each pass, used to decide when to stop looping
+  loopMag <- rep(NA_real_, maxLoop)
+
+  for(loop in seq_len(maxLoop)){
+
+  debugData <- list(info = list(), membership = list())
+  memPairs <- NULL
+  memCorrData <- list()
 
   # FIND MNN pairs ----
   if(is.null(pairs)){
@@ -311,12 +401,19 @@ CorrectBatch <- function(refBatch, queBatch,
       cnQue <- queBatch
     }
 
-    pcaBatches <- prcomp_irlba(t(cbind(cnRef, cnQue)), n = pcaDim)
+    #TEST TEST TEST
+    #if the correction is not the embedding space, we calculate PCA. Otherwise, we already calculated it
+    if(correctEmbeddings == FALSE){
+      pcaBatches <- prcomp_irlba(t(cbind(cnRef, cnQue)), n = pcaDim)
+      #subset the pca coordinates of the current reference and query batch
+      pcaRef <- pcaBatches$x[1:nCellsRef,]
+      pcaQue <- pcaBatches$x[(nCellsRef+1):nCells,]
 
-    pcaRef <- pcaBatches$x[1:nCellsRef,]
-    pcaQue <- pcaBatches$x[(nCellsRef+1):nCells,]
-
-    rm(pcaBatches)
+      rm(pcaBatches)
+    }else{
+      pcaRef <- t(refBatch) #we transpose to match the current workflow
+      pcaQue <- t(queBatch) #ew transpose to match the current workflow
+    }
 
     if(verbose)
       cat(paste("\n\nFinding mutual nearest neighbors from", kNN,"nearest neighbors"))
@@ -327,9 +424,16 @@ CorrectBatch <- function(refBatch, queBatch,
 
     pairs <- pairs$Pairs
   }else{
-
     pcaQue <- prcomp_irlba(t(queBatch),n = 10)
     pcaQue <- pcaQue$x
+  }
+
+  # set the number of PCA dimensions to use for the fuzzy process. Instead of using 
+  # the user-defined fuzzyPCA, we set it to the number of available PCA dimensions. This is important because
+  # if the user sets fuzzyPCA to a value greater than the number of available PCA dimensions, it can lead to errors or unexpected behavior in the fuzzy logic process.
+  if(fuzzyPCA > ncol(pcaQue)){
+    warning("fuzzyPCA (", fuzzyPCA, ") exceeds the number of available PCA dimensions (", ncol(pcaQue), "); using ", ncol(pcaQue), " instead.", call. = FALSE)
+    fuzzyPCA <- ncol(pcaQue)
   }
 
   debugData$pairs <- data.frame(ref = colnames(refBatch)[pairs[, 2]], query = colnames(queBatch)[pairs[, 1]])
@@ -337,19 +441,21 @@ CorrectBatch <- function(refBatch, queBatch,
  if(verbose)
   cat(paste('\n\tNumber of MNN pairs:', nrow(pairs)))
 
-  # FIND memberships ----
-  switch(clusterMethod,
-    "kmeans" = {
-      cluster <- ClusterKMeans(pcaQue[, 1:10], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
-    },
-    "louvain" = {
-      cluster <- ClusterLouvain(pcaQue[, 1:10], k = kNN, verbose = verbose)
-    },
-    stop("cluster method unknown.")
-  )
+  # FIND memberships ---- (only on the first iteration, so later iterations don't chase a moving clustering and a moving correction)
+  if(loop == 1){
+    switch(clusterMethod,
+      "kmeans" = {
+        cluster <- ClusterKMeans(pcaQue[, 1:fuzzyPCA, drop = FALSE], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
+      },
+      "louvain" = {
+        cluster <- ClusterLouvain(pcaQue[, 1:fuzzyPCA, drop = FALSE], k = kNN, verbose = verbose)
+      },
+      stop("cluster method unknown.")
+    )
 
-  cluMem <- cluster$result
-  nMem <- cluster$nMem
+    cluMem <- cluster$result
+    nMem <- cluster$nMem
+  }
 
  # INIT correction matrix ----
  corGene <- matrix(0, nrow = nrow(refBatch), ncol = nMem)
@@ -391,6 +497,13 @@ CorrectBatch <- function(refBatch, queBatch,
    norNumPairs <- (ceiling(nrow(memPairs)/kNN))/(numCellMem)
 
    if (norNumPairs > perCellMNN){
+
+     #if the corrections should be perform on the embedding space
+     if(correctEmbeddings){
+       refBatch <- t(pcaRef)
+       queBatch <- t(pcaQue)
+     }
+
      if(estMethod == "EKF"){
        if(verbose)
          cat("\n\n\tEXTENDED KALMAN FILTER")
@@ -432,7 +545,11 @@ CorrectBatch <- function(refBatch, queBatch,
  # CALCULATE minimum spanning tree ----
  MST <- CalculateMST(cluMem$centers[,1:fuzzyPCA])
 
- # CHECK No Zero Correction Vectors ----
+ # CHECK No Zero Correction Vectors ---- (work on copies so the fixed clustering across iterations is never overwritten)
+ cluMemFuzzy <- cluMem
+ nMemFuzzy <- nMem
+ MSTFuzzy <- MST
+
  isZero <- which(zeroCorrection == TRUE)
  if(length(isZero) == nMem){
    warning('\nWarning: No correction vectors where found.\nConsider using a higher number of kNN or a lower number of clusters to filter pairs', call. = TRUE)
@@ -443,9 +560,9 @@ CorrectBatch <- function(refBatch, queBatch,
 
    memCorrData <- noZeroCV$memCorrData
    corGene <- noZeroCV$corGene
-   MST <- noZeroCV$MST
-   cluMem <- noZeroCV$cluMem
-   nMem <- ncol(corGene)
+   MSTFuzzy <- noZeroCV$MST
+   cluMemFuzzy <- noZeroCV$cluMem
+   nMemFuzzy <- ncol(corGene)
  }
 
 
@@ -458,22 +575,22 @@ CorrectBatch <- function(refBatch, queBatch,
 
  # Init membership's cells (1 to the cell's membership and 0 to the other memberships)
  for (Mem in colnames(corGene)){
-   corCell[which(cluMem$cluster == as.integer(Mem)), Mem] <- 1
+   corCell[which(cluMemFuzzy$cluster == as.integer(Mem)), Mem] <- 1
  }
 
  # Fuzzy process and Correction
- if(fuzzy && nMem > 1){
+ if(fuzzy && nMemFuzzy > 1){
 
    if(verbose)
      cat('\n\n Fuzzy process ')
-   fuzzyData <- Fuzzy(cluMem = cluMem, pcaQue = pcaQue, MST = MST,
+   fuzzyData <- Fuzzy(cluMem = cluMemFuzzy, pcaQue = pcaQue, MST = MSTFuzzy,
                       fuzzyPCA = fuzzyPCA, corCell = corCell,
                       verbose = verbose)
 
    corCell <- fuzzyData$`Fuzzy Memberships`
 
  }else{
-   fuzzyData <- list("Fuzzy Memberships" = corCell, "MST" = MST,
+   fuzzyData <- list("Fuzzy Memberships" = corCell, "MST" = MSTFuzzy,
                      "Fuzzied" =  NULL, "Edges Data" = NULL)
  }
 
@@ -487,11 +604,32 @@ CorrectBatch <- function(refBatch, queBatch,
  debugData$matrix$features <- rownames(queCorrected)
 
   # SET data lists to return ----
- memData <- list("Cluster Membership" = nMem, "Membership Correction Data" = memCorrData)
+ memData <- list("Cluster Membership" = nMemFuzzy, "Membership Correction Data" = memCorrData)
 
  correctionData <- list("Correction Matrix" = corMatrix, "MNN Pairs" = pairs,
                         "Membership Data" = memData, "Fuzzy Data" = fuzzyData,
-                        "Clusters" = cluMem)
+                        "Clusters" = cluMemFuzzy)
+
+ # CHECK convergence ---- (decide whether another iteration is worth it; don't apply when maxLoop = 1)
+ loopMag[loop] <- mean(sqrt(colSums(corMatrix^2)))
+ converged <- FALSE
+ if(loop > 1){
+   relChange <- abs(loopMag[loop] - loopMag[loop - 1]) / (loopMag[loop - 1] + 1e-8)
+   if(verbose)
+     cat(paste0('\n\tLoop ', loop, ': mean correction magnitude ', loopMag[loop], ', relative change ', relChange))
+   if(relChange <= loopTol)
+     converged <- TRUE
+ }
+
+ if(loop < maxLoop && !converged){
+   # feed this iteration's corrected query into the next iteration, and force MNN pairs to be re-searched against the new reference batch
+   queBatch <- queCorrected
+   pairs <- NULL
+ } else {
+   break
+ }
+
+ } # end of maxLoop passes
 
  tBatch <- difftime(Sys.time(), tBatch, units = "min")
 
@@ -503,7 +641,9 @@ CorrectBatch <- function(refBatch, queBatch,
  debugData$info$pairsFilter <- pairsFilter
  debugData$info$pcaQue <- pcaQue
  debugData$info$pcaRef <- pcaRef
-
+ debugData$info$correctEmbeddings <- correctEmbeddings
+ debugData$info$loops <- loop
+ debugData$info$loopMagnitude <- loopMag[seq_len(loop)]
 
  if(verbose)
    cat(paste0('\nBatch correction time: ', tBatch, " seconds"))

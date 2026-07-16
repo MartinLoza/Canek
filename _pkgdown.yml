@@ -5,3 +5,22 @@ template:
     bootswatch: cosmo
     ganalytics: G-59M7HLCFLK
 
+articles:
+- title: Articles
+  navbar: Articles
+  contents:
+  - toy_example
+  - articles/seurat
+  - articles/SCTransform
+  - articles/SingleCellExperiment
+# seurat_gene_expression and Best_practices_thymus predate 0.3.0's
+# correctEmbeddings default; grouped here as their own visible navbar
+# section (any title other than the pkgdown-reserved "internal" shows up as
+# a labeled dropdown group, rather than being hidden from navigation).
+- title: Archive (v0.2.x)
+  navbar: Archive (v0.2.x)
+  contents:
+  - articles/legacy
+  - articles/seurat_gene_expression
+  - articles/Best_practices_thymus
+

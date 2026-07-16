@@ -8,5 +8,6 @@
 ^docs$
 ^pkgdown$
 cran-comments.md
+^UPDATE_PROGRESS\.md$
 ^CRAN-SUBMISSION$
 ^man/figures$

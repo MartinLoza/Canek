@@ -22,6 +22,10 @@ CorrectBatches(
   doCosNorm = FALSE,
   fracSampling = NULL,
   debug = FALSE,
+  correctEmbeddings = FALSE,
+  precomputedEmbeddings = FALSE,
+  maxLoop = 1,
+  loopTol = 0.001,
   verbose = FALSE,
   ...
 )
@@ -29,8 +33,11 @@ CorrectBatches(
 \arguments{
 \item{lsBatches}{List of batches to integrate. Batches should contain the same number of genes as rows.}
 
-\item{hierarchical}{Use hierarchical integration scheme when correcting more than two batches.
-If set to FALSE, the input batches are sorted by number of cells and integrated on descending order.}
+\item{hierarchical}{Use hierarchical integration scheme when correcting more than two batches: at
+each step, pick the remaining batch most similar to the current reference (by MNN pair count). If set to FALSE, the input batches are sorted by
+number of cells and integrated on descending order. When correctEmbeddings is TRUE, scoring
+candidates reuses the already-computed embedding coordinates instead of recomputing a PCA. For gene-expression-space correction it recomputes a PCA per candidate per
+step.}
 
 \item{queNumCelltypes}{Number of cell types in the query batch. By default Canek searches the number of
 cell types using an heuristic algorithm. Change this parameter if you know the number of cell types in advanced.}
@@ -70,6 +77,23 @@ not calculated for this membership.}
 \item{fracSampling}{Fraction of cells to sample in the hierarchical selection (default is NULL, no sampling).}
 
 \item{debug}{Return correction's information}
+
+\item{correctEmbeddings}{Whether to perform the correction on PCA embeddings instead of gene
+expression. When TRUE, batches are transformed to embedding space before correcting (see
+precomputedEmbeddings), and hierarchical batch selection reuses those coordinates instead of
+recomputing a PCA per candidate.}
+
+\item{precomputedEmbeddings}{Whether to use precomputed PCA embeddings.
+Set this to TRUE if lsBatches are already embeddings (e.g. PCA
+coordinates) rather than gene expression, so Canek uses them instead of computing its own
+PCA. Only used when correctEmbeddings = TRUE.}
+
+\item{maxLoop}{Number of times to repeat the correction of a batch pair, using each pass's corrected
+query batch as the input to the next. Only used when correctEmbeddings = TRUE; ignored (with a
+warning) otherwise, since each pass would need to recompute the PCA over gene expression.}
+
+\item{loopTol}{Used to stop repeating early. Once a new pass changes the correction, on average per
+cell, by less than this fraction of the previous pass, looping stops.}
 
 \item{verbose}{Print output.}
 

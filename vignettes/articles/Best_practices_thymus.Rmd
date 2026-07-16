@@ -7,6 +7,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+> This vignette predates the `correctEmbeddings` default added to
+> `RunCanek()` in 0.3.0, so the one `RunCanek()` call below has been pinned
+> to `correctEmbeddings = FALSE` to keep it runnable, matching what it
+> originally did by default. Several of the careful manual steps this
+> vignette walks through — double-checking the assay at each step, tuning
+> the variable-feature intersection, confirming PC counts after correction
+> — are less critical with 0.3.0's defaults (embedding reuse from an
+> existing `"pca"` reduction, automatic `pcaDim` inference), though the
+> underlying advice about batch labels and variable features is still
+> generally sound.
+
 ## Motivation to develop this vignette.
 
 Correcting batch effects is an important step in every multi-batch scRNA-seq data analysis of *biological replicates*, where we would like to preserve the within-differences of batches while reducing technical differences. We acknowledge that batch effects correction is just a single step in a complete analysis, and we wouldn't like to spend so much time on it. However, we think that it is important to pay special attention to correct batch effects because *an incorrect analysis could completely change the conclusions* of downstream analyses and we might end up *wasting a significant amount of research-time*.
@@ -255,7 +266,7 @@ To correct batch effects, Canek accepts either a list of objects or single objec
 #RunCanek in a list of SingleCellExperiment objects
 #corrected <- Canek::RunCanek(x = sce, features = integration_features)
 #RunCanek in a single object with a batch identifier
-corrected <- Canek::RunCanek(x = uncorrected, batches = "tech", features = integration_features)
+corrected <- Canek::RunCanek(x = uncorrected, batches = "tech", features = integration_features, correctEmbeddings = FALSE)
 ```
 
 To perform PCA it's important to use the `corrected log counts`. These are saved in the assay `Canek` in the `SingleCellExperiment` object and can be specified by changing the `exprs_values` parameter.

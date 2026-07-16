@@ -1,0 +1,18 @@
+---
+title: "Previous versions (v0.2.x)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Previous versions (v0.2.x)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Vignettes for the `v0.2.x` line of Canek, kept for reference. These
+document workflows and defaults that predate `0.3.0`'s PCA-embedding-space
+correction (`correctEmbeddings = TRUE`) — see the current vignettes linked
+from the [README](https://martinloza.github.io/Canek/index.html) for
+up-to-date usage.
+
+- [Run Canek on Seurat objects (gene-expression-space
+  correction)](seurat_gene_expression.html)
+- [Best practices on batch effects correction](Best_practices_thymus.html)
