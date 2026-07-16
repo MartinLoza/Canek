@@ -1,0 +1,96 @@
+---
+title: "Run Canek on Seurat objects (gene-expression-space correction)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Run Canek on Seurat objects (gene-expression-space correction)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+> This is the original content of the Seurat vignette, from before
+> `correctEmbeddings` existed. `RunCanek()` now corrects in PCA-embedding
+> space by default, returning a `"canek"` reduction rather than a `"Canek"`
+> assay — see [Log-normalized data](seurat.html) or
+> [SCTransform-normalized data](SCTransform.html) for the current, default
+> workflow. The gene-expression-space path shown below still works and is
+> still supported, just no longer the default, so the one `RunCanek()`
+> call here has been pinned to `correctEmbeddings = FALSE` to keep this page
+> runnable as originally written.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Canek)
+library(Seurat)
+```
+
+# Create Seurat object
+
+```{r}
+x <- lapply(names(SimBatches$batches), function(batch) {
+  CreateSeuratObject(SimBatches$batches[[batch]], project = batch) 
+})
+x <- merge(x[[1]], x[[2]])
+x[["cell_type"]] <- SimBatches$cell_types
+x
+```
+
+```{r}
+table(x$orig.ident)
+```
+
+```{r}
+x <- NormalizeData(x)
+x <- FindVariableFeatures(x, nfeatures=100)
+VariableFeaturePlot(x)
+```
+
+```{r}
+x <- ScaleData(x)
+```
+
+```{r}
+x <- RunPCA(x)
+```
+
+## PCA plot before correction
+
+```{r}
+DimPlot(x, group.by = "orig.ident")
+DimPlot(x, group.by = "cell_type")
+```
+
+# Run Canek
+
+We pass the column containing the batch information.
+
+```{r}
+x <- RunCanek(x, "orig.ident", correctEmbeddings = FALSE)
+```
+
+The features selected during integration are assigned as variable features.
+
+```{r}
+head(VariableFeatures(x, assay="Canek"))
+```
+
+We scale features and run PCA.
+
+```{r}
+x <- ScaleData(x)
+x <- RunPCA(x)
+```
+
+## PCA plot after correction
+
+```{r}
+DimPlot(x, group.by = "orig.ident")
+DimPlot(x, group.by = "cell_type")
+```

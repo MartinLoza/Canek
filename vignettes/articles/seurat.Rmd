@@ -1,8 +1,8 @@
 ---
-title: "Run Canek on Seurat objects"
+title: "Correct log-normalized Seurat data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Use Canek with Seurat}
+  %\VignetteIndexEntry{Correct log-normalized Seurat data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,16 +16,26 @@ knitr::opts_chunk$set(
 )
 ```
 
+This vignette shows Canek's default workflow on standard, log-normalized Seurat
+data. If your data is SCTransform-normalized instead, see
+[Correct SCTransform-normalized Seurat data](SCTransform.html) — SCTransform
+fit per batch produces residuals on different scales, so it needs an extra
+reconciliation step before Canek can correct it. For the older,
+gene-expression-space correction path (`correctEmbeddings = FALSE`), see
+[the legacy version of this vignette](seurat_legacy.html).
+
 ```{r setup}
 library(Canek)
 library(Seurat)
 ```
 
-# Create Seurat object
+# Create a Seurat object
+
+We use the two simulated batches included in `SimBatches`.
 
 ```{r}
 x <- lapply(names(SimBatches$batches), function(batch) {
-  CreateSeuratObject(SimBatches$batches[[batch]], project = batch) 
+  CreateSeuratObject(SimBatches$batches[[batch]], project = batch)
 })
 x <- merge(x[[1]], x[[2]])
 x[["cell_type"]] <- SimBatches$cell_types
@@ -36,51 +46,73 @@ x
 table(x$orig.ident)
 ```
 
-```{r}
-x <- NormalizeData(x)
-x <- FindVariableFeatures(x, nfeatures=100)
-VariableFeaturePlot(x)
-```
+# Standard preprocessing
+
+We follow Seurat's standard log-normalization workflow on the whole merged
+object.
 
 ```{r}
-x <- ScaleData(x)
+x <- NormalizeData(x, verbose = FALSE)
+x <- FindVariableFeatures(x, nfeatures = 100, verbose = FALSE)
+x <- ScaleData(x, verbose = FALSE)
+x <- RunPCA(x, verbose = FALSE)
 ```
+
+## UMAP before correction
 
 ```{r}
-x <- RunPCA(x)
+x <- RunUMAP(x, reduction = "pca", dims = 1:ncol(Embeddings(x, "pca")),
+             reduction.name = "umap_uncorrected", verbose = FALSE)
+DimPlot(x, reduction = "umap_uncorrected", group.by = "orig.ident")
+DimPlot(x, reduction = "umap_uncorrected", group.by = "cell_type")
 ```
 
-## PCA plot before correction
-
-```{r}
-DimPlot(x, group.by = "orig.ident")
-DimPlot(x, group.by = "cell_type")
-```
+Cells separate by `orig.ident` in a way that doesn't line up with `cell_type`
+— that's the batch effect we want to correct.
 
 # Run Canek
 
-We pass the column containing the batch information.
+We pass the column containing the batch information. By default,
+`RunCanek()` corrects in PCA-embedding space (`correctEmbeddings = TRUE`)
+rather than on gene expression directly. Since `x` already has a `"pca"`
+reduction from the step above, Canek infers the number of dimensions to use
+from it and reuses that embedding directly instead of recomputing its own
+PCA.
 
 ```{r}
 x <- RunCanek(x, "orig.ident")
+Reductions(x)
+ncol(Embeddings(x, "canek"))
 ```
 
-The features selected during integration are assigned as variable features.
+The correction is stored as a new `"canek"` reduction, not a new assay — the
+original `RNA` assay is untouched.
 
 ```{r}
-head(VariableFeatures(x, assay="Canek"))
+Assays(x)
 ```
 
-We scale features and run PCA.
+By default, `RunCanek()` also repeats the correction up to 5 times
+(`maxLoop = 5`), feeding each pass's result into the next and stopping early
+once the correction stops changing much (`loopTol`). Pass `maxLoop = 1` for
+a single pass, or `debug = TRUE` to inspect the per-pass correction
+magnitude (`x@tools$RunCanek`).
+
+## UMAP after correction
+
+Downstream steps should use the `"canek"` reduction directly, not re-run
+`ScaleData`/`RunPCA` on the original assay — the correction lives in the
+reduction, not in the assay's expression values.
 
 ```{r}
-x <- ScaleData(x)
-x <- RunPCA(x)
+x <- RunUMAP(x, reduction = "canek", dims = 1:ncol(Embeddings(x, "canek")),
+             reduction.name = "umap_corrected", verbose = FALSE)
+DimPlot(x, reduction = "umap_corrected", group.by = "orig.ident")
+DimPlot(x, reduction = "umap_corrected", group.by = "cell_type")
 ```
 
-## PCA plot after correction
+## Session info
 
 ```{r}
-DimPlot(x, group.by = "orig.ident")
-DimPlot(x, group.by = "cell_type")
+sessionInfo()
 ```
