@@ -40,8 +40,7 @@ knitr::opts_chunk$set(
   fig.width = 7,
   fig.align = "center",
   collapse = TRUE,
-  comment = "#>",
-  eval = FALSE
+  comment = "#>"
 )
 #extend timeout to download large data
 options(timeout=1000)
