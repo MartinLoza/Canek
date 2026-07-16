@@ -21,6 +21,7 @@ Imports:
     bluster,
     igraph,
     matrixStats,
+    methods,
     utils
 Suggests:
     testthat (>= 2.1.0),
