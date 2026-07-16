@@ -78,6 +78,11 @@ not calculated for this membership.}
 
 \item{debug}{Return correction's information}
 
+\item{correctEmbeddings}{Whether to perform the correction on PCA embeddings instead of gene
+expression. When TRUE, batches are transformed to embedding space before correcting (see
+precomputedEmbeddings), and hierarchical batch selection reuses those coordinates instead of
+recomputing a PCA per candidate.}
+
 \item{precomputedEmbeddings}{Whether to use precomputed PCA embeddings.
 Set this to TRUE if lsBatches are already embeddings (e.g. PCA
 coordinates) rather than gene expression, so Canek uses them instead of computing its own

@@ -14,12 +14,10 @@
 #' @param fuzzy Use fuzzy logic to join the local correction vectors.
 #' @param fuzzyPCA Number of PCs to use in the fuzzy process.
 #' @param hierarchical Use hierarchical integration scheme when correcting more than two batches: at
-#' each step, pick the remaining batch most similar to the current reference (by MNN pair count)
-#' instead of always taking the next-largest one. If set to FALSE, the input batches are sorted by
+#' each step, pick the remaining batch most similar to the current reference (by MNN pair count). If set to FALSE, the input batches are sorted by
 #' number of cells and integrated on descending order. When correctEmbeddings is TRUE, scoring
-#' candidates reuses the already-computed embedding coordinates instead of recomputing a PCA, so this
-#' stays affordable there; for gene-expression-space correction it recomputes a PCA per candidate per
-#' step, which is more expensive.
+#' candidates reuses the already-computed embedding coordinates instead of recomputing a PCA. For gene-expression-space correction it recomputes a PCA per candidate per
+#' step.
 #' @param verbose Print output.
 #' @param estMethod Method to use when estimating the correction vectors:
 #' \itemize{
@@ -36,6 +34,10 @@
 #' @param fracSampling Fraction of cells to sample in the hierarchical selection (default is NULL, no sampling).
 #' @param clusterMethod Method used to identify memberships.
 #' @param debug Return correction's information
+#' @param correctEmbeddings Whether to perform the correction on PCA embeddings instead of gene
+#' expression. When TRUE, batches are transformed to embedding space before correcting (see
+#' precomputedEmbeddings), and hierarchical batch selection reuses those coordinates instead of
+#' recomputing a PCA per candidate.
 #' @param precomputedEmbeddings Whether to use precomputed PCA embeddings.
 #' Set this to TRUE if lsBatches are already embeddings (e.g. PCA
 #' coordinates) rather than gene expression, so Canek uses them instead of computing its own
@@ -311,6 +313,8 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 #' @param cnRef Cosine normalization of the reference batch.
 #' @param cnQue Cosine normalization of the query batch.
 #' @param clusterMethod Method used to identify memberships.
+#' @param correctEmbeddings Whether to perform the correction on PCA embeddings instead of gene
+#' expression.
 #' @param maxLoop Number of times to repeat the correction, using each pass's corrected query batch as
 #' the input to the next. Only used when correctEmbeddings = TRUE; ignored (with a warning) otherwise,
 #' since each pass would need to recompute the PCA over gene expression.

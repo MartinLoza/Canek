@@ -84,6 +84,9 @@ the pairs are filtered from outliers using an interquartile range method.}
 
 \item{doCosNorm}{Whether to do cosine normalization.}
 
+\item{correctEmbeddings}{Whether to perform the correction on PCA embeddings instead of gene
+expression.}
+
 \item{maxLoop}{Number of times to repeat the correction, using each pass's corrected query batch as
 the input to the next. Only used when correctEmbeddings = TRUE; ignored (with a warning) otherwise,
 since each pass would need to recompute the PCA over gene expression.}
