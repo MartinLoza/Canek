@@ -48,7 +48,7 @@ RunCanek(x, ...)
 \item{slot}{slot used for Seurat objects (default: data).}
 
 \item{assay}{assay used for Seurat objects. If NULL (default), an existing "SCT" assay is
-preferred over the object's default assay, if one exists.}
+preferred over the object's default assay.}
 
 \item{features}{optional vector of features to use for correction.}
 
