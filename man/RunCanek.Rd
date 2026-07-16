@@ -47,7 +47,8 @@ RunCanek(x, ...)
 
 \item{slot}{slot used for Seurat objects (default: data).}
 
-\item{assay}{assay used for Seurat objects.}
+\item{assay}{assay used for Seurat objects. If NULL (default), an existing "SCT" assay is
+preferred over the object's default assay, if one exists.}
 
 \item{features}{optional vector of features to use for correction.}
 
@@ -64,14 +65,16 @@ RunCanek(x, ...)
 \item{correctEmbeddings}{whether to perform the correction on PCA embeddings instead of gene expression (Seurat objects only).}
 
 \item{pcaDim}{number of PCA dimensions to use when correctEmbeddings is TRUE. If NULL (default),
-it is inferred from the object's existing "pca" reduction; if none is found, used 30 as default with a warning.}
+it is inferred from the object's existing "pca" reduction; if none is found, used 30 as default with a warning.
+When correctEmbeddings is TRUE and a "pca" reduction already exists on the object, it is reused
+directly instead of being recomputed. If the assay in use is SCTransform-normalized and no "pca"
+reduction exists, an error is raised instead of computing one internally, since SCTransform fit
+separately per batch produces residuals that are not on a comparable scale across batches.}
 
-\item{maxLoop}{number of times to repeat the correction (Seurat objects with correctEmbeddings = TRUE
-only), using each pass's corrected result as the input to the next. Defaults to 5: correction quality
-keeps improving noticeably for several passes, at the cost of a few times the runtime of a single pass.}
+\item{maxLoop}{number of times to iterate the correction (correctEmbeddings = TRUE
+only), using each iteration's corrected result as the input to the next. Defaults to 5.}
 
-\item{loopTol}{used to stop repeating early. Once a new pass changes the correction, on average per
-cell, by less than this fraction of the previous pass, looping stops.}
+\item{loopTol}{average change in median correction magnitude used to stop iterating early. Defaults to 1e-3. Ignored if maxLoop = 1.}
 }
 \value{
 An object of the appropriate type.

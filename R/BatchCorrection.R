@@ -31,6 +31,10 @@
 #' @param fracSampling Fraction of cells to sample in the hierarchical selection (default is NULL, no sampling).
 #' @param clusterMethod Method used to identify memberships.
 #' @param debug Return correction's information
+#' @param precomputedEmbeddings Whether to use precomputed PCA embeddings.
+#' Set this to TRUE if lsBatches are already embeddings (e.g. PCA
+#' coordinates) rather than gene expression, so Canek uses them instead of computing its own
+#' PCA. Only used when correctEmbeddings = TRUE.
 #' @param maxLoop Number of times to repeat the correction of a batch pair, using each pass's corrected
 #' query batch as the input to the next. Only used when correctEmbeddings = TRUE; ignored (with a
 #' warning) otherwise, since each pass would need to recompute the PCA over gene expression.
@@ -69,6 +73,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            doCosNorm = FALSE, fracSampling = NULL,
                            debug = FALSE,
                            correctEmbeddings = FALSE,
+                           precomputedEmbeddings = FALSE,
                            maxLoop = 1, loopTol = 1e-3,
                            verbose = FALSE, ... ){
 
@@ -103,28 +108,32 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
     #deactivate hierarchical
     hierarchical <- FALSE
 
-    #to calculate the embedding we need to merge the data first
-    tmp_merged <- Reduce(f = cbind, x = lsBatches)
-    #get the embedding space
-    pcaBatches <- prcomp_irlba(x = t(tmp_merged), n = pcaDim, center = TRUE, scale. = TRUE)
-    #assign the cell names
-    rownames(pcaBatches$x) <- colnames(tmp_merged)
-    #remove temporal batch to save memory
-    rm(tmp_merged)
-    gc()
+    if(precomputedEmbeddings){
+      #lsBatches are already embedded (e.g. an existing PCA reduction split per batch)
+    } else {
+      #to calculate the embedding we need to merge the data first
+      tmp_merged <- Reduce(f = cbind, x = lsBatches)
+      #get the embedding space
+      pcaBatches <- prcomp_irlba(x = t(tmp_merged), n = pcaDim, center = TRUE, scale. = TRUE)
+      #assign the cell names
+      rownames(pcaBatches$x) <- colnames(tmp_merged)
+      #remove temporal batch to save memory
+      rm(tmp_merged)
+      gc()
 
-    #get the current batch order
-    currentNames <- names(lsBatches)
-    #subset the embedded cells from each batch
-    lsBatches <- lapply(X = currentNames, FUN = function(name){
-      tmp <- t(pcaBatches$x[inCellNames_ls[[name]],]) #transpose to match workflow
-      return(tmp)
-    })
-    #recover the batch names
-    names(lsBatches) <- currentNames
-    #remove pcaBatches to reduce memory usage
-    rm(pcaBatches, currentNames)
-    gc()
+      #get the current batch order
+      currentNames <- names(lsBatches)
+      #subset the embedded cells from each batch
+      lsBatches <- lapply(X = currentNames, FUN = function(name){
+        tmp <- t(pcaBatches$x[inCellNames_ls[[name]],]) #transpose to match workflow
+        return(tmp)
+      })
+      #recover the batch names
+      names(lsBatches) <- currentNames
+      #remove pcaBatches to reduce memory usage
+      rm(pcaBatches, currentNames)
+      gc()
+    }
   }
 
   # First batch is the one with highest number of cells
@@ -403,6 +412,14 @@ CorrectBatch <- function(refBatch, queBatch,
     pcaQue <- pcaQue$x
   }
 
+  # set the number of PCA dimensions to use for the fuzzy process. Instead of using 
+  # the user-defined fuzzyPCA, we set it to the number of available PCA dimensions. This is important because
+  # if the user sets fuzzyPCA to a value greater than the number of available PCA dimensions, it can lead to errors or unexpected behavior in the fuzzy logic process.
+  if(fuzzyPCA > ncol(pcaQue)){
+    warning("fuzzyPCA (", fuzzyPCA, ") exceeds the number of available PCA dimensions (", ncol(pcaQue), "); using ", ncol(pcaQue), " instead.", call. = FALSE)
+    fuzzyPCA <- ncol(pcaQue)
+  }
+
   debugData$pairs <- data.frame(ref = colnames(refBatch)[pairs[, 2]], query = colnames(queBatch)[pairs[, 1]])
 
  if(verbose)
@@ -412,10 +429,10 @@ CorrectBatch <- function(refBatch, queBatch,
   if(loop == 1){
     switch(clusterMethod,
       "kmeans" = {
-        cluster <- ClusterKMeans(pcaQue[, 1:10], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
+        cluster <- ClusterKMeans(pcaQue[, 1:fuzzyPCA, drop = FALSE], maxMem = maxMem, nMem = nMem, usepam = nCellsQue < 2000, verbose = verbose)
       },
       "louvain" = {
-        cluster <- ClusterLouvain(pcaQue[, 1:10], k = kNN, verbose = verbose)
+        cluster <- ClusterLouvain(pcaQue[, 1:fuzzyPCA, drop = FALSE], k = kNN, verbose = verbose)
       },
       stop("cluster method unknown.")
     )

@@ -19,13 +19,8 @@ cellnames <- colnames(m)
 x <- Seurat::CreateSeuratObject(Seurat::as.sparse(m))
 x$batch <- b
 
-# Create SingleCellExperiment object.
-y <- SingleCellExperiment::SingleCellExperiment(list(counts=m, logcounts=m))
-y$batch <- b
-
 # RunCanek.
 x <- RunCanek(x, "batch", slot="counts", correctEmbeddings = FALSE)
-y <- RunCanek(y, "batch")
 z <- RunCanek(list(B1=m1, B2=m2), debug = TRUE)
 
 test_that("RunCanek works on Seurat objects", {
@@ -36,7 +31,18 @@ test_that("RunCanek works on Seurat objects", {
   expect_equal(colnames(x), cellnames)
 })
 
+# SingleCellExperiment is a Suggests dependency, not always installed locally; skip_if_not_installed()
+# scopes that to just these tests instead of the whole file failing to run (SingleCellExperiment::
+# SingleCellExperiment() used to be called at top level here, outside any test_that(), which meant a
+# missing install silently voided every test in this file under devtools::test(), not just these two).
 test_that("RunCanek works on SingleCellExperiment objects", {
+  skip_if_not_installed("SingleCellExperiment")
+  skip_if_not_installed("SummarizedExperiment")
+
+  y <- SingleCellExperiment::SingleCellExperiment(list(counts = m, logcounts = m))
+  y$batch <- b
+  y <- RunCanek(y, "batch")
+
   expect_false(is.null(y))
   expect_is(y, "SingleCellExperiment")
   expect_length(SummarizedExperiment::assays(y), 3)
@@ -54,10 +60,19 @@ test_that("RunCanek works on lists", {
 })
 
 x <- RunCanek(x, "batch", integration.name = "CanekRNA", correctEmbeddings = FALSE)
-y <- RunCanek(y, "batch", integration.name = "CanekRNA")
 
-test_that("Setting RunCanek integration.name argument works", {
+test_that("Setting RunCanek integration.name argument works on Seurat objects", {
   expect_true("CanekRNA" %in% names(x))
+})
+
+test_that("Setting RunCanek integration.name argument works on SingleCellExperiment objects", {
+  skip_if_not_installed("SingleCellExperiment")
+  skip_if_not_installed("SummarizedExperiment")
+
+  y <- SingleCellExperiment::SingleCellExperiment(list(counts = m, logcounts = m))
+  y$batch <- b
+  y <- RunCanek(y, "batch", integration.name = "CanekRNA")
+
   expect_true("CanekRNA" %in% names(SummarizedExperiment::assays(y)))
 })
 
@@ -95,9 +110,23 @@ test_that("RunCanek respects an explicitly passed pcaDim over inference and the 
   xe <- Seurat::CreateSeuratObject(Seurat::as.sparse(m))
   xe$batch <- b
 
+  # fuzzyPCA (default 10) needs to be fixed here, otherwise it triggers the related warning
+  # covered separately below -- this test is specifically about pcaDim.
+  expect_warning(
+    xe <- RunCanek(xe, "batch", slot = "counts", pcaDim = 5, fuzzyPCA = 5),
+    NA
+  )
+
+  expect_equal(ncol(Seurat::Embeddings(xe, "canek")), 5)
+})
+
+test_that("CorrectBatch clamps fuzzyPCA to the available PCA dimensions instead of erroring", {
+  xe <- Seurat::CreateSeuratObject(Seurat::as.sparse(m))
+  xe$batch <- b
+
   expect_warning(
     xe <- RunCanek(xe, "batch", slot = "counts", pcaDim = 5),
-    NA
+    "fuzzyPCA \\(10\\) exceeds the number of available PCA dimensions \\(5\\)"
   )
 
   expect_equal(ncol(Seurat::Embeddings(xe, "canek")), 5)
@@ -143,4 +172,71 @@ test_that("RunCanek forwards maxLoop/loopTol to CorrectBatches through ...", {
   info <- xe@tools$RunCanek[[1]]$debug$info
 
   expect_equal(info$loops, 3)
+})
+
+# Calculate SCTransform-normalized data, fit separately per batch (the standard recommended way
+# to run SCTransform before integration) to test Canek's SCT warnings and embedding-reuse.
+sct_batches <- Seurat::CreateSeuratObject(Seurat::as.sparse(m))
+sct_batches$batch <- b
+sct_batches <- Seurat::SplitObject(sct_batches, split.by = "batch")
+sct_batches <- suppressWarnings(lapply(sct_batches, function(o) Seurat::SCTransform(o, verbose = FALSE)))
+
+test_that("RunCanek errors on SCTransform-normalized data with no existing PCA reduction", {
+  merged <- merge(sct_batches[[1]], sct_batches[[2]])
+  merged$batch <- b
+  Seurat::DefaultAssay(merged) <- "SCT"
+
+  expect_error(
+    RunCanek(merged, "batch"),
+    "SCTransform-normalized"
+  )
+})
+
+test_that("RunCanek reuses an existing PCA embedding instead of recomputing one for SCTransform-normalized data", {
+  feats <- suppressWarnings(Seurat::SelectIntegrationFeatures(sct_batches, nfeatures = 100))
+  prepped <- suppressWarnings(Seurat::PrepSCTIntegration(sct_batches, anchor.features = feats))
+  merged <- merge(prepped[[1]], prepped[[2]])
+  merged$batch <- b
+  Seurat::DefaultAssay(merged) <- "SCT"
+  Seurat::VariableFeatures(merged) <- feats
+  merged <- suppressWarnings(Seurat::RunPCA(merged, npcs = 10, verbose = FALSE))
+  origPCA <- Seurat::Embeddings(merged, "pca")
+
+  merged <- RunCanek(merged, "batch", maxLoop = 1)
+
+  expect_true("canek" %in% Seurat::Reductions(merged))
+  expect_equal(ncol(Seurat::Embeddings(merged, "canek")), 10)
+
+  # the reference (larger) batch should be untouched and identical to the original PCA, which only
+  # happens if the existing embedding was reused instead of recomputed internally
+  canekEmb <- Seurat::Embeddings(merged, "canek")
+  refBatch <- names(sort(table(merged$batch), decreasing = TRUE))[1]
+  refCells <- colnames(merged)[merged$batch == refBatch]
+  # column names differ (Canek_1.. vs PC_1..); only the actual embedding values should match
+  expect_equal(unname(canekEmb[refCells, ]), unname(origPCA[refCells, ]))
+})
+
+test_that("RunCanek prefers an existing SCT assay over the current default when assay is not specified", {
+  feats <- suppressWarnings(Seurat::SelectIntegrationFeatures(sct_batches, nfeatures = 100))
+  prepped <- suppressWarnings(Seurat::PrepSCTIntegration(sct_batches, anchor.features = feats))
+  merged <- merge(prepped[[1]], prepped[[2]])
+  merged$batch <- b
+  Seurat::DefaultAssay(merged) <- "RNA"
+  Seurat::VariableFeatures(merged, assay = "SCT") <- feats
+  merged <- suppressWarnings(Seurat::RunPCA(merged, npcs = 10, verbose = FALSE, assay = "SCT"))
+
+  merged <- RunCanek(merged, "batch", maxLoop = 1)
+
+  expect_equal(Seurat::DefaultAssay(merged), "SCT")
+})
+
+test_that("RunCanek does not require an SCT-specific PCA when assay is explicitly set to a non-SCT assay", {
+  merged <- merge(sct_batches[[1]], sct_batches[[2]])
+  merged$batch <- b
+  merged <- Seurat::NormalizeData(merged, assay = "RNA", verbose = FALSE)
+
+  expect_warning(
+    RunCanek(merged, "batch", assay = "RNA", slot = "counts"),
+    "No existing 'pca' reduction found on the object"
+  )
 })

@@ -23,6 +23,7 @@ CorrectBatches(
   fracSampling = NULL,
   debug = FALSE,
   correctEmbeddings = FALSE,
+  precomputedEmbeddings = FALSE,
   maxLoop = 1,
   loopTol = 0.001,
   verbose = FALSE,
@@ -73,6 +74,11 @@ not calculated for this membership.}
 \item{fracSampling}{Fraction of cells to sample in the hierarchical selection (default is NULL, no sampling).}
 
 \item{debug}{Return correction's information}
+
+\item{precomputedEmbeddings}{Whether to use precomputed PCA embeddings.
+Set this to TRUE if lsBatches are already embeddings (e.g. PCA
+coordinates) rather than gene expression, so Canek uses them instead of computing its own
+PCA. Only used when correctEmbeddings = TRUE.}
 
 \item{maxLoop}{Number of times to repeat the correction of a batch pair, using each pass's corrected
 query batch as the input to the next. Only used when correctEmbeddings = TRUE; ignored (with a
