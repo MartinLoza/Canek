@@ -9,11 +9,10 @@
 #' @param sampling Use MNNs pairs sampling when using a Kalman filter to estimate the correction vector.
 #' @param numSamples If sampling. Number of MNNs pairs samples to use on the estimation process.
 #' @param kNN Number of k-nearest-neighbors used to define the MNNs pairs.
-#' @param ncores Number of cores to use for finding MNN pairs. Defaults to 1 (sequential); only
-#' opt into more if you know the cores are actually available to you (e.g. not already claimed by
-#' a cluster/HPC job scheduler). Requesting more than 1 errors on Windows (no fork() support there)
+#' @param ncores Number of cores to use for finding MNN pairs. Defaults to 1 (sequential).
+#' Requesting more than 1 errors on Windows (no fork() support there)
 #' or if it exceeds the number of cores parallel::detectCores() reports, rather than silently
-#' falling back or capping.
+#' falling back or reducing.
 #' @param pcaDim Number of PCA dimensions to use.
 #' @param maxMem Maximum number of memberships from the query batch. This parameter is used on the heuristic algorithm to find the number of cell types.
 #' @param fuzzy Use fuzzy logic to join the local correction vectors.
@@ -297,11 +296,10 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 #' @param idxRef Numerical vector indicating the index of the cells from the reference batch to use
 #' on the correction vector estimation.
 #' @param kNN Number of k-nearest-neighbors used to define the MNNs pairs.
-#' @param ncores Number of cores to use for finding MNN pairs. Defaults to 1 (sequential); only
-#' opt into more if you know the cores are actually available to you (e.g. not already claimed by
-#' a cluster/HPC job scheduler). Requesting more than 1 errors on Windows (no fork() support there)
+#' @param ncores Number of cores to use for finding MNN pairs. Defaults to 1 (sequential).
+#' Requesting more than 1 errors on Windows (no fork() support there)
 #' or if it exceeds the number of cores parallel::detectCores() reports, rather than silently
-#' falling back or capping.
+#' falling back or reducing.
 #' @param pcaDim Number of PCA dimensions to use.
 #' @param fuzzyPCA Number of PCs to use in the fuzzy process.
 #' @param maxMem Maximum number of memberships from the query batch. This parameter is used on the
