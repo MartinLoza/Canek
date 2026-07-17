@@ -119,6 +119,7 @@ for each cluster using its MNNs pairs and use these vectors to remove the batch 
 }
 }
 \examples{
+\donttest{
 x <- SimBatches$batches[[1]]
 y <- SimBatches$batches[[2]]
 z <- CorrectBatch(x, y)
@@ -128,5 +129,6 @@ Uncorrected_PCA <- prcomp(t(cbind(x,y)))
 plot(Uncorrected_PCA$x[,1:2])
 Corrected_PCA <- prcomp(t(cbind(x,z$`Corrected Query Batch`)))
 plot(Corrected_PCA$x[,1:2])
+}
 
 }
