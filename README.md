@@ -66,7 +66,7 @@ distortion to the structures of cells as compared with a gold standard.
 For more information about Canek check out our manuscript in [NAR
 Genomics and Bioinformatics](https://doi.org/10.1093/nargab/lqac022).
 
-## What’s new in 0.3.0
+## What’s new in 0.3.1
 
 - **Latest updates**: `RunCanek()` on Seurat objects now defaults to
   `correctEmbeddings = TRUE` — correction happens in PCA-embedding space
@@ -79,6 +79,8 @@ Genomics and Bioinformatics](https://doi.org/10.1093/nargab/lqac022).
   for batches normalized separately.
 - Added a repeat-correction loop (`maxLoop`/`loopTol`) that refines the
   correction across multiple passes.
+- Sped up MNN pair finding, and added an opt-in `ncores` parameter to
+  parallelize it.
 
 See the [full
 changelog](https://martinloza.github.io/Canek/news/index.html) for
@@ -87,7 +89,7 @@ details.
 ## Usage
 
 You can use Canek directly with *normalized-count matrices*, *Seurat*
-objects or *SingleCellExperiment* objects. As of Canek 0.3.0, correcting
+objects or *SingleCellExperiment* objects. As of Canek 0.3.1, correcting
 Seurat objects defaults to PCA-embedding space
 (`correctEmbeddings = TRUE`) rather than gene expression directly, and
 both log-normalized and SCTransform-normalized data are supported. For
@@ -102,6 +104,8 @@ more details, check out our GitHub page and vignettes:
   data](https://martinloza.github.io/Canek/articles/SCTransform.html)
 - [Run Canek on SingleCellExperiment objects
   vignette](https://martinloza.github.io/Canek/articles/SingleCellExperiment.html)
+- [Speed up batch correction with parallel
+  processing](https://martinloza.github.io/Canek/articles/Parallel-processing.html)
 
 For vignettes related to the previous `v0.2.x` version, see [Previous
 versions](https://martinloza.github.io/Canek/articles/legacy.html).

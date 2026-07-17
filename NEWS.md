@@ -1,3 +1,29 @@
+# Canek 0.3.1
+
+## Changes
+
+- Sped up MNN pair finding: `FindMnnPairs()` scanned the full
+  neighbor tables with `which()` for every cell and grew its result with
+  repeated `rbind()` calls inside a loop, both of which scaled quadratically
+  in cell count. Both are now near-linear, with no change in output
+  (verified byte-identical against the previous implementation). `Fuzzy()`
+  also no longer converts its correction matrix to a `data.frame` just to
+  track a per-cell flag, which was much slower than tracking it as a plain
+  vector. Together these give roughly a 2-4x speedup on real datasets,
+  more on larger ones, since MNN search is repeated on every `maxLoop` pass.
+
+- Added an `ncores` parameter (`CorrectBatches()`, `CorrectBatch()`,
+  `GetMnnPairs()`, and via `...` on `RunCanek()`) to parallelize the two
+  independent k-nearest-neighbor searches MNN pair finding requires. Defaults
+  to 1 (fully sequential) — parallelism is opt-in only, since automatically
+  detecting and using "available" cores could oversubscribe a shared
+  cluster/HPC job's actual allocation. Uses `parallel::mclapply()`, so
+  `ncores > 1` requires Linux/macOS (errors on Windows, and if more cores are
+  requested than `parallel::detectCores()` reports, rather than silently
+  falling back or capping). See the new
+  [Speed up batch correction with parallel processing](https://martinloza.github.io/Canek/articles/Parallel-processing.html)
+  vignette.
+
 # Canek 0.3.0
 
 ## Latests updates
