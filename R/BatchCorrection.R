@@ -59,6 +59,7 @@
 #' }
 #'
 #' @examples
+#' \donttest{
 #' Batches <- SimBatches$batches
 #' z <- CorrectBatches(Batches)
 #'
@@ -66,6 +67,7 @@
 #' plot(Uncorrected_PCA$x[,1:2])
 #' Corrected_PCA <- prcomp(t(z))
 #' plot(Corrected_PCA$x[,1:2])
+#' }
 #'
 #' @return A list containing the integrated datasets as matrix and the correction data .
 #' @export
@@ -332,6 +334,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 #' }
 #'
 #' @examples
+#' \donttest{
 #' x <- SimBatches$batches[[1]]
 #' y <- SimBatches$batches[[2]]
 #' z <- CorrectBatch(x, y)
@@ -341,6 +344,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 #' plot(Uncorrected_PCA$x[,1:2])
 #' Corrected_PCA <- prcomp(t(cbind(x,z$`Corrected Query Batch`)))
 #' plot(Corrected_PCA$x[,1:2])
+#' }
 #'
 #' @return A list containing the input batches, the corrected query batch, and the correction data
 #' @export
