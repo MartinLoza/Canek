@@ -12,6 +12,7 @@ CorrectBatches(
   sampling = FALSE,
   numSamples = NULL,
   kNN = 30,
+  ncores = 1,
   pcaDim = 50,
   pairsFilter = FALSE,
   perCellMNN = 0.08,
@@ -49,6 +50,11 @@ cell types using an heuristic algorithm. Change this parameter if you know the n
 \item{numSamples}{If sampling. Number of MNNs pairs samples to use on the estimation process.}
 
 \item{kNN}{Number of k-nearest-neighbors used to define the MNNs pairs.}
+
+\item{ncores}{Number of cores to use for finding MNN pairs. Defaults to 1 (sequential).
+Requesting more than 1 errors on Windows (no fork() support there)
+or if it exceeds the number of cores parallel::detectCores() reports, rather than silently
+falling back or reducing.}
 
 \item{pcaDim}{Number of PCA dimensions to use.}
 

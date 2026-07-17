@@ -41,7 +41,8 @@ RunCanek(x, ...)
 \arguments{
 \item{x}{object with expression counts or list of matrices.}
 
-\item{...}{additional arguments passed down to methods.}
+\item{...}{additional arguments passed down to methods, e.g. \code{ncores} to parallelize
+MNN pair finding (see \code{\link{CorrectBatches}}; defaults to 1, sequential).}
 
 \item{batches}{for S4 objects the column containing batch information.}
 

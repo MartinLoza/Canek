@@ -1,0 +1,131 @@
+---
+title: "Correct SCTransform-normalized Seurat data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Correct SCTransform-normalized Seurat data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`SCTransform` is normally fit *separately per batch* before merging — that's
+Seurat's own recommended way to run it ahead of integration. That means each
+batch's residuals live on a different, non-comparable scale. `RunCanek()`'s
+default `correctEmbeddings = TRUE` corrects in PCA-embedding space, and by
+default reuses whatever `"pca"` reduction already exists on the object
+instead of computing its own (see
+[Correct log-normalized Seurat data](seurat.html) for that default path). For
+SCTransform-normalized data specifically, we should reconcile the per-batch
+normalizations so that the batch-to-batch scale mismatch is accounted for in
+the correction. This vignette shows the reconciliation Seurat itself provides
+for exactly this problem, and how `RunCanek()` uses it — using the same
+`ifnb` dataset as [Seurat's own integration
+tutorial](https://satijalab.org/seurat/articles/integration_introduction)
+and the [main Seurat vignette](seurat.html) here.
+
+`ifnb` is loaded from the [SeuratData](https://github.com/satijalab/seurat-data)
+package rather than CRAN, so it needs a one-time install the first time you
+use it:
+
+```{r, eval = FALSE}
+if (!requireNamespace("SeuratData", quietly = TRUE)) {
+  install.packages("remotes")
+  remotes::install_github("satijalab/seurat-data")
+}
+SeuratData::InstallData("ifnb")
+```
+
+```{r setup}
+library(Canek)
+library(Seurat)
+library(SeuratData)
+```
+
+# Create and SCTransform-normalize per batch
+
+We split `ifnb` by `stim` into separate per-batch objects and normalize each
+one independently with `SCTransform` — mirroring how you'd normally run it
+ahead of integration.
+
+```{r}
+ifnb <- LoadData("ifnb")
+x <- SplitObject(ifnb, split.by = "stim")
+x <- suppressWarnings(lapply(x, SCTransform, verbose = FALSE))
+```
+
+# What happens without reconciling first
+
+If we just merge the independently-normalized batches and call `RunCanek()`
+without computing a joint PCA on reconciled data first, it stops with an
+error:
+
+```{r, error = TRUE}
+naive <- merge(x[[1]], x[[2]])
+DefaultAssay(naive) <- "SCT"
+RunCanek(naive, "stim")
+```
+
+# Reconciling the per-batch models
+
+`RunCanek()`'s error points at the fix: select integration features across
+the independent models, reconcile the batches' residuals onto a comparable
+scale for those features (`PrepSCTIntegration`), merge, and compute a joint
+PCA on the reconciled data.
+
+```{r}
+features <- SelectIntegrationFeatures(x, nfeatures = 3000)
+x <- suppressWarnings(PrepSCTIntegration(x, anchor.features = features))
+
+x <- merge(x[[1]], x[[2]])
+DefaultAssay(x) <- "SCT"
+VariableFeatures(x) <- features
+x <- RunPCA(x, verbose = FALSE)
+```
+
+## UMAP before correction
+
+```{r}
+x <- RunUMAP(x, reduction = "pca", dims = 1:ncol(Embeddings(x, "pca")),
+             reduction.name = "umap_uncorrected", verbose = FALSE)
+DimPlot(x, reduction = "umap_uncorrected", group.by = "stim")
+DimPlot(x, reduction = "umap_uncorrected", group.by = "seurat_annotations")
+```
+
+# Run Canek
+
+With a `"pca"` reduction now present on properly reconciled data,
+`RunCanek()` reuses it directly instead of recomputing one — the SCT assay
+is auto-detected, so we don't need to pass `assay = "SCT"` explicitly.
+
+```{r}
+x <- RunCanek(x, "stim")
+Reductions(x)
+ncol(Embeddings(x, "canek"))
+```
+
+## UMAP after correction
+
+As with the log-normalized workflow, downstream steps should use the
+`"canek"` reduction directly rather than re-running `ScaleData`/`RunPCA` on
+the SCT assay.
+
+```{r}
+x <- RunUMAP(x, reduction = "canek", dims = 1:ncol(Embeddings(x, "canek")),
+             reduction.name = "umap_corrected", verbose = FALSE)
+DimPlot(x, reduction = "umap_corrected", group.by = "stim")
+DimPlot(x, reduction = "umap_corrected", group.by = "seurat_annotations")
+```
+
+## Session info
+
+```{r}
+sessionInfo()
+```

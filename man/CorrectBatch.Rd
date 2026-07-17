@@ -13,6 +13,7 @@ CorrectBatch(
   maxMem = 5,
   pairs = NULL,
   kNN = 30,
+  ncores = 1,
   sampling = FALSE,
   numSamples = NULL,
   idxQuery = NULL,
@@ -49,6 +50,11 @@ heuristic algorithm to find the number of cell types.}
 \item{pairs}{A numerical matrix containing MNNs pairs cell indexes. First column corresponds to query batch cell indexes.}
 
 \item{kNN}{Number of k-nearest-neighbors used to define the MNNs pairs.}
+
+\item{ncores}{Number of cores to use for finding MNN pairs. Defaults to 1 (sequential).
+Requesting more than 1 errors on Windows (no fork() support there)
+or if it exceeds the number of cores parallel::detectCores() reports, rather than silently
+falling back or reducing.}
 
 \item{sampling}{Use MNNs pairs sampling when using a Kalman filter to estimate the correction vector.}
 

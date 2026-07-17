@@ -1,0 +1,126 @@
+---
+title: "Speed up batch correction with parallel processing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Speed up batch correction with parallel processing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette shows how to speed up `RunCanek()` with the `ncores` parameter, which
+parallelizes the mutual nearest neighbor (MNN) search.
+We use the same `ifnb` dataset as [Seurat's own integration
+tutorial](https://satijalab.org/seurat/articles/integration_introduction) —
+stimulated vs. control PBMCs — so if you've worked through that one, this data
+will look familiar. For a general walkthrough of `RunCanek()` itself, see the
+[main Seurat vignette](seurat.html); this one focuses specifically on `ncores`.
+
+# Install the data
+
+`ifnb` is loaded from the [SeuratData](https://github.com/satijalab/seurat-data)
+package rather than CRAN, so it needs a one-time install the first time you use
+it:
+
+```{r, eval = FALSE}
+if (!requireNamespace("SeuratData", quietly = TRUE)) {
+  install.packages("remotes")
+  remotes::install_github("satijalab/seurat-data")
+}
+SeuratData::InstallData("ifnb")
+```
+
+```{r setup}
+library(Canek)
+library(Seurat)
+library(SeuratData)
+```
+
+# Load and preprocess
+
+Standard log-normalization workflow, same preprocessing as the main Seurat
+vignette.
+
+```{r}
+ifnb <- LoadData("ifnb")
+ifnb[["RNA"]] <- split(ifnb[["RNA"]], f = ifnb$stim)
+
+ifnb <- NormalizeData(ifnb, verbose = FALSE)
+ifnb <- FindVariableFeatures(ifnb, verbose = FALSE)
+ifnb <- ScaleData(ifnb, verbose = FALSE)
+ifnb <- RunPCA(ifnb, verbose = FALSE)
+```
+
+# The `ncores` parameter
+
+Finding MNN pairs requires two independent k-nearest-neighbor searches — one
+from reference to query, one from query to reference. Neither depends on the
+other's result, so they can run at the same time instead of one after the
+other. Setting `ncores > 1` does exactly that, via `parallel::mclapply()`.
+
+**`ncores` defaults to 1** (fully sequential) — parallelism is opt-in only,
+never automatic. Canek never tries to detect how many
+cores are "available" and use them on its own to avoid any issues when using a shared cluster or
+HPC job. Silently using them could oversubscribe your
+allocation and could affect other jobs sharing the same node. Set `ncores`
+explicitly to however many cores you know are free to use.
+
+Two things `ncores > 1` checks for you, rather than silently doing something
+unexpected:
+
+- **Windows**: `parallel::mclapply()` relies on `fork()`, which Windows
+  doesn't support. Requesting `ncores > 1` there raises an error rather than
+  quietly running sequentially anyway and leaving you wondering why it isn't
+  any faster.
+- **Requesting more cores than exist**: if `ncores` exceeds
+  `parallel::detectCores()`, `RunCanek()` errors instead of silently reducing
+  it to whatever's available.
+
+# Timing comparison
+
+```{r}
+set.seed(42)
+system.time(
+  ifnb <- RunCanek(ifnb, "stim")
+)
+```
+
+```{r}
+set.seed(42)
+system.time(
+  ifnb <- RunCanek(ifnb, "stim", ncores = 3, integration.name = "CanekParallel")
+)
+```
+
+How much this actually helps depends on how much of the total runtime is
+spent in the parallelized MNN search versus everything else (clustering,
+fuzzy correction, etc.).
+
+# Same result, just faster
+
+Parallelizing the two searches doesn't change what they compute. `unname()` clears each reduction's
+column names before comparing: Seurat renames a reduction's key prefix when
+two reductions would otherwise share one (here, `"Canek_"` becomes
+`"canekparallel_"` for the second run), which would otherwise make
+`all.equal()` return FALSE even though every number in the embeddings matches.
+
+```{r}
+isTRUE(all.equal(
+  unname(Embeddings(ifnb, "canek")),
+  unname(Embeddings(ifnb, "canekparallel"))
+))
+```
+
+# Session info
+
+```{r}
+sessionInfo()
+```

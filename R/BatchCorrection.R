@@ -9,6 +9,10 @@
 #' @param sampling Use MNNs pairs sampling when using a Kalman filter to estimate the correction vector.
 #' @param numSamples If sampling. Number of MNNs pairs samples to use on the estimation process.
 #' @param kNN Number of k-nearest-neighbors used to define the MNNs pairs.
+#' @param ncores Number of cores to use for finding MNN pairs. Defaults to 1 (sequential).
+#' Requesting more than 1 errors on Windows (no fork() support there)
+#' or if it exceeds the number of cores parallel::detectCores() reports, rather than silently
+#' falling back or reducing.
 #' @param pcaDim Number of PCA dimensions to use.
 #' @param maxMem Maximum number of memberships from the query batch. This parameter is used on the heuristic algorithm to find the number of cell types.
 #' @param fuzzy Use fuzzy logic to join the local correction vectors.
@@ -75,7 +79,7 @@
 CorrectBatches <- function(lsBatches, hierarchical = TRUE,
                            queNumCelltypes = NULL, maxMem = 5,
                            sampling = FALSE, numSamples = NULL,
-                           kNN = 30, pcaDim = 50,
+                           kNN = 30, ncores = 1, pcaDim = 50,
                            pairsFilter = FALSE, perCellMNN = 0.08,
                            fuzzy = TRUE, fuzzyPCA = 10,
                            estMethod = "Median", clusterMethod = "louvain",
@@ -212,7 +216,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
       nPairs <- lapply(pcaBatches, function(x){
         pairs <- GetMnnPairs(refBatch = t(x[1:nCellsRef, ]),
                              queBatch = t(x[(nCellsRef+1):nrow(x), ]),
-                             kNN = 30)$Pairs
+                             kNN = 30, ncores = ncores)$Pairs
         return(nrow(pairs))
       })
 
@@ -232,7 +236,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 
     Correction <- CorrectBatch(refBatch = lsBatches[[1]], queBatch = lsBatches[[Query]],
                                queNumCelltypes = queNumCelltypes, pcaDim = pcaDim,
-                               maxMem = maxMem, kNN = kNN,
+                               maxMem = maxMem, kNN = kNN, ncores = ncores,
                                fuzzy = fuzzy, fuzzyPCA = fuzzyPCA, estMethod = estMethod,
                                pairsFilter = pairsFilter, perCellMNN = perCellMNN,
                                sampling = sampling, numSamples = numSamples,
@@ -294,6 +298,10 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 #' @param idxRef Numerical vector indicating the index of the cells from the reference batch to use
 #' on the correction vector estimation.
 #' @param kNN Number of k-nearest-neighbors used to define the MNNs pairs.
+#' @param ncores Number of cores to use for finding MNN pairs. Defaults to 1 (sequential).
+#' Requesting more than 1 errors on Windows (no fork() support there)
+#' or if it exceeds the number of cores parallel::detectCores() reports, rather than silently
+#' falling back or reducing.
 #' @param pcaDim Number of PCA dimensions to use.
 #' @param fuzzyPCA Number of PCs to use in the fuzzy process.
 #' @param maxMem Maximum number of memberships from the query batch. This parameter is used on the
@@ -352,7 +360,7 @@ CorrectBatches <- function(lsBatches, hierarchical = TRUE,
 CorrectBatch <- function(refBatch, queBatch,
                          cnRef = NULL, cnQue = NULL,
                          queNumCelltypes = NULL, maxMem = 5,
-                         pairs = NULL, kNN = 30,
+                         pairs = NULL, kNN = 30, ncores = 1,
                          sampling = FALSE, numSamples = NULL,
                          idxQuery = NULL, idxRef = NULL,
                          pcaDim = 50, perCellMNN = 0.08,
@@ -424,7 +432,7 @@ CorrectBatch <- function(refBatch, queBatch,
 
     pairs <- GetMnnPairs(refBatch = if(is.null(idxRef)) t(pcaRef) else t(pcaRef[,idxRef]),
                          queBatch = if(is.null(idxQuery)) t(pcaQue) else t(pcaRef[,idxQuery]),
-                         kNN = kNN)
+                         kNN = kNN, ncores = ncores)
 
     pairs <- pairs$Pairs
   }else{

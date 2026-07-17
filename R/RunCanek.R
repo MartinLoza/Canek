@@ -23,7 +23,8 @@
 #' @param maxLoop number of times to iterate the correction (correctEmbeddings = TRUE
 #' only), using each iteration's corrected result as the input to the next. Defaults to 5.
 #' @param loopTol average change in median correction magnitude used to stop iterating early. Defaults to 1e-3. Ignored if maxLoop = 1.
-#' @param ... additional arguments passed down to methods.
+#' @param ... additional arguments passed down to methods, e.g. \code{ncores} to parallelize
+#' MNN pair finding (see \code{\link{CorrectBatches}}; defaults to 1, sequential).
 #'
 #' @return An object of the appropriate type.
 #' @export
