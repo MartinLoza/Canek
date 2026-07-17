@@ -112,7 +112,7 @@ system.time(
   ifnb <- RunCanek(ifnb, "stim")
 )
 #>    user  system elapsed 
-#>  24.344   0.124  20.234
+#>  25.965   0.120  21.738
 ```
 
 
@@ -123,7 +123,7 @@ system.time(
 )
 #> Warning: Key 'Canek_' taken, using 'canekparallel_' instead
 #>    user  system elapsed 
-#>  23.115   0.866  13.337
+#>  24.511   0.925  14.221
 ```
 
 How much this actually helps depends on how much of the total runtime is
@@ -132,12 +132,11 @@ fuzzy correction, etc.).
 
 # Same result, just faster
 
-Parallelizing the two searches doesn't change what they compute, only when —
-same seed, same input, same correction. `unname()` strips each reduction's
+Parallelizing the two searches doesn't change what they compute. `unname()` clears each reduction's
 column names before comparing: Seurat renames a reduction's key prefix when
 two reductions would otherwise share one (here, `"Canek_"` becomes
-`"canekparallel_"` for the second run), which would otherwise trip
-`all.equal()`'s default check even though every number matches.
+`"canekparallel_"` for the second run), which would otherwise make
+`all.equal()` return FALSE even though every number in the embeddings matches.
 
 
 ``` r

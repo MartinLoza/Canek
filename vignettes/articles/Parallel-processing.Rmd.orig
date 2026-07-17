@@ -106,12 +106,11 @@ fuzzy correction, etc.).
 
 # Same result, just faster
 
-Parallelizing the two searches doesn't change what they compute, only when —
-same seed, same input, same correction. `unname()` strips each reduction's
+Parallelizing the two searches doesn't change what they compute. `unname()` clears each reduction's
 column names before comparing: Seurat renames a reduction's key prefix when
 two reductions would otherwise share one (here, `"Canek_"` becomes
-`"canekparallel_"` for the second run), which would otherwise trip
-`all.equal()`'s default check even though every number matches.
+`"canekparallel_"` for the second run), which would otherwise make
+`all.equal()` return FALSE even though every number in the embeddings matches.
 
 ```{r}
 isTRUE(all.equal(
