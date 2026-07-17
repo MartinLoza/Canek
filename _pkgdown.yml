@@ -13,6 +13,7 @@ articles:
   - articles/seurat
   - articles/SCTransform
   - articles/SingleCellExperiment
+  - articles/Parallel-processing
 # seurat_gene_expression and Best_practices_thymus predate 0.3.0's
 # correctEmbeddings default; grouped here as their own visible navbar
 # section (any title other than the pkgdown-reserved "internal" shows up as
