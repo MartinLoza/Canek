@@ -19,16 +19,21 @@ FindMnnPairs <- function(B1_B2_NN = NULL, B2_B1_NN = NULL, B2_NCells = NULL ){
     stop('B2_NCells, Number of queBatch cells needs to be defined.')
   }
 
+  # Precompute, which rows of each NN table belong to each query cell
+  # index.
+  idx_B1_B2 <- split(seq_len(nrow(B1_B2_NN)), factor(B1_B2_NN[,2], levels = seq_len(B2_NCells)))
+  idx_B2_B1 <- split(seq_len(nrow(B2_B1_NN)), factor(B2_B1_NN[,1], levels = seq_len(B2_NCells)))
+
   #CHECK PAIRS
   for (i in 1:B2_NCells) {
 
-    p_B1_B2 <- which(B1_B2_NN[,2] == i)
+    p_B1_B2 <- idx_B1_B2[[i]]
     if(length(p_B1_B2) == 0){
       next()
     }
     B1_B2_sub <- matrix(B1_B2_NN[p_B1_B2,], ncol = 2)
 
-    p_B2_B1 <- which(B2_B1_NN[,1] == i)
+    p_B2_B1 <- idx_B2_B1[[i]]
     if(length(p_B2_B1) == 0){
       next()
     }
