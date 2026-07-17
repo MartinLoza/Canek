@@ -20,10 +20,9 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, M
   #INIT
   nCells <- nrow(pcaQue)
   nMem <- nrow(cluMem$centers)
-  Fuzzied <- rep(FALSE, nCells)
   Edges_Data <- list()
-  corCell <- as.data.frame(corCell)
-  corCell[["Fuzzified"]] <- FALSE
+  # Tracked as a vector alongside the corCell matrix to optimize time
+  fuzzified <- rep(FALSE, nCells)
 
   # Create Minimum spanning tree (MST) by using centers of Memberships as nodes
   if(verbose)
@@ -84,14 +83,14 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, M
 
       iCell <- idxCells[cell]
 
-      if(corCell$Fuzzified[iCell] == FALSE){
+      if(fuzzified[iCell] == FALSE){
         corCell[iCell,outNode] <- edgeCellsComp[cell]
         corCell[iCell,inNode] <- 1 - edgeCellsComp[cell]
       }else{
         corCell[iCell,outNode] <-mean(corCell[iCell,outNode], edgeCellsComp[cell])
         corCell[iCell,inNode] <- mean(corCell[iCell,inNode], 1 - edgeCellsComp[cell])
       }
-      corCell$Fuzzified[iCell] <- TRUE
+      fuzzified[iCell] <- TRUE
     }
 
     # prepare debug info
@@ -107,11 +106,8 @@ Fuzzy <- function(cluMem = NULL, pcaQue = NULL, corCell = NULL, fuzzyPCA = 10, M
                                                           "Fuzzification" = NULL, "CellsComponents" = edgeCellsComp)
   }
 
-  Fuzzied <- corCell[,ncol(corCell)]
-  corCell <- as.matrix(corCell[,-ncol(corCell)])
-
   Fuzzy_Data <- list("Fuzzy Memberships" = corCell, "MST" = MST,
-                     "Fuzzied" = Fuzzied, "Edges Data" = Edges_Data)
+                     "Fuzzied" = fuzzified, "Edges Data" = Edges_Data)
 
   return(Fuzzy_Data)
 }
