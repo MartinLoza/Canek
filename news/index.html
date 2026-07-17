@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
       </span>
     </div>
 
@@ -50,6 +50,9 @@
     </li>
     <li>
       <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
+    </li>
+    <li>
+      <a href="../articles/Parallel-processing.html">Speed up batch correction with parallel processing</a>
     </li>
     <li class="divider">
     <li class="dropdown-header">Archive (v0.2.x)</li>
@@ -85,6 +88,14 @@
       <small>Source: <a href="https://github.com/MartinLoza/Canek/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.3.1" id="canek-031">Canek 0.3.1<a class="anchor" aria-label="anchor" href="#canek-031"></a></h2>
+<div class="section level3">
+<h3 id="changes-0-3-1">Changes<a class="anchor" aria-label="anchor" href="#changes-0-3-1"></a></h3>
+<ul><li><p>Sped up MNN pair finding: <code>FindMnnPairs()</code> scanned the full neighbor tables with <code><a href="https://rdrr.io/r/base/which.html" class="external-link">which()</a></code> for every cell and grew its result with repeated <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> calls inside a loop, both of which scaled quadratically in cell count. Both are now near-linear, with no change in output (verified byte-identical against the previous implementation). <code><a href="../reference/Fuzzy.html">Fuzzy()</a></code> also no longer converts its correction matrix to a <code>data.frame</code> just to track a per-cell flag, which was much slower than tracking it as a plain vector. Together these give roughly a 2-4x speedup on real datasets, more on larger ones, since MNN search is repeated on every <code>maxLoop</code> pass.</p></li>
+<li><p>Added an <code>ncores</code> parameter (<code><a href="../reference/CorrectBatches.html">CorrectBatches()</a></code>, <code><a href="../reference/CorrectBatch.html">CorrectBatch()</a></code>, <code>GetMnnPairs()</code>, and via <code>...</code> on <code><a href="../reference/RunCanek.html">RunCanek()</a></code>) to parallelize the two independent k-nearest-neighbor searches MNN pair finding requires. Defaults to 1 (fully sequential) — parallelism is opt-in only, since automatically detecting and using “available” cores could oversubscribe a shared cluster/HPC job’s actual allocation. Uses <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply()</a></code>, so <code>ncores &gt; 1</code> requires Linux/macOS (errors on Windows, and if more cores are requested than <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code> reports, rather than silently falling back or capping). See the new <a href="https://martinloza.github.io/Canek/articles/Parallel-processing.html">Speed up batch correction with parallel processing</a> vignette.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.0" id="canek-030">Canek 0.3.0<a class="anchor" aria-label="anchor" href="#canek-030"></a></h2>
 <div class="section level3">

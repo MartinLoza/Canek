@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
       </span>
     </div>
 
@@ -50,6 +50,9 @@
     </li>
     <li>
       <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
+    </li>
+    <li>
+      <a href="../articles/Parallel-processing.html">Speed up batch correction with parallel processing</a>
     </li>
     <li class="divider">
     <li class="dropdown-header">Archive (v0.2.x)</li>
@@ -100,6 +103,7 @@
 <span>  maxMem <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  pairs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  kNN <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  sampling <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  numSamples <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  idxQuery <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -155,6 +159,13 @@ heuristic algorithm to find the number of cell types.</p></dd>
 
 <dt id="arg-knn">kNN<a class="anchor" aria-label="anchor" href="#arg-knn"></a></dt>
 <dd><p>Number of k-nearest-neighbors used to define the MNNs pairs.</p></dd>
+
+
+<dt id="arg-ncores">ncores<a class="anchor" aria-label="anchor" href="#arg-ncores"></a></dt>
+<dd><p>Number of cores to use for finding MNN pairs. Defaults to 1 (sequential).
+Requesting more than 1 errors on Windows (no fork() support there)
+or if it exceeds the number of cores parallel::detectCores() reports, rather than silently
+falling back or reducing.</p></dd>
 
 
 <dt id="arg-sampling">sampling<a class="anchor" aria-label="anchor" href="#arg-sampling"></a></dt>

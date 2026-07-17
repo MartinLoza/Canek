@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
       </span>
     </div>
 
@@ -50,6 +50,9 @@
     </li>
     <li>
       <a href="../articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
+    </li>
+    <li>
+      <a href="../articles/Parallel-processing.html">Speed up batch correction with parallel processing</a>
     </li>
     <li class="divider">
     <li class="dropdown-header">Archive (v0.2.x)</li>
@@ -135,7 +138,8 @@
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>additional arguments passed down to methods.</p></dd>
+<dd><p>additional arguments passed down to methods, e.g. <code>ncores</code> to parallelize
+MNN pair finding (see <code><a href="CorrectBatches.html">CorrectBatches</a></code>; defaults to 1, sequential).</p></dd>
 
 
 <dt id="arg-batches">batches<a class="anchor" aria-label="anchor" href="#arg-batches"></a></dt>

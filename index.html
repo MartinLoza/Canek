@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Canek</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
       </span>
     </div>
 
@@ -69,6 +69,9 @@
     </li>
     <li>
       <a href="articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects</a>
+    </li>
+    <li>
+      <a href="articles/Parallel-processing.html">Speed up batch correction with parallel processing</a>
     </li>
     <li class="divider">
     </li>
@@ -142,7 +145,7 @@
 <p>For more information about Canek check out our manuscript in <a href="https://doi.org/10.1093/nargab/lqac022" class="external-link">NAR Genomics and Bioinformatics</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="whats-new-in-030">What’s new in 0.3.0<a class="anchor" aria-label="anchor" href="#whats-new-in-030"></a>
+<h2 id="whats-new-in-031">What’s new in 0.3.1<a class="anchor" aria-label="anchor" href="#whats-new-in-031"></a>
 </h2>
 <ul>
 <li>
@@ -151,19 +154,21 @@
 <code>pcaDim</code> is inferred automatically from an existing <code>"pca"</code> reduction when present, and reused directly instead of being recomputed.</li>
 <li>Added SCTransform support, including automatic reconciliation checks for batches normalized separately.</li>
 <li>Added a repeat-correction loop (<code>maxLoop</code>/<code>loopTol</code>) that refines the correction across multiple passes.</li>
+<li>Sped up MNN pair finding, and added an opt-in <code>ncores</code> parameter to parallelize it.</li>
 </ul>
 <p>See the <a href="https://martinloza.github.io/Canek/news/index.html">full changelog</a> for details.</p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>You can use Canek directly with <em>normalized-count matrices</em>, <em>Seurat</em> objects or <em>SingleCellExperiment</em> objects. As of Canek 0.3.0, correcting Seurat objects defaults to PCA-embedding space (<code>correctEmbeddings = TRUE</code>) rather than gene expression directly, and both log-normalized and SCTransform-normalized data are supported. For more details, check out our GitHub page and vignettes:</p>
+<p>You can use Canek directly with <em>normalized-count matrices</em>, <em>Seurat</em> objects or <em>SingleCellExperiment</em> objects. As of Canek 0.3.1, correcting Seurat objects defaults to PCA-embedding space (<code>correctEmbeddings = TRUE</code>) rather than gene expression directly, and both log-normalized and SCTransform-normalized data are supported. For more details, check out our GitHub page and vignettes:</p>
 <ul>
 <li><a href="https://martinloza.github.io/Canek/index.html">Canek website</a></li>
 <li><a href="https://martinloza.github.io/Canek/articles/toy_example.html">Run Canek on a toy example vignette</a></li>
 <li><a href="https://martinloza.github.io/Canek/articles/seurat.html">Correct log-normalized Seurat data</a></li>
 <li><a href="https://martinloza.github.io/Canek/articles/SCTransform.html">Correct SCTransform-normalized Seurat data</a></li>
 <li><a href="https://martinloza.github.io/Canek/articles/SingleCellExperiment.html">Run Canek on SingleCellExperiment objects vignette</a></li>
+<li><a href="https://martinloza.github.io/Canek/articles/Parallel-processing.html">Speed up batch correction with parallel processing</a></li>
 </ul>
 <p>For vignettes related to the previous <code>v0.2.x</code> version, see <a href="https://martinloza.github.io/Canek/articles/legacy.html">Previous versions</a>.</p>
 </div>
